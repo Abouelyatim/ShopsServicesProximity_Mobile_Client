@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.custom_category.viewProduct.adapters
+package com.smartcity.client.ui.main.blog.viewProduct.adapters
 
 import android.annotation.SuppressLint
 import android.graphics.Color

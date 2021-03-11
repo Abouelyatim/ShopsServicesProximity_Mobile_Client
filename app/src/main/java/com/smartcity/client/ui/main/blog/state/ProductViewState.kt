@@ -6,6 +6,7 @@ import com.smartcity.client.models.BlogPost
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.persistence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
 import com.smartcity.client.persistence.BlogQueryUtils.Companion.ORDER_BY_ASC_DATE_UPDATED
+import com.smartcity.client.ui.main.store.state.StoreViewState
 import kotlinx.android.parcel.Parcelize
 
 const val BLOG_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.blog.state.BlogViewState"
@@ -14,9 +15,23 @@ const val BLOG_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.blog
 data class ProductViewState (
 
     // BlogFragment vars
-    var productFields: ProductFields = ProductFields()
+    var productFields: ProductFields = ProductFields(),
 
-): Parcelable {
+    var viewProductFields: ViewProductFields = ViewProductFields(),
+
+    var choisesMap: ChoisesMap = ChoisesMap()
+
+    ): Parcelable {
+
+    @Parcelize
+    data class ViewProductFields(
+        var product: Product? = null
+    ) : Parcelable
+
+    @Parcelize
+    data class ChoisesMap(
+        var choises:MutableMap<String, String> = mutableMapOf()
+    ) : Parcelable
 
     @Parcelize
     data class ProductFields(

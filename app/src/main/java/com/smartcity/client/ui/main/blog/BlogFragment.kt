@@ -14,6 +14,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -228,7 +229,8 @@ constructor(
 
 
     override fun onItemSelected(position: Int, item: Product) {
-
+        viewModel.setViewProductFields(item)
+        findNavController().navigate(R.id.action_blogFragment_to_viewProductFragment)
     }
 
     override fun restoreListPosition() {

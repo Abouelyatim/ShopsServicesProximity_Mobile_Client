@@ -10,6 +10,15 @@
     <fragment android:id="@+id/blogFragment"
             android:name="com.smartcity.client.ui.main.blog.BlogFragment"
             android:label="@string/fragment_blog"
-            tools:layout="@layout/fragment_blog"/>
+            tools:layout="@layout/fragment_blog">
+        <action
+                android:id="@+id/action_blogFragment_to_viewProductFragment"
+                app:destination="@id/viewProductFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/viewProductFragment"
+            android:name="com.smartcity.client.ui.main.blog.viewProduct.ViewProductFragment"
+            android:label="ViewProductFragment"
+            tools:layout="@layout/fragment_view_product"/>
 
 </navigation>

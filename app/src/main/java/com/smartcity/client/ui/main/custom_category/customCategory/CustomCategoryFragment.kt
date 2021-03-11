@@ -272,7 +272,7 @@ constructor(
             ActionConstants.SELECTED -> {
                 viewModel.setSelectedCustomCategory(item)
                 resetUI()
-                findNavController().navigate(R.id.action_createBlogFragment_to_productFragment)
+
             }
 
         }

@@ -234,7 +234,7 @@ constructor(
         when(action){
             ActionConstants.SELECTED ->{
                viewModel.setViewProductFields(item)
-                findNavController().navigate(R.id.action_storeFragment_to_viewProductFragment)
+
             }
         }
 

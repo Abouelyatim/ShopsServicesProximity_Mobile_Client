@@ -3,6 +3,7 @@ package com.smartcity.client.ui.main.blog.viewmodel
 import android.os.Parcelable
 import com.smartcity.client.models.BlogPost
 import com.smartcity.client.models.product.Product
+import com.smartcity.client.ui.main.blog.state.ProductViewState
 
 fun ProductViewModel.setQueryExhausted(isExhausted: Boolean){
     val update = getCurrentViewStateOrNew()
@@ -58,11 +59,23 @@ fun ProductViewModel.setQuery(query: String){
     setViewState(update)
 }
 
+fun ProductViewModel.setChoisesMap(map: MutableMap<String, String>){
+    val update = getCurrentViewStateOrNew()
+    update.choisesMap.choises = map
+    setViewState(update)
+}
 
+fun ProductViewModel.clearChoisesMap(){
+    val update = getCurrentViewStateOrNew()
+    update.choisesMap= ProductViewState.ChoisesMap()
+    setViewState(update)
+}
 
-
-
-
+fun ProductViewModel.setViewProductFields(product: Product){
+    val update = getCurrentViewStateOrNew()
+    update.viewProductFields.product = product
+    setViewState(update)
+}
 
 
 

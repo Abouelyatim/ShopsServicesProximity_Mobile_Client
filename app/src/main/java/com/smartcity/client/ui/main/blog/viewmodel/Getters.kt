@@ -3,6 +3,8 @@ package com.smartcity.client.ui.main.blog.viewmodel
 import android.net.Uri
 import com.smartcity.client.models.BlogPost
 import com.smartcity.client.models.product.Product
+import com.smartcity.client.ui.main.blog.state.ProductViewState
+import com.smartcity.client.ui.main.store.state.StoreViewState
 
 fun ProductViewModel.getPage(): Int{
     getCurrentViewStateOrNew().let {
@@ -31,6 +33,17 @@ fun ProductViewModel.getSearchQuery(): String {
     }
 }
 
+fun ProductViewModel.getViewProductFields():Product?{
+    getCurrentViewStateOrNew().let {
+        return it.viewProductFields.product
+    }
+}
+
+fun ProductViewModel.getChoisesMap():MutableMap<String, String>{
+    getCurrentViewStateOrNew().let {
+        return it.choisesMap.choises
+    }
+}
 
 
 

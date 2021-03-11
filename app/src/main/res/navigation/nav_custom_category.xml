@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/nav_create_blog"
+        app:startDestination="@id/customCategoryFragment">
+
+    <fragment android:id="@+id/customCategoryFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.customCategory.CustomCategoryFragment"
+            android:label="@string/fragment_create_blog"
+            tools:layout="@layout/fragment_custom_category">
+
+        <action
+                android:id="@+id/action_createBlogFragment_to_productFragment"
+                app:destination="@id/productFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/productFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.product.ProductFragment"
+            android:label="fragment_product"
+            tools:layout="@layout/fragment_product" >
+        <action
+                android:id="@+id/action_productFragment_to_createProductFragment"
+                app:destination="@id/createProductFragment" />
+        <action
+                android:id="@+id/action_productFragment_to_viewProductFragment"
+                app:destination="@id/viewProductFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/createProductFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.createProduct.CreateProductFragment"
+            android:label="fragment_create_product"
+            tools:layout="@layout/fragment_create_product" >
+        <action
+                android:id="@+id/action_createProductFragment_to_createOptionFragment"
+                app:destination="@id/createOptionFragment" />
+        <action
+                android:id="@+id/action_createProductFragment_to_variantFragment"
+                app:destination="@id/variantFragment" />
+        <action
+                android:id="@+id/action_createProductFragment_to_productFragment"
+                app:destination="@id/productFragment"
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/productFragment"
+                app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+            android:id="@+id/optionFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.option.OptionFragment"
+            android:label="fragment_option"
+            tools:layout="@layout/fragment_option" >
+        <action
+                android:id="@+id/action_optionFragment_to_optionValuesFragment"
+                app:destination="@id/optionValuesFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/optionValuesFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.optionValue.OptionValuesFragment"
+            android:label="fragment_option_values"
+            tools:layout="@layout/fragment_option_values" >
+        <action
+                android:id="@+id/action_optionValuesFragment_to_createOptionFragment"
+                app:destination="@id/createOptionFragment"
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/createOptionFragment"
+                app:popUpToInclusive="true"
+                />
+    </fragment>
+    <fragment
+            android:id="@+id/createOptionFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.createOption.CreateOptionFragment"
+            android:label="fragment_create_option"
+            tools:layout="@layout/fragment_create_option" >
+        <action
+                android:id="@+id/action_createOptionFragment_to_optionFragment"
+                app:destination="@id/optionFragment" />
+        <action
+                android:id="@+id/action_createOptionFragment_to_createProductFragment"
+                app:destination="@id/createProductFragment"
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/createProductFragment"
+                app:popUpToInclusive="true"/>
+        <action
+                android:id="@+id/action_createOptionFragment_to_renameOptionFragment"
+                app:destination="@id/renameOptionFragment" />
+        <action
+                android:id="@+id/action_createOptionFragment_to_optionValuesFragment"
+                app:destination="@id/optionValuesFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/variantFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.variant.VariantFragment"
+            android:label="fragment_variant"
+            tools:layout="@layout/fragment_variant" >
+        <action
+                android:id="@+id/action_variantFragment_to_createProductFragment"
+                app:destination="@id/createProductFragment"
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/createProductFragment"
+                app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+            android:id="@+id/renameOptionFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.renameOption.RenameOptionFragment"
+            android:label="fragment_rename_option"
+            tools:layout="@layout/fragment_rename_option" >
+        <action
+                android:id="@+id/action_renameOptionFragment_to_createOptionFragment"
+                app:destination="@id/createOptionFragment"
+                app:launchSingleTop="true"
+                app:popUpTo="@+id/createOptionFragment"
+                app:popUpToInclusive="true"/>
+    </fragment>
+    <fragment
+            android:id="@+id/viewProductFragment"
+            android:name="com.smartcity.client.ui.main.custom_category.viewProduct.ViewProductFragment"
+            android:label="fragment_view_product"
+            tools:layout="@layout/fragment_view_product" >
+        <action
+                android:id="@+id/action_viewProductFragment_to_createProductFragment"
+                app:destination="@id/createProductFragment" />
+    </fragment>
+</navigation>

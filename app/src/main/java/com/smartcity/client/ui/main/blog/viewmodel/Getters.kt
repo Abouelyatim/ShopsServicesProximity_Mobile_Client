@@ -1,0 +1,49 @@
+package com.smartcity.client.ui.main.blog.viewmodel
+
+import android.net.Uri
+import com.smartcity.client.models.BlogPost
+import com.smartcity.client.models.product.Product
+
+fun ProductViewModel.getPage(): Int{
+    getCurrentViewStateOrNew().let {
+        return it.productFields.page
+    }
+}
+
+
+fun ProductViewModel.getIsQueryExhausted(): Boolean{
+    getCurrentViewStateOrNew().let {
+        return it.productFields.isQueryExhausted
+    }
+}
+
+fun ProductViewModel.getProductList(): List<Product>{
+    getCurrentViewStateOrNew().let {
+        return it.productFields.productList
+    }
+}
+
+
+
+fun ProductViewModel.getSearchQuery(): String {
+    getCurrentViewStateOrNew().let {
+        return it.productFields.searchQuery
+    }
+}
+
+
+
+
+fun ProductViewModel.getDummyBlogPost(): BlogPost{
+    return BlogPost(-1, "" , "", "", "", 1, "")
+}
+
+
+
+
+
+
+
+
+
+

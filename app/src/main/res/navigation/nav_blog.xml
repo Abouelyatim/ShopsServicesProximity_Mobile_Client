@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/nav_blog"
+        app:startDestination="@id/blogFragment"
+        >
+
+    <fragment android:id="@+id/blogFragment"
+            android:name="com.smartcity.client.ui.main.blog.BlogFragment"
+            android:label="@string/fragment_blog"
+            tools:layout="@layout/fragment_blog"/>
+
+</navigation>

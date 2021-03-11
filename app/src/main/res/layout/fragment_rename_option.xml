@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/new_default_background_color"
+        tools:context=".ui.main.custom_category.renameOption.RenameOptionFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/input_rename_option_layout"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:background="@color/white"
+            android:elevation="1dp"
+            >
+
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/input_option_rename"
+                android:textColor="#000"
+                android:hint="Name of option"
+                android:inputType="textEmailAddress"
+
+                />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.core.widget.NestedScrollView>

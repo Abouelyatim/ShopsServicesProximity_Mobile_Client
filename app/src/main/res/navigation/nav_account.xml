@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/nav_account"
+        app:startDestination="@id/storeFragment">
+
+    <fragment android:id="@+id/storeFragment"
+            android:name="com.smartcity.client.ui.main.store.StoreFragment"
+            android:label="@string/fragment_account"
+            tools:layout="@layout/fragment_store">
+
+
+        <action
+                android:id="@+id/action_storeFragment_to_viewProductFragment"
+                app:destination="@id/viewProductFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/viewProductFragment"
+            android:name="com.smartcity.client.ui.main.store.ViewProductFragment"
+            android:label="fragment_view_product"
+            tools:layout="@layout/fragment_view_product" >
+        <action
+                android:id="@+id/action_viewProductFragment_to_storeFragment"
+                app:destination="@id/storeFragment" />
+    </fragment>
+
+
+</navigation>

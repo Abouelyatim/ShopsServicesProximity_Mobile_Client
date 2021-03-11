@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".ui.main.custom_category.createProduct.CreateProductFragment">
+
+
+
+    <LinearLayout
+            android:id="@+id/lin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+        android:orientation="vertical"
+            android:layout_gravity="fill"
+
+            >
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_margin="16dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PHOTOS"
+                    android:textSize="15sp"
+                    android:layout_marginBottom="16dp"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/recyclerview_product_image"
+                        android:scrollbars="horizontal"
+                        android:layout_gravity="center"
+                        />
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:background="@color/default_background_color"
+                />
+
+
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_selector"
+                android:layout_margin="16dp"
+                app:boxBackgroundMode="outline"
+                android:padding="5dp"
+                    >
+
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/input_product_name"
+                    android:textColor="#000"
+                    android:hint="Product Name"
+                    android:inputType="text"
+                    android:backgroundTint="@color/white"
+                    />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_selector"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundMode="outline"
+                android:padding="5dp"
+                >
+
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/input_product_description"
+                    android:textColor="#000"
+                    android:hint="Product Description"
+                    android:inputType="textMultiLine"
+                    android:backgroundTint="@color/white"
+                    />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+                android:id="@+id/price_quntity_inputs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_selector"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="1"
+                    app:boxBackgroundMode="outline"
+                    android:padding="5dp"
+                    >
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/input_product_price"
+                        android:textColor="#000"
+                        android:hint="Price"
+                        android:inputType="number"
+                        android:backgroundTint="@color/white"
+                        />
+
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_selector"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_weight="1"
+                    app:boxBackgroundMode="outline"
+                    android:padding="5dp"
+                    >
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/input_product_quantity"
+                        android:textColor="#000"
+                        android:hint="Quantity"
+                        android:inputType="number"
+                        android:backgroundTint="@color/white"
+                        />
+
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:background="@color/default_background_color"
+                />
+
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Variantes"
+                    android:textSize="15sp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp"
+                    />
+
+            <TextView
+                    android:id="@+id/add_option_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:text="Add Options"
+                    android:padding="5dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/bleu"
+                    android:textSize="15sp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:gravity="center"
+                    />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/variant_recyclerview"
+                android:scrollbars="vertical"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                tools:listitem="@layout/layout_variant_list_item"
+                />
+
+        <Button
+                android:id="@+id/product_save_button"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/auth_button_drawable"
+                android:text="Save"
+                android:textAllCaps="false"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                android:layout_margin="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                />
+    </LinearLayout>
+
+
+
+</androidx.core.widget.NestedScrollView>

@@ -62,8 +62,8 @@ fun ProductViewModel.loadFirstPage() {
     resetPage()
     if(getSearchQuery()!=""){
         clearQuery()
-        clearProductListData()
     }
+    clearProductListData()
     setStateEvent(ProductMainEvent())
     Log.e(TAG, "BlogViewModel: loadFirstPage: ${viewState.value!!.productFields.searchQuery}")
 }

@@ -94,8 +94,7 @@ constructor(
 
     private fun addCustomCategory() {
         add_custom_category_button.setOnClickListener {
-            showCustomDialog("New",null,
-                ActionConstants.CREATE,null)
+
         }
     }
 
@@ -121,50 +120,7 @@ constructor(
         viewModel.setStateEvent(CustomCategoryStateEvent.DeleteCustomCategory(id))
     }
 
-    fun showCustomDialog(header:String,inputText:String?,action: Int,item: CustomCategory?) {
-        val inflater: LayoutInflater = this.getLayoutInflater()
-        val dialogView: View = inflater.inflate(R.layout.dialog_custom_view, null)
 
-        val header_txt = dialogView.findViewById<TextView>(R.id.header)
-        header_txt.text = header
-
-        val input: EditText = dialogView.findViewById(R.id.input_name_custom_category)
-        inputText?.let {
-            input.setText(it)
-        }
-        val save_button: Button = dialogView.findViewById(R.id.save)
-        save_button.setOnClickListener {
-            when(action){
-                 ActionConstants.UPDATE ->{
-                    item?.let {
-                        updateCustomCategory(
-                            it.pk.toLong(),
-                            input.text.toString(),
-                            it.provider.toLong()
-                        )
-                    }
-                }
-
-                 ActionConstants.CREATE ->{
-                    createCustomCategory(input.text.toString())
-                }
-            }
-        }
-        val dialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context!!)
-        dialogBuilder.setOnDismissListener(object : DialogInterface.OnDismissListener {
-            override fun onDismiss(arg0: DialogInterface) {
-
-            }
-        })
-        dialogBuilder.setView(dialogView)
-
-        alertDialog = dialogBuilder.create();
-        //alertDialog.window!!.getAttributes().windowAnimations = R.style.PauseDialogAnimation
-       // alertDialog.window.setBackgroundDrawable( ColorDrawable(Color.TRANSPARENT))
-        alertDialog.show()
-
-
-    }
 
     fun CustomCategoryMain(){
         viewModel.setStateEvent(CustomCategoryStateEvent.CustomCategoryMain())
@@ -248,8 +204,7 @@ constructor(
     override fun onItemSelected(position: Int, item: CustomCategory, action: Int) {
         when(action){
             ActionConstants.UPDATE ->{
-                showCustomDialog("Update",item.name,
-                    ActionConstants.UPDATE,item)
+
             }
 
             ActionConstants.DELETE ->{

@@ -59,6 +59,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
 
+    implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'
+
     implementation 'com.github.kanytu:android-parallax-recyclerview:v1.7'
 
     implementation 'com.github.tizisdeepan:dots:1.0.1'

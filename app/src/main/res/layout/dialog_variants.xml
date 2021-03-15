@@ -119,10 +119,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <RelativeLayout
+            android:background="#fff"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
     <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll"
             android:fillViewport="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/add_to_cart_button_height"
+            >
 
 
         <LinearLayout
@@ -142,7 +152,9 @@
                     />
 
             <LinearLayout
-                    android:layout_margin="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -154,12 +166,22 @@
                         android:text="Quantity"
                         android:textSize="19sp"
                         />
-                <TextView
-                        android:layout_width="match_parent"
+
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                        android:id="@+id/number_button"
+                        android:layout_width="120dp"
+                        app:backGroundColor="@color/white"
+                        app:textSize="8sp"
                         android:layout_height="wrap_content"
-                        android:text=":"
-                        android:textSize="19sp"
-                        />
+                        app:textColor="@color/grey4"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="5dp"
+                        tools:ignore="SmallSp" />
 
                 <TextView
                         android:layout_width="match_parent"
@@ -169,7 +191,7 @@
                         android:textColor="#000"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center"
                         />
                 <TextView
                         android:layout_width="match_parent"
@@ -178,14 +200,32 @@
                         android:textColor="#000"
                         android:textStyle="bold"
                         android:textSize="16sp"
-                        android:layout_marginStart="10dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_gravity="center"
                         />
             </LinearLayout>
 
-
-
-
     </LinearLayout>
+
+
     </androidx.core.widget.NestedScrollView>
 
+    <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="false"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <Button
+                android:background="@color/bleu"
+                android:text="ADD TO CART"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/add_to_cart_button_height"/>
+    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout >

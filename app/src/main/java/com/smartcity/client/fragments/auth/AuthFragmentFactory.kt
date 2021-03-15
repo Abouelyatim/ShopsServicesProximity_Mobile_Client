@@ -31,9 +31,6 @@ constructor(
                 RegisterFragment(viewModelFactory)
             }
 
-            ForgotPasswordFragment::class.java.name -> {
-                ForgotPasswordFragment(viewModelFactory)
-            }
 
 
             else -> {

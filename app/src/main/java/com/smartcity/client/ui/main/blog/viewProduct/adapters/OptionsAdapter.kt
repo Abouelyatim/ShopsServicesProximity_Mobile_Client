@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Attribute
+import com.smartcity.client.ui.main.blog.viewProduct.adapters.ValuesAdapter
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.option_value_item_header.view.*
 

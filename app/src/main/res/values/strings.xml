@@ -65,6 +65,7 @@
     <string name="text_info">Info</string>
     <string name="delete">Delete</string>
 
+    <string name="InterestNavHost">InterestNavHost</string>
     <string name="AuthNavHost">AuthNavHost</string>
     <string name="AccountFragmentFactory">AccountFragmentFactory</string>
     <string name="BlogFragmentFactory">BlogFragmentFactory</string>

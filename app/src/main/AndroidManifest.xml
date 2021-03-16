@@ -18,17 +18,21 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name="com.smartcity.client.ui.interest.InterestActivity"
+                android:windowSoftInputMode="adjustResize"
+                >
+        </activity>
+
         <activity android:name="com.smartcity.client.ui.main.MainActivity"
                 android:windowSoftInputMode="adjustResize"
                 >
-
         </activity>
+
         <activity
                 android:name="com.smartcity.client.ui.auth.AuthActivity"
                 android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

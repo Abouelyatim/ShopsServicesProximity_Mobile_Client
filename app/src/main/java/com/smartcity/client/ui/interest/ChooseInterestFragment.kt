@@ -41,6 +41,17 @@ constructor(
         getAllCategory()
         subscribeObservers()
         initRecyclerView()
+        saveInterestCenter()
+    }
+
+    private fun saveInterestCenter() {
+        next_button_interest.setOnClickListener {
+            viewModel.setStateEvent(
+                InterestStateEvent.SetInterestCenter(
+                    viewModel.getSelectedCategoriesList()
+                )
+            )
+        }
     }
 
     private fun subscribeObservers() {

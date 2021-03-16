@@ -12,6 +12,7 @@ import com.smartcity.client.ui.Loading
 import com.smartcity.client.ui.interest.state.CategoryFields
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.state.InterestViewState
+import com.smartcity.client.util.AbsentLiveData
 import javax.inject.Inject
 
 @InterestScope
@@ -25,6 +26,14 @@ constructor(
     override fun handleStateEvent(stateEvent: InterestStateEvent): LiveData<DataState<InterestViewState>> {
         when (stateEvent) {
 
+            is InterestStateEvent.SetInterestCenter ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    interestRepository.attemptSetInterestCenter(
+                        authToken.account_pk!!.toLong(),
+                        stateEvent.list
+                    )
+                }?: AbsentLiveData.create()
+            }
             is InterestStateEvent.AllCategory ->{
                 return interestRepository.attemptAllCategory()
             }

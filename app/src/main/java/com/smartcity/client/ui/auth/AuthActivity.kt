@@ -103,7 +103,6 @@ class AuthActivity : BaseActivity()
             Log.d(TAG, "AuthActivity, subscribeObservers: AuthDataState: ${dataState}")
             dataState.let{ authToken ->
                 if(authToken != null && authToken.account_pk != -1 && authToken.token != null){
-                   // navMainActivity()
                     navInterestActivity()
                 }
 
@@ -119,13 +118,7 @@ class AuthActivity : BaseActivity()
         (application as BaseApplication).releaseAuthComponent()
     }
 
-    fun navMainActivity(){
-        Log.d(TAG, "navMainActivity: called.")
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish()
-        (application as BaseApplication).releaseAuthComponent()
-    }
+
 
     private fun checkPreviousAuthUser(){
         viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())

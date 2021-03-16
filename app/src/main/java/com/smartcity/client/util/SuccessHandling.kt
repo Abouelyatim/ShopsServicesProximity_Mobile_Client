@@ -22,6 +22,8 @@ class SuccessHandling {
         const val SUCCESS_BLOG_DELETED = "deleted"
 
 
+        const val CREATED_DONE="created."
+
         //network call
         const val DONE_Custom_Category_Main = "Done CustomCategoryMain"
         const val DONE_Product_Main ="Done ProductMain"

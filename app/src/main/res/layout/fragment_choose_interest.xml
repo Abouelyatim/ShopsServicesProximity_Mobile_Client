@@ -75,6 +75,7 @@
           android:layout_height="wrap_content">
 
     <Button
+            android:id="@+id/next_button_interest"
             android:layout_marginLeft="32dp"
             android:layout_marginRight="32dp"
             android:background="@drawable/raduis_selector_selected_white"

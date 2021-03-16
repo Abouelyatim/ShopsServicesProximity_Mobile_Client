@@ -2,6 +2,7 @@ package com.smartcity.client.repository.interest
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.interest.OpenApiInterestService
 import com.smartcity.client.api.interest.response.ListCategoryResponse
 import com.smartcity.client.api.main.responses.ListCustomCategoryResponse
@@ -12,12 +13,16 @@ import com.smartcity.client.repository.JobManager
 import com.smartcity.client.repository.NetworkBoundResource
 import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.DataState
+import com.smartcity.client.ui.Response
+import com.smartcity.client.ui.ResponseType
 import com.smartcity.client.ui.interest.state.CategoryFields
 import com.smartcity.client.ui.interest.state.InterestViewState
 import com.smartcity.client.ui.main.custom_category.state.CustomCategoryViewState
 import com.smartcity.client.util.AbsentLiveData
 import com.smartcity.client.util.ApiSuccessResponse
+import com.smartcity.client.util.ErrorHandling.Companion.GENERIC_AUTH_ERROR
 import com.smartcity.client.util.GenericApiResponse
+import com.smartcity.client.util.SuccessHandling
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -79,4 +84,102 @@ constructor(
 
         }.asLiveData()
     }
+
+    fun attemptSetInterestCenter(
+        id:Long,
+        interest: List<String>
+    ): LiveData<DataState<InterestViewState>> {
+
+        val selectedCategoriesError = CategoryFields(
+            listOf(),
+            interest.toMutableList()
+            ).isValid()
+
+        if(!selectedCategoriesError.equals(CategoryFields.SelectedCategoriesError.none())){
+            return returnErrorResponse(selectedCategoriesError, ResponseType.Dialog())
+        }
+
+        return object :
+            NetworkBoundResource<GenericResponse, Category, InterestViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                if (response.body.response == SuccessHandling.CREATED_DONE){
+                    onCompleteJob(
+                        DataState.data(
+                            data = null
+                            ,
+                            response = Response(
+                                SuccessHandling.CREATED_DONE,
+                                ResponseType.None()
+                            )
+                        )
+                    )
+                }else{
+                    onCompleteJob(
+                        DataState.data(
+                            data = null
+                            ,
+                            response = Response(
+                                GENERIC_AUTH_ERROR,
+                                ResponseType.None()
+                            )
+                        )
+                    )
+                }
+
+
+            }
+
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+                return openApiInterestService.setInterestCenter(
+                    id,
+                    interest
+                )
+            }
+
+            // Ignore
+            override fun loadFromCache(): LiveData<InterestViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: Category?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptSetInterestCenter", job)
+            }
+
+        }.asLiveData()
+    }
+
+    private fun returnErrorResponse(errorMessage: String, responseType: ResponseType): LiveData<DataState<InterestViewState>>{
+        Log.d(TAG, "returnErrorResponse: ${errorMessage}")
+
+        return object: LiveData<DataState<InterestViewState>>(){
+            override fun onActive() {
+                super.onActive()
+                value = DataState.error(
+                    Response(
+                        errorMessage,
+                        responseType
+                    )
+                )
+            }
+        }
+    }
+
 }

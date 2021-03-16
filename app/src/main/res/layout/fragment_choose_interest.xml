@@ -1,17 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.interest.ChooseInterestFragment">
+        tools:context=".ui.interest.ChooseInterestFragment"
+        android:background="@color/white">
+  <androidx.core.widget.NestedScrollView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/scroll_interest_height">
+
+<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+  <LinearLayout
+          android:layout_marginTop="32dp"
+          android:id="@+id/header"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="What are you interested in?"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:textSize="24sp"
+            />
+    <TextView
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Add to or edit categories you\nfollow. Choose three or more."
+            android:textSize="18sp"
+            />
+  </LinearLayout>
+
 
   <androidx.recyclerview.widget.RecyclerView
+          android:layout_below="@+id/header"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:id="@+id/category_recyclerview"
           tools:listitem="@layout/layout_interest_category_item"
           android:scrollbars="none"
-          android:layout_margin="16dp"
+          android:layout_marginTop="16dp"
+          android:layout_marginRight="32dp"
+          android:layout_marginLeft="32dp"
           />
 
-</FrameLayout>
+</RelativeLayout>
+  </androidx.core.widget.NestedScrollView>
+
+  <View
+          android:layout_above="@+id/next_container"
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/default_background_color"/>
+  <LinearLayout
+          android:id="@+id/next_container"
+          android:background="@color/white"
+          android:padding="16dp"
+          android:layout_alignParentBottom="true"
+          android:layout_alignParentStart="true"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentTop="false"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+    <Button
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:background="@drawable/raduis_selector_selected_white"
+            android:text="Next"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="17sp"
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/next_interest_button_height"/>
+  </LinearLayout>
+
+</RelativeLayout>

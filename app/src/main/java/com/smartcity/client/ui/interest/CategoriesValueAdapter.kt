@@ -1,6 +1,7 @@
 package com.smartcity.client.ui.interest
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.*
 import com.smartcity.client.R
 import kotlinx.android.synthetic.main.layout_interest_category_value_item.view.*
-import kotlinx.android.synthetic.main.option_value_item.view.option_value_container
 
 class CategoriesValueAdapter (
     private val interaction: Interaction? = null
@@ -97,19 +97,21 @@ class CategoriesValueAdapter (
             selectedPositionMap[category]?.let {
                 if(position in selectedPositionMap[category]!!){
                     if(selectedPositionMap[category]!!.count { it == position } > 1){
-                        itemView.option_value_container.background=ResourcesCompat.getDrawable(resources,R.drawable.raduis_selector,null)
+                        itemView.category_value_container.background=ResourcesCompat.getDrawable(resources,R.drawable.raduis_selector_white,null)
+                        itemView.category_value_name.setTextColor(Color.parseColor("#000000"))
                         val list=selectedPositionMap[category]!!.toMutableList()
                         list.removeAll { it==position }
                         list.remove(position)
                         selectedPositionMap.put(category,list)
 
                     }else{
-                        itemView.option_value_container.background= ResourcesCompat.getDrawable(resources,R.drawable.raduis_selector_selected,null)
+                        itemView.category_value_container.background=ResourcesCompat.getDrawable(resources,R.drawable.raduis_selector_selected_white,null)
+                        itemView.category_value_name.setTextColor(Color.parseColor("#ffffff"))
                     }
                 } else{
-                    itemView.option_value_container.background=
-                        ResourcesCompat.getDrawable(resources,R.drawable.raduis_selector,null)
-
+                    itemView.category_value_container.background=
+                        ResourcesCompat.getDrawable(resources,R.drawable.raduis_selector_white,null)
+                    itemView.category_value_name.setTextColor(Color.parseColor("#000000"))
                 }
             }
 

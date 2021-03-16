@@ -54,13 +54,13 @@ constructor(
         }
     }
 
-    fun setSelectedCategoriesMap(map: MutableMap<String, MutableList<String>>){
+    fun setSelectedCategoriesList(list: MutableList<String>){
         val update = getCurrentViewStateOrNew()
-        update.categoryFields.selectedCategories = map
+        update.categoryFields.selectedCategories = list
         setViewState(update)
     }
 
-    fun getSelectedCategoriesMap():MutableMap<String, MutableList<String>>{
+    fun getSelectedCategoriesList():MutableList<String>{
         getCurrentViewStateOrNew().let {
             return it.categoryFields.selectedCategories
         }

@@ -17,6 +17,6 @@ data class InterestViewState(
 @Parcelize
 data class CategoryFields(
     var categoryList:List<Category> = ArrayList(),
-    var selectedCategories:MutableMap<String, MutableList<String>> = mutableMapOf()
+    var selectedCategories:MutableList<String> = mutableListOf<String>()
 ) : Parcelable
 

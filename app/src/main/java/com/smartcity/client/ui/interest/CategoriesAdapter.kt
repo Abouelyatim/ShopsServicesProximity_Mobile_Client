@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
+import com.google.android.flexbox.*
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Category
 import com.smartcity.client.util.TopSpacingItemDecoration
@@ -94,7 +95,10 @@ class CategoriesAdapter (
 
         fun initOptionsRecyclerView(recyclerview:RecyclerView){
             recyclerview.apply {
-                layoutManager = GridLayoutManager(context, 4, GridLayoutManager.VERTICAL, false)
+                layoutManager = FlexboxLayoutManager(context)
+                (layoutManager as FlexboxLayoutManager).justifyContent = JustifyContent.CENTER
+                (layoutManager as FlexboxLayoutManager).flexWrap= FlexWrap.WRAP
+
                 val topSpacingDecorator = TopSpacingItemDecoration(0)
                 removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
                 addItemDecoration(topSpacingDecorator)

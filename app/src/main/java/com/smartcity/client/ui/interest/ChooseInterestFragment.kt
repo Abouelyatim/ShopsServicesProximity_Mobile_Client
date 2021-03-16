@@ -12,10 +12,8 @@ import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.ui.auth.BaseAuthFragment
 import com.smartcity.client.ui.interest.state.InterestStateEvent
-import com.smartcity.client.ui.main.custom_category.customCategory.CustomCategoryAdapter
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_choose_interest.*
-import kotlinx.android.synthetic.main.fragment_custom_category.*
 import javax.inject.Inject
 
 @InterestScope
@@ -69,7 +67,7 @@ constructor(
     fun initRecyclerView(){
         category_recyclerview.apply {
             layoutManager = LinearLayoutManager(this@ChooseInterestFragment.context)
-            val topSpacingDecorator = TopSpacingItemDecoration(30)
+            val topSpacingDecorator = TopSpacingItemDecoration(5)
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
 
@@ -103,27 +101,14 @@ constructor(
 
     override fun onItemSelected(option: String, value: String) {
         category_recyclerview.adapter!!.notifyDataSetChanged()
-        val map=
-            updateSelectedMap(
-            viewModel.getSelectedCategoriesMap(),
-            option,
-            value)
-
-        viewModel.setSelectedCategoriesMap(map)
-    }
-
-    private fun updateSelectedMap(map:MutableMap<String, MutableList<String>>,option: String, value: String):MutableMap<String, MutableList<String>>{
-        if(map[option]==null){
-            map[option] = mutableListOf()
-        }
-        if ( map[option]!!.contains(value)){
-            map[option]!!.removeAll { it == value }
-            if(map[option]!!.isEmpty()){
-                map.remove(option)
-            }
+        val list=viewModel.getSelectedCategoriesList()
+        if(list.contains(value)){
+            list.removeAll { it == value }
         }else{
-            map[option]!!.add(value)
+            list.add(value)
         }
-        return map
+        viewModel.setSelectedCategoriesList(list.distinct().toMutableList())
     }
+
+
 }

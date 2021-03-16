@@ -1,6 +1,7 @@
 package com.smartcity.client.di.interest
 
 import com.smartcity.client.api.interest.OpenApiInterestService
+import com.smartcity.client.persistence.AuthTokenDao
 import com.smartcity.client.repository.interest.InterestRepository
 import com.smartcity.client.session.SessionManager
 import dagger.Module
@@ -23,10 +24,12 @@ object InterestModule{
     @InterestScope
     @Provides
     fun provideInterestRepository(
+        authTokenDao: AuthTokenDao,
         sessionManager: SessionManager,
         openApiInterestService: OpenApiInterestService
     ): InterestRepository {
         return InterestRepository(
+            authTokenDao,
             openApiInterestService,
             sessionManager
         )

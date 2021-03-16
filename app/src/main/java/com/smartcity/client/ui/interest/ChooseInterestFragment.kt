@@ -12,6 +12,7 @@ import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.ui.auth.BaseAuthFragment
 import com.smartcity.client.ui.interest.state.InterestStateEvent
+import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_choose_interest.*
 import javax.inject.Inject
@@ -53,6 +54,7 @@ constructor(
             )
         }
     }
+
 
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->

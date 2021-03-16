@@ -49,11 +49,31 @@ class InterestActivity : BaseActivity() {
                             if(message.equals(SuccessHandling.CREATED_DONE)){
                                 navMainActivity()
                             }
+
                         }
                     }
                 }
             }
         })
+
+        sessionManager.cachedToken.observe(this, Observer{ dataState ->
+            Log.d(TAG, "AuthActivity, subscribeObservers: AuthDataState: ${dataState}")
+            dataState.let{ authToken ->
+                authToken?.let {
+                    it.interest?.let {interest->
+                        if(interest){
+                            navMainActivity()
+                        }else{
+                            onFinishCheckPreviousAuthUser()
+                        }
+                    }
+                }
+
+            }
+        })
+    }
+    private fun onFinishCheckPreviousAuthUser(){
+        fragment_container.visibility = View.VISIBLE
     }
 
     fun navMainActivity(){

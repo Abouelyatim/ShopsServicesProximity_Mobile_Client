@@ -26,6 +26,7 @@ constructor(
     override fun handleStateEvent(stateEvent: InterestStateEvent): LiveData<DataState<InterestViewState>> {
         when (stateEvent) {
 
+
             is InterestStateEvent.SetInterestCenter ->{
                 return sessionManager.cachedToken.value?.let { authToken ->
                     interestRepository.attemptSetInterestCenter(

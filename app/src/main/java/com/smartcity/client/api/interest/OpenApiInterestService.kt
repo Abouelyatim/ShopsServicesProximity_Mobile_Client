@@ -6,10 +6,7 @@ import com.smartcity.client.api.auth.network_responses.LoginResponse
 import com.smartcity.client.api.interest.response.ListCategoryResponse
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.util.GenericApiResponse
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 @InterestScope
 interface OpenApiInterestService {
@@ -23,4 +20,6 @@ interface OpenApiInterestService {
         @Field("id") id: Long,
         @Field("interest") interest: List<String>
     ): LiveData<GenericApiResponse<GenericResponse>>
+
+
 }

@@ -7,8 +7,10 @@ import com.smartcity.client.api.interest.OpenApiInterestService
 import com.smartcity.client.api.interest.response.ListCategoryResponse
 import com.smartcity.client.api.main.responses.ListCustomCategoryResponse
 import com.smartcity.client.di.interest.InterestScope
+import com.smartcity.client.models.AuthToken
 import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Category
+import com.smartcity.client.persistence.AuthTokenDao
 import com.smartcity.client.repository.JobManager
 import com.smartcity.client.repository.NetworkBoundResource
 import com.smartcity.client.session.SessionManager
@@ -18,11 +20,8 @@ import com.smartcity.client.ui.ResponseType
 import com.smartcity.client.ui.interest.state.CategoryFields
 import com.smartcity.client.ui.interest.state.InterestViewState
 import com.smartcity.client.ui.main.custom_category.state.CustomCategoryViewState
-import com.smartcity.client.util.AbsentLiveData
-import com.smartcity.client.util.ApiSuccessResponse
+import com.smartcity.client.util.*
 import com.smartcity.client.util.ErrorHandling.Companion.GENERIC_AUTH_ERROR
-import com.smartcity.client.util.GenericApiResponse
-import com.smartcity.client.util.SuccessHandling
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -30,6 +29,7 @@ import javax.inject.Inject
 class InterestRepository
 @Inject
 constructor(
+    val authTokenDao: AuthTokenDao,
     val openApiInterestService: OpenApiInterestService,
     val sessionManager: SessionManager
 ): JobManager("InterestRepository")
@@ -115,6 +115,20 @@ constructor(
                 Log.d(TAG, "handleApiSuccessResponse: ${response}")
 
                 if (response.body.response == SuccessHandling.CREATED_DONE){
+                    // will return -1 if failure
+                    val result = authTokenDao.insert(
+                        AuthToken(
+                            sessionManager.cachedToken.value!!.account_pk,
+                            sessionManager.cachedToken.value!!.token,
+                            true
+                        )
+                    )
+                    if(result < 0){
+                        return onCompleteJob(DataState.error(
+                            Response(ErrorHandling.ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog()))
+                        )
+                    }
+
                     onCompleteJob(
                         DataState.data(
                             data = null
@@ -165,6 +179,8 @@ constructor(
 
         }.asLiveData()
     }
+
+
 
     private fun returnErrorResponse(errorMessage: String, responseType: ResponseType): LiveData<DataState<InterestViewState>>{
         Log.d(TAG, "returnErrorResponse: ${errorMessage}")

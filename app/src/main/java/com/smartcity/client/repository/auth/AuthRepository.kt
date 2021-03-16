@@ -95,7 +95,8 @@ constructor(
                 val result = authTokenDao.insert(
                     AuthToken(
                         response.body.pk,
-                        response.body.token
+                        response.body.token,
+                        false
                     )
                 )
                 if(result < 0){
@@ -109,7 +110,7 @@ constructor(
                 onCompleteJob(
                     DataState.data(
                         data = AuthViewState(
-                            authToken = AuthToken(response.body.pk, response.body.token)
+                            authToken = AuthToken(response.body.pk, response.body.token,false)
                         )
                     )
                 )
@@ -184,7 +185,8 @@ constructor(
                 val result = authTokenDao.insert(
                     AuthToken(
                         response.body.pk,
-                        null
+                        null,
+                        false
                     )
                 )
                 if(result < 0){
@@ -198,7 +200,7 @@ constructor(
                 onCompleteJob(
                     DataState.data(
                         data = AuthViewState(
-                            authToken = AuthToken(response.body.pk, null),
+                            authToken = AuthToken(response.body.pk, null,false),
                             registrationState= RegistrationState(
                                 isRegistred = true
                             )

@@ -13,6 +13,7 @@ import com.smartcity.client.R
 import com.smartcity.client.fragments.auth.AuthNavHostFragment
 import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.auth.state.AuthStateEvent
+import com.smartcity.client.ui.interest.InterestActivity
 import com.smartcity.client.ui.main.MainActivity
 import com.smartcity.client.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE
 import kotlinx.android.synthetic.main.activity_auth.*
@@ -102,20 +103,22 @@ class AuthActivity : BaseActivity()
             Log.d(TAG, "AuthActivity, subscribeObservers: AuthDataState: ${dataState}")
             dataState.let{ authToken ->
                 if(authToken != null && authToken.account_pk != -1 && authToken.token != null){
-                    navMainActivity()
+                    navInterestActivity()
                 }
 
             }
         })
     }
 
-    fun navMainActivity(){
-        Log.d(TAG, "navMainActivity: called.")
-        val intent = Intent(this, MainActivity::class.java)
+    fun navInterestActivity(){
+        Log.d(TAG, "navInterestActivity: called.")
+        val intent = Intent(this, InterestActivity::class.java)
         startActivity(intent)
         finish()
         (application as BaseApplication).releaseAuthComponent()
     }
+
+
 
     private fun checkPreviousAuthUser(){
         viewModel.setStateEvent(AuthStateEvent.CheckPreviousAuthEvent())

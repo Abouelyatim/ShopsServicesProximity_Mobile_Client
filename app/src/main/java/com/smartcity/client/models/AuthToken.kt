@@ -42,7 +42,12 @@ data class AuthToken(
     @ColumnInfo(name = "token")
     @SerializedName("token")
     @Expose
-    var token: String? = null
+    var token: String? = null,
+
+    @ColumnInfo(name = "interest")
+    @SerializedName("interest")
+    @Expose
+    var interest: Boolean? = null
 ) : Parcelable
 
 

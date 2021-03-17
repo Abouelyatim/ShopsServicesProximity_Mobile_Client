@@ -17,11 +17,13 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Response
 import com.smartcity.client.ui.ResponseType
+import com.smartcity.client.ui.auth.state.LoginFields
 import com.smartcity.client.ui.interest.state.CategoryFields
 import com.smartcity.client.ui.interest.state.InterestViewState
 import com.smartcity.client.ui.main.custom_category.state.CustomCategoryViewState
 import com.smartcity.client.util.*
 import com.smartcity.client.util.ErrorHandling.Companion.GENERIC_AUTH_ERROR
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_User_Interest_Center
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -180,6 +182,85 @@ constructor(
         }.asLiveData()
     }
 
+    fun attemptUserInterestCenter(
+        id: Long
+    ): LiveData<DataState<InterestViewState>> {
+        sessionManager.cachedToken.value?.let {
+            it.interest
+        }
+
+        Log.d("ii",sessionManager.cachedToken.value!!.interest!!.toString())
+        if(sessionManager.cachedToken.value!!.interest!!){//if interest is set so do not do request
+            return returnErrorResponse("", ResponseType.None())
+        }
+
+        return object :
+            NetworkBoundResource<ListCategoryResponse, List<Category>, InterestViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<ListCategoryResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                if (response.body.results.isNotEmpty()){
+                    val result = authTokenDao.insert(
+                        AuthToken(
+                            sessionManager.cachedToken.value!!.account_pk,
+                            sessionManager.cachedToken.value!!.token,
+                            true
+                        )
+                    )
+                    if(result < 0){
+                        return onCompleteJob(DataState.error(
+                            Response(ErrorHandling.ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog()))
+                        )
+                    }
+                }
+
+                onCompleteJob(
+                    DataState.data(
+                        data = InterestViewState(
+                            categoryFields = CategoryFields(response.body.results)
+                        ),
+                        response =  Response(
+                            DONE_User_Interest_Center,
+                            ResponseType.None()
+                        )
+                    )
+
+                )
+            }
+
+
+            override fun createCall(): LiveData<GenericApiResponse<ListCategoryResponse>> {
+                return openApiInterestService.getUserInterestCenter(
+                    id
+                )
+            }
+
+            // Ignore
+            override fun loadFromCache(): LiveData<InterestViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: List<Category>?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptUserInterestCenter", job)
+            }
+
+        }.asLiveData()
+    }
 
 
     private fun returnErrorResponse(errorMessage: String, responseType: ResponseType): LiveData<DataState<InterestViewState>>{

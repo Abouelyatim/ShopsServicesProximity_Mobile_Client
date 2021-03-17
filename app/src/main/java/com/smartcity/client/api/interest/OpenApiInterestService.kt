@@ -21,5 +21,6 @@ interface OpenApiInterestService {
         @Field("interest") interest: List<String>
     ): LiveData<GenericApiResponse<GenericResponse>>
 
-
+    @GET("user/interestCenter/{id}")
+    fun getUserInterestCenter(@Path("id") id: Long?): LiveData<GenericApiResponse<ListCategoryResponse>>
 }

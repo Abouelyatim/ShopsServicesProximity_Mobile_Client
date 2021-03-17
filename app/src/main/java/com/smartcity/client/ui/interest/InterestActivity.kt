@@ -44,6 +44,7 @@ class InterestActivity : BaseActivity() {
 
             dataState.data?.let { data ->
                 data.response?.let{event ->
+                    //after save interest center navigate to main
                     event.peekContent().let{ response ->
                         response.message?.let{ message ->
                             if(message.equals(SuccessHandling.CREATED_DONE)){
@@ -52,10 +53,25 @@ class InterestActivity : BaseActivity() {
 
                         }
                     }
+                    //check if user set interest center
+                    event.peekContent().let{ response ->
+                        response.message?.let{ message ->
+                            if(message.equals(SuccessHandling.DONE_User_Interest_Center)){
+                                data.data?.let {
+                                    if(it.peekContent().categoryFields.categoryList.isNotEmpty()){
+                                        navMainActivity()
+                                    }else{
+                                        onFinishCheckPreviousAuthUser()
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         })
 
+        //check previous set of interest center
         sessionManager.cachedToken.observe(this, Observer{ dataState ->
             Log.d(TAG, "AuthActivity, subscribeObservers: AuthDataState: ${dataState}")
             dataState.let{ authToken ->
@@ -63,8 +79,6 @@ class InterestActivity : BaseActivity() {
                     it.interest?.let {interest->
                         if(interest){
                             navMainActivity()
-                        }else{
-                            onFinishCheckPreviousAuthUser()
                         }
                     }
                 }

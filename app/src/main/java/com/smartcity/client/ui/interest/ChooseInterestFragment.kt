@@ -39,11 +39,19 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getAllCategory()
+
+        getUserInterestCenter()
         subscribeObservers()
         initRecyclerView()
         saveInterestCenter()
     }
+
+    private fun getUserInterestCenter() {
+        viewModel.setStateEvent(
+            InterestStateEvent.UserInterestCenter()
+        )
+    }
+
 
     private fun saveInterestCenter() {
         next_button_interest.setOnClickListener {
@@ -60,8 +68,25 @@ constructor(
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             stateChangeListener.onDataStateChange(dataState)
 
-            //set  Category list get it from network
+
+
             dataState.data?.let { data ->
+                data.response?.let{event ->
+                    //check if user set interest center if not send request to get category list
+                    event.peekContent().let{ response ->
+                        response.message?.let{ message ->
+                            if(message.equals(SuccessHandling.DONE_User_Interest_Center)){
+                                data.data?.let {
+                                    if(it.peekContent().categoryFields.categoryList.isEmpty()){
+                                        getAllCategory()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //set  Category list get it from network
                 data.data?.let{
                     it.getContentIfNotHandled()?.let{
                         viewModel.setCategoryList(it.categoryFields.categoryList)

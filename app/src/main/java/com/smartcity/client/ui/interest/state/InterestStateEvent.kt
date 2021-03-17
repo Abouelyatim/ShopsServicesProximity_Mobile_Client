@@ -8,5 +8,7 @@ sealed class InterestStateEvent {
         val list: List<String>
     ):InterestStateEvent()
 
+    class UserInterestCenter:InterestStateEvent()
+
     class None: InterestStateEvent()
 }

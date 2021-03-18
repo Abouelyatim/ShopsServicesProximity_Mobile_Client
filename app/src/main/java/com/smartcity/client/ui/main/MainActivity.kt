@@ -133,6 +133,14 @@ class MainActivity : BaseActivity(),
         restoreSession(savedInstanceState)
     }
 
+    override fun displayRetryView() {
+        //TODO
+    }
+
+    override fun displayFragmentContainerView() {
+        //TODO
+    }
+
     private fun setupBottomNavigationView(savedInstanceState: Bundle?){
         bottomNavigationView = findViewById(R.id.bottom_navigation_view)
         bottomNavigationView.setUpNavigation(bottomNavController, this)

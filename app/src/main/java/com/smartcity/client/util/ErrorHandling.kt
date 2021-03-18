@@ -8,6 +8,7 @@ class ErrorHandling{
 
     companion object{
 
+
         private val TAG: String = "AppDebug"
 
         const val UNABLE_TO_RESOLVE_HOST = "Unable to resolve host"
@@ -23,6 +24,8 @@ class ErrorHandling{
         const val ERROR_CHECK_NETWORK_CONNECTION = "Check network connection."
         const val ERROR_UNKNOWN = "Unknown error"
 
+        const val FAILED_TO_CONNECT_TO="Failed to connect to"
+         val NETWORK_ERRORS= listOf<String>(ERROR_CHECK_NETWORK_CONNECTION,UNABLE_TODO_OPERATION_WO_INTERNET,UNABLE_TO_RESOLVE_HOST)
 
         fun isNetworkError(msg: String): Boolean{
             when{

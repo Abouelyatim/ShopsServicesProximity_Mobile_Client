@@ -11,7 +11,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.smartcity.client.BaseApplication
 import com.smartcity.client.session.SessionManager
+import com.smartcity.client.util.RetryToHandelNetworkError
 import com.smartcity.client.util.Constants.Companion.PERMISSIONS_REQUEST_READ_STORAGE
+import com.smartcity.client.util.ErrorHandling
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -66,6 +68,7 @@ abstract class BaseActivity: AppCompatActivity(),
 
                 it.error?.let { errorEvent ->
                     handleStateError(errorEvent)
+                    handleNetworkStateError(errorEvent)
                 }
 
                 it.data?.let {
@@ -76,6 +79,26 @@ abstract class BaseActivity: AppCompatActivity(),
             }
         }
     }
+
+    lateinit var handelNetworkError: RetryToHandelNetworkError
+
+     fun initHandelNetworkError(handelNetworkError: RetryToHandelNetworkError){
+        this.handelNetworkError=handelNetworkError
+    }
+
+    private fun handleNetworkStateError(event: Event<StateError>){
+        event.peekContent()?.let{
+            if(it.response.message in ErrorHandling.NETWORK_ERRORS ||
+                it.response.message!!.contains(ErrorHandling.FAILED_TO_CONNECT_TO)){
+                displayFragmentContainerView()
+                displayRetryView()
+            }
+        }
+    }
+
+    abstract fun displayRetryView()
+
+    abstract fun displayFragmentContainerView()
 
     abstract fun displayProgressBar(bool: Boolean)
 

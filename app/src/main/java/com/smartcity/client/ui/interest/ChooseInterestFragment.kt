@@ -1,7 +1,6 @@
 package com.smartcity.client.ui.interest
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -10,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
-import com.smartcity.client.ui.auth.BaseAuthFragment
 import com.smartcity.client.ui.interest.state.InterestStateEvent
+import com.smartcity.client.util.RetryToHandelNetworkError
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_choose_interest.*
@@ -22,8 +21,10 @@ class ChooseInterestFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory
-): BaseAuthFragment(R.layout.fragment_choose_interest),
-    CategoriesAdapter.Interaction{
+): BaseInterestFragment(R.layout.fragment_choose_interest),
+    CategoriesAdapter.Interaction,
+    RetryToHandelNetworkError
+{
 
     private lateinit var recyclerAdapter: CategoriesAdapter
 
@@ -38,12 +39,18 @@ constructor(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        (activity as InterestActivity).initHandelNetworkError(this)
 
         getUserInterestCenter()
+
         subscribeObservers()
         initRecyclerView()
         saveInterestCenter()
+    }
+
+
+    override fun resendNetworkRequest() {
+        getUserInterestCenter()
     }
 
     private fun getUserInterestCenter() {
@@ -62,6 +69,8 @@ constructor(
             )
         }
     }
+
+
 
 
     private fun subscribeObservers() {
@@ -147,6 +156,8 @@ constructor(
         }
         viewModel.setSelectedCategoriesList(list.distinct().toMutableList())
     }
+
+
 
 
 }

@@ -55,8 +55,8 @@ constructor(
         return object: NetworkBoundResource<ListProductResponse, List<Product>, ProductViewState>(
             sessionManager.isConnectedToTheInternet(),
             true,
-            false,
-            true
+            true,
+            false
         ) {
 
             override suspend fun handleApiSuccessResponse(

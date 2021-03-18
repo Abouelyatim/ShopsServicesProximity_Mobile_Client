@@ -13,8 +13,12 @@ import com.smartcity.client.R
 import com.smartcity.client.fragments.interest.InterestNavHostFragment
 import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.main.MainActivity
+import com.smartcity.client.util.ErrorHandling
 import com.smartcity.client.util.SuccessHandling
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.android.synthetic.main.activity_auth.fragment_container
+import kotlinx.android.synthetic.main.activity_auth.progress_bar
+import kotlinx.android.synthetic.main.activity_interest.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -37,6 +41,19 @@ class InterestActivity : BaseActivity() {
         onRestoreInstanceState()
         subscribeObservers()
     }
+
+    override fun displayRetryView() {
+        retry_button.visibility=View.VISIBLE
+        retry_button.setOnClickListener {
+            handelNetworkError.resendNetworkRequest()
+            retry_button.visibility=View.GONE
+        }
+    }
+
+    override fun displayFragmentContainerView() {
+        onFinishCheckPreviousAuthUser()
+    }
+
 
     private fun subscribeObservers() {
         viewModel.dataState.observe(this, Observer { dataState ->

@@ -42,6 +42,14 @@ class AuthActivity : BaseActivity()
         onRestoreInstanceState()
     }
 
+    override fun displayRetryView() {
+        //TODO
+    }
+
+    override fun displayFragmentContainerView() {
+        //TODO
+    }
+
     fun onRestoreInstanceState(){
         val host = supportFragmentManager.findFragmentById(R.id.auth_fragments_container)
         host?.let {

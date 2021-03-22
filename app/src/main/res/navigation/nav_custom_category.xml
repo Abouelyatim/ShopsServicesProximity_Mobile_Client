@@ -7,7 +7,7 @@
         app:startDestination="@id/customCategoryFragment">
 
     <fragment android:id="@+id/customCategoryFragment"
-            android:name="com.smartcity.client.ui.main.custom_category.customCategory.CustomCategoryFragment"
+            android:name="com.smartcity.client.ui.main.cart.CartFragment"
             android:label="@string/fragment_create_blog"
             tools:layout="@layout/fragment_custom_category"/>
 </navigation>

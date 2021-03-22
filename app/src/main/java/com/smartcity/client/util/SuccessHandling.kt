@@ -11,6 +11,7 @@ class SuccessHandling {
         const val CUSTOM_CATEGORY_CREATION_DONE = "Done cration."
 
         const val DONE_ADD_TO_CART="Added to cart"
+        const val DONE_UPDATE_CART_QUANTITY="Done"
         const val DELETE_DONE = "deleted."
         const val CUSTOM_CATEGORY_UPDATE_DONE = "Done update"
 

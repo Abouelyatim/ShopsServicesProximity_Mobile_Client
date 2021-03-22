@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.smartcity.client.di.auth.keys.MainViewModelKey
 import com.smartcity.client.ui.main.store.StoreViewModel
 import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
-import com.smartcity.client.ui.main.custom_category.CustomCategoryViewModel
+import com.smartcity.client.ui.main.cart.CustomCategoryViewModel
 
 import com.smartcity.client.viewmodels.MainViewModelFactory
 import dagger.Binds

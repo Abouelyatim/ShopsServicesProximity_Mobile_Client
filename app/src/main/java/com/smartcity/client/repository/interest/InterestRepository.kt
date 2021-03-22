@@ -5,10 +5,8 @@ import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.interest.OpenApiInterestService
 import com.smartcity.client.api.interest.response.ListCategoryResponse
-import com.smartcity.client.api.main.responses.ListCustomCategoryResponse
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.models.AuthToken
-import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Category
 import com.smartcity.client.persistence.AuthTokenDao
 import com.smartcity.client.repository.JobManager
@@ -17,10 +15,8 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Response
 import com.smartcity.client.ui.ResponseType
-import com.smartcity.client.ui.auth.state.LoginFields
 import com.smartcity.client.ui.interest.state.CategoryFields
 import com.smartcity.client.ui.interest.state.InterestViewState
-import com.smartcity.client.ui.main.custom_category.state.CustomCategoryViewState
 import com.smartcity.client.util.*
 import com.smartcity.client.util.ErrorHandling.Companion.GENERIC_AUTH_ERROR
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_User_Interest_Center

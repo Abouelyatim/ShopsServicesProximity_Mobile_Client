@@ -24,7 +24,7 @@ import com.smartcity.client.util.BottomNavController.*
 import com.smartcity.client.util.setUpNavigation
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.smartcity.client.ui.main.custom_category.BaseCustomCategoryFragment
+import com.smartcity.client.ui.main.cart.BaseCartFragment
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.progress_bar
@@ -77,7 +77,7 @@ class MainActivity : BaseActivity(),
                 if(fragment is BaseBlogFragment){
                     fragment.cancelActiveJobs()
                 }
-                if(fragment is BaseCustomCategoryFragment){
+                if(fragment is BaseCartFragment){
                     fragment.cancelActiveJobs()
                 }
             }

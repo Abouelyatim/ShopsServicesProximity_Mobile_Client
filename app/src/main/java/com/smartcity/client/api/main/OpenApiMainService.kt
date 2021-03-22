@@ -5,6 +5,7 @@ import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.responses.*
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.AccountProperties
+import com.smartcity.client.models.product.Cart
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.util.GenericApiResponse
 import okhttp3.MultipartBody
@@ -79,7 +80,8 @@ interface OpenApiMainService {
     ):LiveData<GenericApiResponse<GenericResponse>>
 
 
-
+    @GET("cart/{userId}")
+    fun getUserCart(@Path("userId") id: Long?):LiveData<GenericApiResponse<Cart>>
 
 
 

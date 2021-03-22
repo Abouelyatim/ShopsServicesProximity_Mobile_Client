@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Button
@@ -34,9 +33,8 @@ import com.smartcity.client.ui.main.blog.viewProduct.adapters.ValuesAdapter
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.VariantImageAdapter
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.ViewPagerAdapter
 import com.smartcity.client.ui.main.blog.viewmodel.*
-import com.smartcity.client.ui.main.custom_category.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
+import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.util.Constants
-import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_product.*
 

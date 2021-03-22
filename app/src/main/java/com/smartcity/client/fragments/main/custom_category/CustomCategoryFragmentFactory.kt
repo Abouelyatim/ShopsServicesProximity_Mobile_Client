@@ -7,7 +7,7 @@ import com.bumptech.glide.RequestManager
 
 import com.smartcity.client.di.main.MainScope
 
-import com.smartcity.client.ui.main.custom_category.customCategory.CustomCategoryFragment
+import com.smartcity.client.ui.main.cart.CartFragment
 
 import javax.inject.Inject
 
@@ -23,8 +23,8 @@ constructor(
 
         when (className) {
 
-            CustomCategoryFragment::class.java.name -> {
-                CustomCategoryFragment(
+            CartFragment::class.java.name -> {
+                CartFragment(
                     viewModelFactory,
                     requestManager
                 )
@@ -34,7 +34,7 @@ constructor(
 
 
             else -> {
-                CustomCategoryFragment(
+                CartFragment(
                     viewModelFactory,
                     requestManager
                 )

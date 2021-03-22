@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.custom_category
+package com.smartcity.client.ui.main.cart
 
 import android.content.Context
 import android.os.Bundle
@@ -16,7 +16,7 @@ import com.smartcity.client.R
 import com.smartcity.client.ui.DataStateChangeListener
 import com.smartcity.client.ui.UICommunicationListener
 
-abstract class BaseCustomCategoryFragment
+abstract class BaseCartFragment
 constructor(
     @LayoutRes
     private val layoutRes: Int

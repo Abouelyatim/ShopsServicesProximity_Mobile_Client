@@ -6,7 +6,7 @@ import com.smartcity.client.persistence.AppDatabase
 import com.smartcity.client.persistence.BlogPostDao
 import com.smartcity.client.repository.main.StoreRepository
 import com.smartcity.client.repository.main.BlogRepository
-import com.smartcity.client.repository.main.CustomCategoryRepository
+import com.smartcity.client.repository.main.CartRepository
 
 
 import com.smartcity.client.session.SessionManager
@@ -61,8 +61,8 @@ object MainModule {
         openApiMainService: OpenApiMainService,
         blogPostDao: BlogPostDao,
         sessionManager: SessionManager
-    ): CustomCategoryRepository {
-        return CustomCategoryRepository(openApiMainService, blogPostDao, sessionManager)
+    ): CartRepository {
+        return CartRepository(openApiMainService, blogPostDao, sessionManager)
     }
 }
 

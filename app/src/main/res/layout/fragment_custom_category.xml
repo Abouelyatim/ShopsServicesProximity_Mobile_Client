@@ -5,8 +5,7 @@
         android:id="@+id/productFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/app_background_color"
-        tools:context=".ui.main.custom_category.customCategory.CustomCategoryFragment"
+        tools:context=".ui.main.cart.CartFragment"
         >
 
     <LinearLayout
@@ -19,17 +18,7 @@
                 android:focusableInTouchMode="true"
                 android:id="@+id/focusable_view_custom_category">
         </View>
-        <Button
-                android:id="@+id/add_custom_category_button"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
-                android:background="@drawable/main_button_drawable"
-                android:text="Add Category   +"
-                android:textAllCaps="false"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                android:layout_margin="15dp"
-                />
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,8 +28,8 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/custom_category_recyclerview"
-                    tools:listitem="@layout/layout_custom_category_list_item"
+                    android:id="@+id/cart_recyclerview"
+                    tools:listitem="@layout/layout_product_cart_list_item"
                     android:scrollbars="vertical"
                     android:layout_margin="20dp"
                     />

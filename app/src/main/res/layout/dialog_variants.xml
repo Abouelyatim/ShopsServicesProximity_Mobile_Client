@@ -219,6 +219,7 @@
             android:layout_height="wrap_content">
 
         <Button
+                android:id="@+id/add_to_cart"
                 android:background="@color/bleu"
                 android:text="ADD TO CART"
                 android:textColor="@color/white"

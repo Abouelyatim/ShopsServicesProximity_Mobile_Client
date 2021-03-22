@@ -8,5 +8,10 @@ sealed class ProductStateEvent {
 
     //class ProductSearchEvent :ProductStateEvent()
 
+    class AddProductCartEvent(
+        val variantId: Long,
+        val quantity: Int
+    ): ProductStateEvent()
+
     class None: ProductStateEvent()
 }

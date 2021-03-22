@@ -71,6 +71,12 @@ interface OpenApiMainService {
     ): LiveData<GenericApiResponse<ListProductResponse>>
 
 
+    @POST("cart/add")
+    fun addProductCart(
+        @Query("userId") userId: Long,
+        @Query("variantId") variantId: Long,
+        @Query("quantity") quantity: Int
+    ):LiveData<GenericApiResponse<GenericResponse>>
 
 
 

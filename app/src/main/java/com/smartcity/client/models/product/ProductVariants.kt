@@ -9,6 +9,10 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class ProductVariants(
 
+    @SerializedName("id")
+    @Expose
+    var id: Long,
+
     @SerializedName("productVariantAttributeValuesProductVariant")
     @Expose
     var productVariantAttributeValuesProductVariant: List<ProductVariantAttributeValue>,

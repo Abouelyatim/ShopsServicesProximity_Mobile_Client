@@ -10,6 +10,7 @@ import android.transition.TransitionManager
 import android.util.Log
 import android.view.View
 import android.view.Window
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.viewModels
@@ -26,6 +27,7 @@ import com.smartcity.client.models.product.AttributeValue
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.models.product.ProductVariants
 import com.smartcity.client.ui.main.blog.BaseBlogFragment
+import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.OptionsAdapter
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.ValuesAdapter
@@ -34,6 +36,7 @@ import com.smartcity.client.ui.main.blog.viewProduct.adapters.ViewPagerAdapter
 import com.smartcity.client.ui.main.blog.viewmodel.*
 import com.smartcity.client.ui.main.custom_category.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.util.Constants
+import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_product.*
 
@@ -186,6 +189,9 @@ constructor(
     }
 
     private fun subscribeObservers() {
+        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
+            stateChangeListener.onDataStateChange(dataState)
+        })
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             val map=viewModel.getChoisesMap()
             val sortedOption= mutableListOf<String>()
@@ -250,9 +256,26 @@ constructor(
 
         })
         btn1.setOnValueChangeListener { view: ElegantNumberButton?, oldValue: Int, newValue: Int ->
-            Log.d("ii",newValue.toString())
+
         }
-        btn1.number
+
+
+        val addToCart=dialogView.findViewById<Button>(R.id.add_to_cart)
+        addToCart.setOnClickListener {
+            val map=viewModel.getChoisesMap()
+            if(map.size==product.attributes.size){
+                val variantId=getVariantId(map)
+                if(variantId!=-1L){
+                    viewModel.setStateEvent(
+                        ProductStateEvent.AddProductCartEvent(
+                            variantId,
+                            btn1.number.toInt()
+                        )
+                    )
+                }
+            }
+        }
+
         dialog.show()
     }
 
@@ -316,6 +339,17 @@ constructor(
             }
         }
         return resultSortedMap
+    }
+
+    private fun getVariantId(map: Map<String, String>):Long{
+        product.let {
+            for (variant in it.productVariants) {
+                if (getVariantValues(variant) == map) {
+                    return variant.id
+                }
+            }
+        }
+        return -1L
     }
 
     private fun showDetailedProduct(map: Map<String, String>){

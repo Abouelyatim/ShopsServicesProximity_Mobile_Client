@@ -2,18 +2,12 @@ package com.smartcity.client.repository.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.switchMap
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
-import com.smartcity.client.api.main.responses.BlogCreateUpdateResponse
-import com.smartcity.client.api.main.responses.BlogListSearchResponse
 import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.models.AuthToken
-import com.smartcity.client.models.BlogPost
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.persistence.BlogPostDao
-import com.smartcity.client.persistence.returnOrderedBlogQuery
 import com.smartcity.client.repository.JobManager
 import com.smartcity.client.repository.NetworkBoundResource
 import com.smartcity.client.session.SessionManager
@@ -21,19 +15,9 @@ import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Response
 import com.smartcity.client.ui.ResponseType
 import com.smartcity.client.ui.main.blog.state.ProductViewState
-import com.smartcity.client.ui.main.blog.state.ProductViewState.*
-import com.smartcity.client.ui.main.custom_category.state.CustomCategoryViewState
-import com.smartcity.client.ui.main.store.state.StoreViewState
+import com.smartcity.client.ui.main.blog.state.ProductViewState.ProductFields
 import com.smartcity.client.util.*
-import com.smartcity.client.util.Constants.Companion.PAGINATION_PAGE_SIZE
-import com.smartcity.client.util.ErrorHandling.Companion.ERROR_UNKNOWN
-import com.smartcity.client.util.SuccessHandling.Companion.RESPONSE_HAS_PERMISSION_TO_EDIT
-import com.smartcity.client.util.SuccessHandling.Companion.RESPONSE_NO_PERMISSION_TO_EDIT
-import com.smartcity.client.util.SuccessHandling.Companion.SUCCESS_BLOG_DELETED
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 @MainScope
@@ -102,7 +86,75 @@ constructor(
     }
 
 
+    fun attemptAddProductCart(
+        userId: Long,
+        variantId: Long,
+        quantity: Int
+    ): LiveData<DataState<ProductViewState>> {
+        return object :
+            NetworkBoundResource<GenericResponse, Any, ProductViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
 
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                if(response.body.response == SuccessHandling.SUCCESS_CREATED){
+                    onCompleteJob(
+                        DataState.data(
+                            data = null
+                            ,
+                            response = Response(
+                                SuccessHandling.DONE_ADD_TO_CART,
+                                ResponseType.Toast()
+                            )
+                        )
+                    )
+                }else{
+                    onCompleteJob(
+                        DataState.error(
+                            Response(
+                                ErrorHandling.ERROR_UNKNOWN,
+                                ResponseType.Dialog()
+                            )
+                        )
+                    )
+                }
+
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+
+                return openApiMainService.addProductCart(
+                    userId,
+                    variantId,
+                    quantity
+                )
+            }
+
+            override fun loadFromCache(): LiveData<ProductViewState> {
+                return AbsentLiveData.create()
+            }
+
+
+
+            override fun setJob(job: Job) {
+                addJob("attemptAddProductCart", job)
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+        }.asLiveData()
+    }
 
 }
 

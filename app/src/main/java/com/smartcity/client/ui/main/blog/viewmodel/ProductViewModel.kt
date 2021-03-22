@@ -44,6 +44,15 @@ constructor(
                 }?: AbsentLiveData.create()
             }*/
 
+            is AddProductCartEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    blogRepository.attemptAddProductCart(
+                        authToken.account_pk!!.toLong(),
+                        stateEvent.variantId,
+                        stateEvent.quantity
+                    )
+                }?: AbsentLiveData.create()
+            }
             is ProductMainEvent ->{
                 clearLayoutManagerState()
                 return sessionManager.cachedToken.value?.let { authToken ->

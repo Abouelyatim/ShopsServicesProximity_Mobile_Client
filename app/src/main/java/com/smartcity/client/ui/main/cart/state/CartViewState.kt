@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 const val CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY = "com.smartcity.provider.ui.main.custom_category.state.CustomCategoryViewState"
 
 @Parcelize
-class CustomCategoryViewState(
+class CartViewState(
     var cartFields:CartFields=CartFields()
 
 ) : Parcelable {

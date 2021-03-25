@@ -132,11 +132,16 @@ class CartAdapter (
                 interaction?.addQuantity(item.id.cartProductVariantId,newValue)
             }
 
+            itemView.delete_cart_product.setOnClickListener {
+                interaction?.deleteCartProduct(item.id.cartProductVariantId)
+            }
+
         }
     }
 
     interface Interaction {
         fun addQuantity(variantId: Long, quantity: Int)
+        fun deleteCartProduct(variantId: Long)
     }
 
 }

@@ -9,5 +9,9 @@ sealed class CartStateEvent {
         val quantity: Int
     ): CartStateEvent()
 
+    class DeleteProductCartEvent(
+        val variantId: Long
+    ): CartStateEvent()
+
     class None: CartStateEvent()
 }

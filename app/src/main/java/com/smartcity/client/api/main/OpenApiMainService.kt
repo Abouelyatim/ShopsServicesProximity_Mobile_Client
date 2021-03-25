@@ -18,51 +18,11 @@ interface OpenApiMainService {
     @GET("store/customCategory/all/{id}")
     fun getAllcustomCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<ListCustomCategoryResponse>>
 
-    @POST("store/customCategory/create")
-    @FormUrlEncoded
-    fun createCustomCategory(
-        @Field("provider") provider:Long,
-        @Field("name") name:String
-    ): LiveData<GenericApiResponse<CustomCategoryResponse>>
-
-    @DELETE("store/customCategory/delete/{id}")
-    fun deleteCustomCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<GenericResponse>>
-
-    @PUT("store/customCategory/update")
-    @FormUrlEncoded
-    fun updateCustomCategory(
-        @Field("id") id:Long,
-        @Field("name") name:String,
-        @Field("provider") provider:Long
-    ): LiveData<GenericApiResponse<CustomCategoryResponse>>
-
-
-    @Multipart
-    @POST("product/create")
-    fun createProduct(
-        @Part("product")  product: RequestBody,
-        @Part productImagesFile: List<MultipartBody.Part>,
-        @Part variantesImagesFile : List<MultipartBody.Part>
-    ): LiveData<GenericApiResponse<Product>>
-
-    @Multipart
-    @PUT("product/update")
-    fun updateProduct(
-        @Part("product")  product: RequestBody,
-        @Part productImagesFile: List<MultipartBody.Part>,
-        @Part variantesImagesFile : List<MultipartBody.Part>
-    ): LiveData<GenericApiResponse<Product>>
-
     @GET("product/all/category/{id}")
     fun getAllProductByCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<ListProductResponse>>
 
     @GET("product/all/provider/{id}")
     fun getAllProduct(@Path("id") id: Long?):LiveData<GenericApiResponse<ListProductResponse>>
-
-
-    @DELETE("product/delete/{id}")
-    fun deleteProduct(@Path("id") id: Long?):LiveData<GenericApiResponse<GenericResponse>>
-
 
 
     @GET("product")
@@ -84,6 +44,11 @@ interface OpenApiMainService {
     fun getUserCart(@Path("userId") id: Long?):LiveData<GenericApiResponse<Cart>>
 
 
+    @DELETE("cart/delete")
+    fun deleteProductCart(
+        @Query("userId") userId: Long,
+        @Query("variantId") variantId: Long
+    ):LiveData<GenericApiResponse<GenericResponse>>
 
 }
 

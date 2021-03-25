@@ -12,7 +12,7 @@ import com.smartcity.client.ui.Loading
 
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartStateEvent.*
-import com.smartcity.client.ui.main.cart.state.CustomCategoryViewState
+import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.util.AbsentLiveData
 
 import javax.inject.Inject
@@ -23,9 +23,9 @@ class CustomCategoryViewModel
 constructor(
     val cartRepository: CartRepository,
     val sessionManager: SessionManager
-): BaseViewModel<CartStateEvent, CustomCategoryViewState>() {
+): BaseViewModel<CartStateEvent, CartViewState>() {
 
-    override fun handleStateEvent(stateEvent: CartStateEvent): LiveData<DataState<CustomCategoryViewState>> {
+    override fun handleStateEvent(stateEvent: CartStateEvent): LiveData<DataState<CartViewState>> {
 
         when(stateEvent){
             is GetUserCart ->{
@@ -46,6 +46,15 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
+            is DeleteProductCartEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    cartRepository.attemptDeleteProductCart(
+                        authToken.account_pk!!.toLong(),
+                        stateEvent.variantId
+                    )
+                }?: AbsentLiveData.create()
+            }
+
             is None -> {
                 return liveData {
                     emit(
@@ -61,8 +70,8 @@ constructor(
 
     }
 
-    override fun initNewViewState(): CustomCategoryViewState {
-        return CustomCategoryViewState()
+    override fun initNewViewState(): CartViewState {
+        return CartViewState()
     }
 
     fun cancelActiveJobs(){
@@ -79,6 +88,12 @@ constructor(
     fun setCartList(cart:Cart){
         val update = getCurrentViewStateOrNew()
         update.cartFields.cartList=cart
+        setViewState(update)
+    }
+
+    fun clearCartList(){
+        val update = getCurrentViewStateOrNew()
+        update.cartFields.cartList= Cart(listOf())
         setViewState(update)
     }
 

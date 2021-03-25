@@ -12,9 +12,13 @@ import com.bumptech.glide.RequestManager
 
 
 import com.smartcity.client.R
+import com.smartcity.client.ui.AreYouSureCallback
+import com.smartcity.client.ui.UIMessage
+import com.smartcity.client.ui.UIMessageType
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
-import com.smartcity.client.ui.main.cart.state.CustomCategoryViewState
+import com.smartcity.client.ui.main.cart.state.CartViewState
+import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_custom_category.*
 import kotlinx.android.synthetic.main.fragment_custom_category.swipe_refresh
@@ -41,7 +45,7 @@ constructor(
         cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
-            (inState[CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY] as CustomCategoryViewState?)?.let { viewState ->
+            (inState[CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY] as CartViewState?)?.let { viewState ->
                 viewModel.setViewState(viewState)
             }
         }
@@ -109,7 +113,16 @@ constructor(
     fun subscribeObservers(){
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             stateChangeListener.onDataStateChange(dataState)
-
+            //delete Cart Product success
+            if(dataState != null){
+                dataState.data?.let { data ->
+                    data.response?.peekContent()?.let{ response ->
+                        if(response.message.equals(SuccessHandling.DELETE_DONE)){
+                            getUserCart()
+                        }
+                    }
+                }
+            }
             //set Custom Category list get it from network
             dataState.data?.let { data ->
                 data.data?.let{
@@ -133,7 +146,7 @@ constructor(
 
 
     override fun onRefresh() {
-       //todo
+        getUserCart()
         swipe_refresh.isRefreshing = false
     }
 
@@ -141,6 +154,7 @@ constructor(
         super.onDestroyView()
         // clear references (can leak memory)
         cart_recyclerview.adapter = null
+        viewModel.clearCartList()
     }
 
     override fun addQuantity(variantId: Long, quantity: Int) {
@@ -150,6 +164,27 @@ constructor(
                 quantity
             )
         )
+    }
+
+    override fun deleteCartProduct(variantId: Long) {
+
+        val callback: AreYouSureCallback = object: AreYouSureCallback {
+            override fun proceed() {
+                viewModel.setStateEvent(
+                    CartStateEvent.DeleteProductCartEvent(variantId)
+                )
+            }
+            override fun cancel() {
+                // ignore
+            }
+        }
+        uiCommunicationListener.onUIMessageReceived(
+            UIMessage(
+                getString(R.string.are_you_sure_delete),
+                UIMessageType.AreYouSureDialog(callback)
+            )
+        )
+
     }
 
 }

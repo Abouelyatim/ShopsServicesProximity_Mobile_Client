@@ -13,9 +13,10 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Response
 import com.smartcity.client.ui.ResponseType
-import com.smartcity.client.ui.main.cart.state.CustomCategoryViewState
-import com.smartcity.client.ui.main.cart.state.CustomCategoryViewState.*
+import com.smartcity.client.ui.main.cart.state.CartViewState
+import com.smartcity.client.ui.main.cart.state.CartViewState.*
 import com.smartcity.client.util.*
+import com.smartcity.client.util.SuccessHandling.Companion.DELETE_DONE
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -32,9 +33,9 @@ constructor(
 
     fun attemptUserCart(
         id: Long
-    ): LiveData<DataState<CustomCategoryViewState>> {
+    ): LiveData<DataState<CartViewState>> {
         return object :
-            NetworkBoundResource<Cart, Cart, CustomCategoryViewState>(
+            NetworkBoundResource<Cart, Cart, CartViewState>(
                 sessionManager.isConnectedToTheInternet(),
                 true,
                 true,
@@ -50,7 +51,7 @@ constructor(
 
                 onCompleteJob(
                     DataState.data(
-                        data = CustomCategoryViewState(
+                        data = CartViewState(
                             cartFields = CartFields(
                                 cartList = response.body
                             )
@@ -68,7 +69,7 @@ constructor(
             }
 
             // Ignore
-            override fun loadFromCache(): LiveData<CustomCategoryViewState> {
+            override fun loadFromCache(): LiveData<CartViewState> {
                 return AbsentLiveData.create()
             }
 
@@ -88,9 +89,9 @@ constructor(
         userId: Long,
         variantId: Long,
         quantity: Int
-    ): LiveData<DataState<CustomCategoryViewState>> {
+    ): LiveData<DataState<CartViewState>> {
         return object :
-            NetworkBoundResource<GenericResponse, Any, CustomCategoryViewState>(
+            NetworkBoundResource<GenericResponse, Any, CartViewState>(
                 sessionManager.isConnectedToTheInternet(),
                 true,
                 true,
@@ -137,7 +138,7 @@ constructor(
                 )
             }
 
-            override fun loadFromCache(): LiveData<CustomCategoryViewState> {
+            override fun loadFromCache(): LiveData<CartViewState> {
                 return AbsentLiveData.create()
             }
 
@@ -148,6 +149,74 @@ constructor(
             }
 
             override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptDeleteProductCart(
+        userId: Long,
+        variantId: Long
+    ): LiveData<DataState<CartViewState>> {
+        return object :
+            NetworkBoundResource<GenericResponse, Cart, CartViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                if(response.body.response ==DELETE_DONE){
+                    onCompleteJob(
+                        DataState.data(
+                            data = null
+                            ,
+                            response = Response(
+                                SuccessHandling.DELETE_DONE,
+                                ResponseType.SnackBar()
+                            )
+                        )
+                    )
+                }else{
+                    onCompleteJob(
+                        DataState.error(
+                            Response(
+                                ErrorHandling.ERROR_UNKNOWN,
+                                ResponseType.Dialog()
+                            )
+                        )
+                    )
+                }
+
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+
+                return openApiMainService.deleteProductCart(
+                    userId,
+                    variantId
+                )
+            }
+
+            override fun loadFromCache(): LiveData<CartViewState> {
+                return AbsentLiveData.create()
+            }
+
+
+
+            override fun setJob(job: Job) {
+                addJob("attemptDeleteProductCart", job)
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Cart?) {
 
             }
 

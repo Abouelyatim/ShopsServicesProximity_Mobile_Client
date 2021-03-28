@@ -6,26 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.smartcity.client.R
-import com.smartcity.client.models.product.CartProductVariant
+import com.smartcity.client.models.product.Cart
 import com.smartcity.client.util.Constants
-import kotlinx.android.synthetic.main.layout_product_cart_list_item.view.*
+import com.smartcity.client.util.TopSpacingItemDecoration
+import kotlinx.android.synthetic.main.layout_cart_item_header.view.*
 
 class CartAdapter (
     private val requestManager: RequestManager,
     private val interaction: Interaction? = null
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
+    private  var  cartProductRecyclerAdapter: CartProductAdapter?=null
 
-    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CartProductVariant>() {
+    val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Cart>() {
 
-        override fun areItemsTheSame(oldItem: CartProductVariant, newItem: CartProductVariant): Boolean {
-            return oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: Cart, newItem: Cart): Boolean {
+            return oldItem.store == newItem.store
         }
 
-        override fun areContentsTheSame(oldItem: CartProductVariant, newItem: CartProductVariant): Boolean {
+        override fun areContentsTheSame(oldItem: Cart, newItem: Cart): Boolean {
             return oldItem == newItem
         }
 
@@ -36,7 +36,6 @@ class CartAdapter (
             CartRecyclerChangeCallback(this),
             AsyncDifferConfig.Builder(DIFF_CALLBACK).build()
         )
-
     internal inner class CartRecyclerChangeCallback(
         private val adapter: CartAdapter
     ) : ListUpdateCallback {
@@ -62,11 +61,11 @@ class CartAdapter (
         parent: ViewGroup,
         viewType: Int
     ): CartHolder {
-
         return CartHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_product_cart_list_item, parent, false),
+                .inflate(R.layout.layout_cart_item_header, parent, false),
             interaction = interaction,
+            cartProductRecyclerAdapter = cartProductRecyclerAdapter,
             requestManager = requestManager
         )
 
@@ -84,58 +83,72 @@ class CartAdapter (
         return differ.currentList.size
     }
 
-    fun submitList(cartList: List<CartProductVariant>?){
-        val newList = cartList?.toMutableList()
+    fun submitList(attributeValueList: Set<Cart>?){
+        val newList = attributeValueList?.toMutableList()
         differ.submitList(newList)
     }
 
+
     class CartHolder(
         itemView: View,
-        val requestManager: RequestManager,
-        private val interaction: Interaction?
-    ) : RecyclerView.ViewHolder(itemView) {
+        private val interaction: Interaction?,
+        private var cartProductRecyclerAdapter: CartProductAdapter?,
+        val requestManager: RequestManager
+    ) : RecyclerView.ViewHolder(itemView),
+        CartProductAdapter.Interaction {
 
+        fun initProductsRecyclerView(recyclerview:RecyclerView){
+            recyclerview.apply {
+                layoutManager = LinearLayoutManager(context)
+                val topSpacingDecorator = TopSpacingItemDecoration(0)
+                removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
+                addItemDecoration(topSpacingDecorator)
+
+                cartProductRecyclerAdapter =
+                    CartProductAdapter(
+                        requestManager,
+                        this@CartHolder
+                    )
+                addOnScrollListener(object: RecyclerView.OnScrollListener(){
+
+                    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                        super.onScrollStateChanged(recyclerView, newState)
+                        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    }
+                })
+                adapter = cartProductRecyclerAdapter
+            }
+
+        }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: CartProductVariant) = with(itemView) {
+        fun bind(item: Cart) = with(itemView) {
+            itemView.store_name_cart.text=item.store
 
-            val name=item.productName
-            name.replace("\n","").replace("\r","")
-            if(name.length>70){
-                itemView.cart_product_name.text=name.subSequence(0,70).padEnd(73,'.')
-            }else{
-                itemView.cart_product_name.text=name
+
+            var total=0.0
+            item.cartProductVariants.map {
+                total=it.productVariant.price*it.unit+total
             }
-            itemView.cart_product_price.text=item.productVariant.price.toString()+ Constants.DINAR_ALGERIAN
-
-            itemView.cart_product_quantity.number=item.unit.toString()
-            itemView.cart_product_quantity.setRange(1, item.productVariant.unit)
-
-            var image=item.productImage.image
-            item.productVariant.image?.let {
-                image=it
-            }
-
-            requestManager
-                .load(Constants.PRODUCT_IMAGE_URL+image)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(itemView.cart_product_image)
+            itemView.cart_product_total_price.text=total.toString()+ Constants.DINAR_ALGERIAN
 
 
-            var options=""
-            item.productVariant.productVariantAttributeValuesProductVariant.map {
-                options=options+" , "+it.attributeValue.value+" "+it.attributeValue.attribute
-            }
-            itemView.cart_product_variant.text=options.drop(2)
-
-            itemView.cart_product_quantity.setOnValueChangeListener { view: ElegantNumberButton?, oldValue: Int, newValue: Int ->
-                interaction?.addQuantity(item.id.cartProductVariantId,newValue)
+            initProductsRecyclerView(itemView.products_cart_recycler_view)
+            cartProductRecyclerAdapter?.let {
+                it.submitList(
+                    item.cartProductVariants.sortedBy { it.productVariant.price }
+                )
             }
 
-            itemView.delete_cart_product.setOnClickListener {
-                interaction?.deleteCartProduct(item.id.cartProductVariantId)
-            }
+        }
 
+
+        override fun addQuantity(variantId: Long, quantity: Int) {
+            interaction?.addQuantity(variantId,quantity)
+        }
+
+        override fun deleteCartProduct(variantId: Long) {
+            interaction?.deleteCartProduct(variantId)
         }
     }
 

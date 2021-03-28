@@ -6,9 +6,11 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Cart (
+data class Cart (
     @SerializedName("cartProductVariants")
     @Expose
-    var cartProductVariants: List<CartProductVariant>
+    var cartProductVariants: List<CartProductVariant>,
+
+    var store:String
 ): Parcelable {
 }

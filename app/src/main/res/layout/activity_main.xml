@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:id="@+id/tool_bar"
-                app:layout_scrollFlags="scroll|enterAlways"
+                app:layout_scrollFlags="enterAlways"
 
                 >
 

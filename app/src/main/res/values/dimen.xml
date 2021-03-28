@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="recycler_loading_view_height">80dp</dimen>
-    <dimen name="bottom_nav_height">80dp</dimen>
+    <dimen name="bottom_nav_height">56dp</dimen>
 
     <dimen name="add_to_cart_button_height">50dp</dimen>
 
     <dimen name="next_interest_button_height">50dp</dimen>
     <dimen name="scroll_interest_height">82dp</dimen><!--plus 32 of next_interest_button_height -->
+
+    <dimen name="order_button_height">40dp</dimen>
+    <dimen name="scroll_cart_height">50dp</dimen><!--plus 32 of order_button_height -->
 </resources>

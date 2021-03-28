@@ -9,5 +9,5 @@
     <fragment android:id="@+id/customCategoryFragment"
             android:name="com.smartcity.client.ui.main.cart.CartFragment"
             android:label="@string/fragment_create_blog"
-            tools:layout="@layout/fragment_custom_category"/>
+            tools:layout="@layout/fragment_cart"/>
 </navigation>

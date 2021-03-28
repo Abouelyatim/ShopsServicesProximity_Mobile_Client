@@ -45,7 +45,7 @@
 
         <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:id="@+id/container1"
                 android:layout_weight="1"
@@ -56,10 +56,20 @@
                     android:id="@+id/cart_product_name"
                     android:text="ble LED Ring"
                     android:textSize="14sp"
-                    android:padding="5dp"
                     android:textColor="#000"
+                    android:padding="3dp"
                     />
 
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/cart_product_price"
+                    android:text="2000.0"
+                    android:textSize="18sp"
+                    android:padding="3dp"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    />
 
             <TextView
                     android:layout_width="match_parent"
@@ -67,40 +77,24 @@
                     android:id="@+id/cart_product_variant"
                     android:text="ble LED Ring"
                     android:textSize="13sp"
-                    android:padding="5dp"
+                    android:padding="3dp"
                     />
+            <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+                    android:id="@+id/cart_product_quantity"
+                    android:layout_width="120dp"
+                    app:backGroundColor="@color/white"
+                    app:textSize="8sp"
+                    android:layout_height="30dp"
+                    app:textColor="@color/grey4"
+                    tools:ignore="SmallSp"
+                    android:layout_gravity="right"/>
 
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/cart_product_price"
-                        android:text="2000.0"
-                        android:textSize="18sp"
-                        android:padding="5dp"
-                        android:textColor="#000"
-                        android:textStyle="bold"
-                        android:layout_weight="1"
-                        />
-
-                <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
-                        android:id="@+id/cart_product_quantity"
-                        android:layout_width="120dp"
-                        app:backGroundColor="@color/white"
-                        app:textSize="8sp"
-                        android:layout_height="wrap_content"
-                        app:textColor="@color/grey4"
-                        tools:ignore="SmallSp" />
-            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
     <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/default_background_color"/>
+            android:background="@color/new_default_background_color"/>
 
 </LinearLayout>

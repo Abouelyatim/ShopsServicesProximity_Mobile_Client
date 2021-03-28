@@ -34,8 +34,6 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBarWithNavController(R.id.customCategoryFragment, activity as AppCompatActivity)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
-        toolbarTitle=(activity as AppCompatActivity).findViewById(R.id.tool_bar_text)
     }
 
     abstract fun cancelActiveJobs()

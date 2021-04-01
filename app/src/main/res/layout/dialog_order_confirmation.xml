@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+    <View
+            android:layout_marginTop="3dp"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/dialog_rectangle"
+            />
+
+    <TextView
+            android:layout_margin="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="confirm order ?"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:textColor="#000"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_above="@+id/next_container"
+            android:background="@color/default_background_color" />
+
+    <com.airbnb.lottie.LottieAnimationView
+            android:layout_margin="16dp"
+            android:id="@+id/lottieAnimationView"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="false"
+            app:lottie_rawRes="@raw/check_mark_success" />
+
+    <LinearLayout
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+    <TextView
+            android:layout_marginBottom="16dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="By continuing you confirm your order and the store(s) will take charge of it."
+            android:textSize="15sp"
+            android:textColor="#000"
+            android:gravity="center"
+            android:layout_gravity="center"
+            />
+
+    <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONTENT OF THE ORDER"
+            android:textSize="14sp"
+            android:padding="5dp"
+            android:textColor="@color/dark"
+            android:textStyle="bold"
+            />
+
+
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_above="@+id/next_container"
+                android:background="@color/default_background_color" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+            <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total to pay"
+                    android:textSize="13sp"
+                    android:padding="5dp"
+                    android:layout_weight="1"
+                    />
+
+            <TextView
+                    android:id="@+id/order_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0.0"
+                    android:textSize="13sp"
+                    android:padding="5dp"
+                    android:textColor="#000"
+                    />
+        </LinearLayout>
+
+        <Button
+                android:id="@+id/confirm_order_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/next_interest_button_height"
+                android:background="@drawable/radius_button_blue"
+                android:text="Confirm order"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:layout_marginBottom="10dp"/>
+
+        <Button
+                android:id="@+id/back_order"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/next_interest_button_height"
+                android:background="@drawable/radius_button_white"
+                android:text="Back"
+                android:textAllCaps="false"
+                android:textColor="#000"
+                android:textSize="17sp"
+                android:layout_marginBottom="10dp"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -27,7 +27,10 @@
     <color name="white">#ffffff</color>
 
     <color name="bleu">#2979ff</color>
+    <color name="bleu_light">#75a7ff</color>
     <color name = "darkBlue">#110f63</color>
+
+    <color name="dark">#363636</color>
 
     <color name="dim_foreground_disabled_material_dark">#80bebebe</color>
     <color name="dim_foreground_disabled_material_light">#99000000 </color>

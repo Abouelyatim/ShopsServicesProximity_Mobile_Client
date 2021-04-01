@@ -12,6 +12,7 @@ class SuccessHandling {
 
         const val DONE_ADD_TO_CART="Added to cart"
         const val DONE_UPDATE_CART_QUANTITY="Done"
+        const val DONE_PLACE_ORDER="Done"
         const val DELETE_DONE = "deleted."
         const val CUSTOM_CATEGORY_UPDATE_DONE = "Done update"
 

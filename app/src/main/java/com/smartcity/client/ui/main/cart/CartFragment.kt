@@ -1,8 +1,13 @@
 package com.smartcity.client.ui.main.cart
 
 import android.annotation.SuppressLint
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -11,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
+import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 import com.smartcity.client.R
@@ -20,6 +27,10 @@ import com.smartcity.client.ui.AreYouSureCallback
 import com.smartcity.client.ui.UIMessage
 import com.smartcity.client.ui.UIMessageType
 import com.smartcity.client.ui.displaySnackBar
+import com.smartcity.client.ui.main.blog.state.ProductStateEvent
+import com.smartcity.client.ui.main.blog.viewProduct.adapters.ValuesAdapter
+import com.smartcity.client.ui.main.blog.viewmodel.clearChoisesMap
+import com.smartcity.client.ui.main.blog.viewmodel.getChoisesMap
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartViewState
@@ -41,6 +52,7 @@ constructor(
     SwipeRefreshLayout.OnRefreshListener
 {
     private lateinit var recyclerCartAdapter: CartAdapter
+    private lateinit var dialogView: View
 
     val viewModel: CustomCategoryViewModel by viewModels{
         viewModelFactory
@@ -85,6 +97,10 @@ constructor(
         initvRecyclerView()
         subscribeObservers()
         getUserCart()
+
+        place_order_button.setOnClickListener {
+            showOrderConfirmationDialog()
+        }
     }
 
     private fun getUserCart() {
@@ -131,6 +147,9 @@ constructor(
                         if(response.message.equals(SuccessHandling.DONE_UPDATE_CART_QUANTITY)){
                             getUserCart()
                         }
+                        if(response.message.equals(SuccessHandling.DONE_PLACE_ORDER)){
+                            getUserCart()
+                        }
                     }
                 }
             }
@@ -150,9 +169,7 @@ constructor(
         //submit list to recycler view
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             setTotalOrderPriceUi(
-                calculateTotalPrice(
-                    viewModel.getCartList()!!.cartProductVariants
-                )
+                calculateTotalPrice()
             )
             recyclerCartAdapter.submitList(
                 generateProductCartList(
@@ -168,12 +185,15 @@ constructor(
         cart_order_total_price_.text=total.toString()+ Constants.DINAR_ALGERIAN
     }
 
-    private fun calculateTotalPrice(cartList: List<CartProductVariant>):Double{
-        var total=0.0
-        cartList.map {
-            total=total+it.productVariant.price*it.unit
+    private fun calculateTotalPrice():Double{
+        viewModel.getCartList()?.let {
+            var total=0.0
+            it.cartProductVariants.map {
+                total += it.productVariant.price * it.unit
+            }
+            return total
         }
-        return total
+        return 0.0
     }
     private fun generateProductCartList(cartList:List<CartProductVariant>):Set<Cart>{
         val map:MutableMap<String,MutableList<CartProductVariant>> = mutableMapOf()
@@ -237,6 +257,42 @@ constructor(
 
     }
 
+
+
+    @SuppressLint("SetTextI18n")
+    private fun showOrderConfirmationDialog(){
+        val dialog = BottomSheetDialog(context!!,R.style.BottomSheetDialogTheme)
+        dialogView = layoutInflater.inflate(R.layout.dialog_order_confirmation, null)
+        dialog.setCancelable(true)
+        dialog.setContentView(dialogView)
+
+
+        val total=dialogView.findViewById<TextView>(R.id.order_total)
+        total.text=calculateTotalPrice().toString()+Constants.DINAR_ALGERIAN
+
+        val backButton=dialogView.findViewById<Button>(R.id.back_order)
+        backButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        val confirmButton=dialogView.findViewById<Button>(R.id.confirm_order_button)
+        confirmButton.setOnClickListener {
+            placeOrder()
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+
+    }
+
+    private fun placeOrder(){
+        viewModel.setStateEvent(
+            CartStateEvent.PlaceOrderEvent(
+                viewModel.getCartList()
+            )
+        )
+    }
 }
 
 

@@ -50,6 +50,11 @@ interface OpenApiMainService {
         @Query("variantId") variantId: Long
     ):LiveData<GenericApiResponse<GenericResponse>>
 
+    @POST("order/create/{id}")
+    fun placeOrder(
+        @Path("id") userId: Long
+    ):LiveData<GenericApiResponse<GenericResponse>>
+
 }
 
 

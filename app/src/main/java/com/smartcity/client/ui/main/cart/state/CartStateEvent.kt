@@ -1,5 +1,7 @@
 package com.smartcity.client.ui.main.cart.state
 
+import com.smartcity.client.models.product.Cart
+
 sealed class CartStateEvent {
 
      class GetUserCart():CartStateEvent()
@@ -11,6 +13,10 @@ sealed class CartStateEvent {
 
     class DeleteProductCartEvent(
         val variantId: Long
+    ): CartStateEvent()
+
+    class PlaceOrderEvent(
+        val cart:Cart?
     ): CartStateEvent()
 
     class None: CartStateEvent()

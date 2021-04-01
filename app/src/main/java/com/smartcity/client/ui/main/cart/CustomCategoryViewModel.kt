@@ -55,6 +55,15 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
+            is PlaceOrderEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    cartRepository.attemptPlaceOrder(
+                        authToken.account_pk!!.toLong(),
+                        stateEvent.cart
+                    )
+                }?: AbsentLiveData.create()
+            }
+
             is None -> {
                 return liveData {
                     emit(

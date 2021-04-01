@@ -59,6 +59,9 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
 
+    def lottieVersion = "3.6.1"
+    implementation "com.airbnb.android:lottie:$lottieVersion"
+
     implementation 'com.google.android:flexbox:2.0.1'
 
     implementation 'com.cepheuen.elegant-number-button:lib:1.0.2'

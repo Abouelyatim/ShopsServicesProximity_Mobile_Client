@@ -16,6 +16,7 @@ import com.smartcity.client.ui.ResponseType
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.ui.main.cart.state.CartViewState.*
 import com.smartcity.client.util.*
+import com.smartcity.client.util.ErrorHandling.Companion.ERROR_EMPTY_CART
 import com.smartcity.client.util.SuccessHandling.Companion.DELETE_DONE
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -223,6 +224,93 @@ constructor(
         }.asLiveData()
     }
 
+
+    fun attemptPlaceOrder(
+        userId: Long,
+        cart:Cart?
+    ): LiveData<DataState<CartViewState>> {
+
+        if(cart==null || cart.cartProductVariants.isEmpty()) {
+            return returnErrorResponse(ERROR_EMPTY_CART, ResponseType.Dialog())
+        }
+        return object :
+            NetworkBoundResource<GenericResponse, Any, CartViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                if(response.body.response == SuccessHandling.SUCCESS_CREATED){
+                    onCompleteJob(
+                        DataState.data(
+                            data = null
+                            ,
+                            response = Response(
+                                SuccessHandling.DONE_PLACE_ORDER,
+                                ResponseType.SnackBar()
+                            )
+                        )
+                    )
+                }else{
+                    onCompleteJob(
+                        DataState.error(
+                            Response(
+                                ErrorHandling.ERROR_UNKNOWN,
+                                ResponseType.Dialog()
+                            )
+                        )
+                    )
+                }
+
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+
+                return openApiMainService.placeOrder(
+                    userId
+                )
+            }
+
+            override fun loadFromCache(): LiveData<CartViewState> {
+                return AbsentLiveData.create()
+            }
+
+
+
+            override fun setJob(job: Job) {
+                addJob("attemptPlaceOrder", job)
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+        }.asLiveData()
+    }
+
+    private fun returnErrorResponse(errorMessage: String, responseType: ResponseType): LiveData<DataState<CartViewState>>{
+        Log.d(TAG, "returnErrorResponse: ${errorMessage}")
+
+        return object: LiveData<DataState<CartViewState>>(){
+            override fun onActive() {
+                super.onActive()
+                value = DataState.error(
+                    Response(
+                        errorMessage,
+                        responseType
+                    )
+                )
+            }
+        }
+    }
 }
 
 

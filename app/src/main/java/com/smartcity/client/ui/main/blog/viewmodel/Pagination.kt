@@ -33,7 +33,7 @@ fun ProductViewModel.handleIncomingBlogListData(viewState: ProductViewState){
 }
 
 fun ProductViewModel.nextPage(){
-    if(!getIsQueryExhausted()){
+    if(!getIsQueryExhausted() && !getIsQueryInProgress()){
        incrementPageNumber()
         setQueryInProgress(true)
         setStateEvent(ProductMainEvent())

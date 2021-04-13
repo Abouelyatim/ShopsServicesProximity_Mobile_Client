@@ -19,6 +19,12 @@ fun ProductViewModel.getIsQueryExhausted(): Boolean{
     }
 }
 
+fun ProductViewModel.getIsQueryInProgress(): Boolean{
+    getCurrentViewStateOrNew().let {
+        return it.productFields.isQueryInProgress
+    }
+}
+
 fun ProductViewModel.getProductList(): List<Product>{
     getCurrentViewStateOrNew().let {
         return it.productFields.productList

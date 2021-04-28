@@ -92,8 +92,9 @@ constructor(
         initRecyclerView()
         subscribeObservers()
 
-        loadProductMainList()
-
+        if(viewModel.getProductList().isEmpty()){
+            loadProductMainList()
+        }
     }
 
     fun loadProductMainList(){

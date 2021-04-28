@@ -22,7 +22,7 @@ class CartAdapter (
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Cart>() {
 
         override fun areItemsTheSame(oldItem: Cart, newItem: Cart): Boolean {
-            return oldItem.store == newItem.store
+            return oldItem.storeId == newItem.storeId
         }
 
         override fun areContentsTheSame(oldItem: Cart, newItem: Cart): Boolean {
@@ -123,7 +123,7 @@ class CartAdapter (
 
         @SuppressLint("SetTextI18n")
         fun bind(item: Cart) = with(itemView) {
-            itemView.store_name_cart.text=item.store
+            itemView.store_name_cart.text=item.storeName
 
 
             var total=0.0
@@ -140,6 +140,9 @@ class CartAdapter (
                 )
             }
 
+            place_order_button.setOnClickListener {
+                interaction?.placeOrder(item)
+            }
         }
 
 
@@ -155,6 +158,7 @@ class CartAdapter (
     interface Interaction {
         fun addQuantity(variantId: Long, quantity: Int)
         fun deleteCartProduct(variantId: Long)
+        fun placeOrder(item: Cart)
     }
 
 }

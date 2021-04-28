@@ -41,6 +41,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp">
 
+
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,29 +49,52 @@
             android:scrollbars="none"
 
             />
+        <View
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@+id/next_container"
+                android:background="@color/default_background_color" />
 
         <LinearLayout
-                android:layout_marginTop="16dp"
+                android:padding="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Total:"
-                    android:textSize="14sp"
+                    android:textSize="18sp"
                     android:textColor="#000"
+
                     android:padding="3dp"
-                    android:layout_weight="1"
+                    android:layout_gravity="center"
                     />
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/cart_product_total_price"
-                    android:text="2600"
-                    android:textSize="14sp"
+                    android:text="0.0"
+                    android:textSize="18sp"
+                    android:padding="5dp"
                     android:textColor="#000"
-                    android:padding="3dp"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    />
+            <Button
+                    android:id="@+id/place_order_button"
+                    android:layout_width="150dp"
+                    android:layout_height="@dimen/order_button_height"
+                    android:layout_gravity="center"
+                    android:background="@drawable/main_button_drawable"
+                    android:text="PLACE ORDER"
+                    android:paddingRight="8dp"
+                    android:paddingLeft="8dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
                     />
         </LinearLayout>
 

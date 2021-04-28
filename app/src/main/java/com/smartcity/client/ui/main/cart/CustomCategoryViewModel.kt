@@ -102,7 +102,7 @@ constructor(
 
     fun clearCartList(){
         val update = getCurrentViewStateOrNew()
-        update.cartFields.cartList= Cart(listOf(),"")
+        update.cartFields.cartList= Cart(listOf(),-1,"")
         setViewState(update)
     }
 

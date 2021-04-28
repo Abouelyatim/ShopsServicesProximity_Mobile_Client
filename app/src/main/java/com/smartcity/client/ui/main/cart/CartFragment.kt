@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.TextView
@@ -98,9 +99,9 @@ constructor(
         subscribeObservers()
         getUserCart()
 
-        place_order_button.setOnClickListener {
+       /* place_order_button.setOnClickListener {
             showOrderConfirmationDialog()
-        }
+        }*/
     }
 
     private fun getUserCart() {
@@ -168,9 +169,6 @@ constructor(
         })
         //submit list to recycler view
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            setTotalOrderPriceUi(
-                calculateTotalPrice()
-            )
             recyclerCartAdapter.submitList(
                 generateProductCartList(
                     viewModel.getCartList()!!.cartProductVariants.sortedByDescending  { it.productVariant.price }
@@ -179,11 +177,7 @@ constructor(
         })
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setTotalOrderPriceUi(total:Double){
-        cart_order_total_price.text=total.toString()+ Constants.DINAR_ALGERIAN
-        cart_order_total_price_.text=total.toString()+ Constants.DINAR_ALGERIAN
-    }
+
 
     private fun calculateTotalPrice():Double{
         viewModel.getCartList()?.let {
@@ -196,19 +190,19 @@ constructor(
         return 0.0
     }
     private fun generateProductCartList(cartList:List<CartProductVariant>):Set<Cart>{
-        val map:MutableMap<String,MutableList<CartProductVariant>> = mutableMapOf()
+        val map:MutableMap<Long,MutableList<CartProductVariant>> = mutableMapOf()
         cartList.map {productVariant->
-            map.put(productVariant.storeName, mutableListOf())
+            map.put(productVariant.storeId, mutableListOf())
         }
         cartList.map {productVariant->
-            val list=map[productVariant.storeName]
+            val list=map[productVariant.storeId]
             list!!.add(productVariant)
-            map.put(productVariant.storeName,list)
+            map.put(productVariant.storeId,list)
         }
 
         val result:MutableList<Cart> = mutableListOf()
         map.map {
-            result.add(Cart(it.value,it.key))
+            result.add(Cart(it.value,it.key,it.value.first().storeName))
         }
         return result.toSet()
     }
@@ -257,8 +251,6 @@ constructor(
 
     }
 
-
-
     @SuppressLint("SetTextI18n")
     private fun showOrderConfirmationDialog(){
         val dialog = BottomSheetDialog(context!!,R.style.BottomSheetDialogTheme)
@@ -284,6 +276,11 @@ constructor(
         dialog.show()
 
 
+    }
+
+    override fun placeOrder(item: Cart) {
+        Log.d("ii",item.storeName)
+        showOrderConfirmationDialog()
     }
 
     private fun placeOrder(){

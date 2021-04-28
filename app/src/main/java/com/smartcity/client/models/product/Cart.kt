@@ -11,6 +11,8 @@ data class Cart (
     @Expose
     var cartProductVariants: List<CartProductVariant>,
 
-    var store:String
+    var storeId:Long,
+
+    var storeName:String
 ): Parcelable {
 }

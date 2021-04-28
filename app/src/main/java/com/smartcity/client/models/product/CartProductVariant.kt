@@ -30,7 +30,11 @@ data class CartProductVariant(
 
     @SerializedName("storeName")
     @Expose
-    var storeName: String
+    var storeName: String,
+
+    @SerializedName("storeId")
+    @Expose
+    var storeId: Long
 
 ) : Parcelable {
     override fun toString(): String {
@@ -39,6 +43,7 @@ data class CartProductVariant(
                 "unit=$unit" +
                 "productImage=$productImage" +
                 "productName=$productName" +
-                "storeName=$storeName)"
+                "storeName=$storeName" +
+                "storeId=$storeId)"
     }
 }

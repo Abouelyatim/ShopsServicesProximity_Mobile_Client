@@ -6,6 +6,8 @@ interface DataStateChangeListener{
 
     fun expandAppBar()
 
+    fun displayBottomNavigation(bool: Boolean)
+
     fun hideSoftKeyboard()
 
     fun isStoragePermissionGranted(): Boolean

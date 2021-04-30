@@ -152,4 +152,8 @@ class InterestActivity : BaseActivity() {
     override fun expandAppBar() {
         // ignore
     }
+
+    override fun displayBottomNavigation(bool: Boolean) {
+
+    }
 }

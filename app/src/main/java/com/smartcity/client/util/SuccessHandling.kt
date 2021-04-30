@@ -10,6 +10,9 @@ class SuccessHandling {
         const val STORE_CREATION_DONE = "Done cration store."
         const val CUSTOM_CATEGORY_CREATION_DONE = "Done cration."
 
+        const val DONE_STORE_POLICY="Done store policy"
+        const val DONE_TOTAL_BILL="Done total bill"
+
         const val DONE_ADD_TO_CART="Added to cart"
         const val DONE_UPDATE_CART_QUANTITY="Done"
         const val DONE_PLACE_ORDER="Done"

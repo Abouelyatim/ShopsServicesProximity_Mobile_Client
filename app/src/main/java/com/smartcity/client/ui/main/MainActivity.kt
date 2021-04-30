@@ -187,6 +187,15 @@ class MainActivity : BaseActivity(),
         findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
     }
 
+    override fun displayBottomNavigation(bool: Boolean) {
+        if(bool){
+            bottom_navigation_view.visibility = View.VISIBLE
+        }
+        else{
+            bottom_navigation_view.visibility = View.GONE
+        }
+    }
+
     override fun onBackPressed() = bottomNavController.onBackPressed()
 
     private fun setupActionBar(){

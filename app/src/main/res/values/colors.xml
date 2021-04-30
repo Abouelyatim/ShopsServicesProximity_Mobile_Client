@@ -28,10 +28,11 @@
 
     <color name="bleu">#2979ff</color>
     <color name="bleu_light">#75a7ff</color>
+    <color name="bleu_light_light">#1A75A7FF</color>
     <color name = "darkBlue">#110f63</color>
 
     <color name="dark">#363636</color>
-
+    <color name="green">#00c853</color>
     <color name="dim_foreground_disabled_material_dark">#80bebebe</color>
     <color name="dim_foreground_disabled_material_light">#99000000 </color>
 </resources>

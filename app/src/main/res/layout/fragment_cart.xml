@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/swipe_refresh"
-            android:layout_marginBottom="@dimen/scroll_cart_height"
             >
     <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView3"

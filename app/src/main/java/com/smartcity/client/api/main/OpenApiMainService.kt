@@ -5,9 +5,11 @@ import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.responses.*
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.AccountProperties
+import com.smartcity.client.models.Bill
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.util.GenericApiResponse
+import com.smartcity.provider.models.Policy
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
@@ -55,6 +57,15 @@ interface OpenApiMainService {
         @Path("id") userId: Long
     ):LiveData<GenericApiResponse<GenericResponse>>
 
+    @GET("policy/store/{id}")
+    fun getStorePolicy(
+        @Path("id") storeId: Long
+    ):LiveData<GenericApiResponse<Policy>>
+
+    @POST("bill/total")
+    fun getTotalBill(
+        @Body bill: Bill
+    ):LiveData<GenericApiResponse<Bill>>
 }
 
 

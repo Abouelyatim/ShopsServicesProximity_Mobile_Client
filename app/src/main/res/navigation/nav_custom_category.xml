@@ -9,5 +9,14 @@
     <fragment android:id="@+id/customCategoryFragment"
             android:name="com.smartcity.client.ui.main.cart.CartFragment"
             android:label="@string/fragment_create_blog"
-            tools:layout="@layout/fragment_cart"/>
+            tools:layout="@layout/fragment_cart">
+        <action
+                android:id="@+id/action_customCategoryFragment_to_placeOrderFragment"
+                app:destination="@id/placeOrderFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/placeOrderFragment"
+            android:name="com.smartcity.client.ui.main.cart.PlaceOrderFragment"
+            android:label="fragment_place_order"
+            tools:layout="@layout/fragment_place_order" />
 </navigation>

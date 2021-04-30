@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.cart
+package com.smartcity.client.ui.main.cart.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
@@ -18,7 +18,7 @@ import com.smartcity.client.util.AbsentLiveData
 import javax.inject.Inject
 
 @MainScope
-class CustomCategoryViewModel
+class CartViewModel
 @Inject
 constructor(
     val cartRepository: CartRepository,
@@ -64,6 +64,18 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
+            is GetStorePolicy ->{
+                return cartRepository.attemptStorePolicy(
+                    stateEvent.storeId
+                )
+            }
+
+            is GetTotalBill ->{
+                return cartRepository.attemptTotalBill(
+                    stateEvent.bill
+                )
+            }
+
             is None -> {
                 return liveData {
                     emit(
@@ -86,24 +98,6 @@ constructor(
     fun cancelActiveJobs(){
         cartRepository.cancelActiveJobs()
         handlePendingData()
-    }
-
-    fun getCartList(): Cart? {
-        getCurrentViewStateOrNew().let {
-            return it.cartFields.cartList
-        }
-    }
-
-    fun setCartList(cart:Cart){
-        val update = getCurrentViewStateOrNew()
-        update.cartFields.cartList=cart
-        setViewState(update)
-    }
-
-    fun clearCartList(){
-        val update = getCurrentViewStateOrNew()
-        update.cartFields.cartList= Cart(listOf(),-1,"")
-        setViewState(update)
     }
 
     fun handlePendingData(){

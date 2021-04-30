@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.di.main.MainScope
+import com.smartcity.client.models.Bill
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.persistence.BlogPostDao
 import com.smartcity.client.repository.JobManager
@@ -18,6 +19,9 @@ import com.smartcity.client.ui.main.cart.state.CartViewState.*
 import com.smartcity.client.util.*
 import com.smartcity.client.util.ErrorHandling.Companion.ERROR_EMPTY_CART
 import com.smartcity.client.util.SuccessHandling.Companion.DELETE_DONE
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_STORE_POLICY
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_TOTAL_BILL
+import com.smartcity.provider.models.Policy
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -291,6 +295,114 @@ constructor(
 
             override suspend fun updateLocalDb(cacheObject: Any?) {
 
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptStorePolicy(
+        storeId: Long
+    ): LiveData<DataState<CartViewState>> {
+        return object :
+            NetworkBoundResource<Policy, Policy, CartViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<Policy>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = CartViewState(
+                            orderFields = OrderFields(
+                                storePolicy = response.body
+                            )
+                        ),
+                        response = Response(DONE_STORE_POLICY,ResponseType.None())
+                    )
+                )
+            }
+
+
+            override fun createCall(): LiveData<GenericApiResponse<Policy>> {
+                return openApiMainService.getStorePolicy(
+                    storeId = storeId
+                )
+            }
+
+            // Ignore
+            override fun loadFromCache(): LiveData<CartViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: Policy?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptStorePolicy", job)
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptTotalBill(
+        bill: Bill
+    ): LiveData<DataState<CartViewState>> {
+        return object :
+            NetworkBoundResource<Bill, Bill, CartViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<Bill>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = CartViewState(
+                            orderFields = OrderFields(
+                                total = response.body
+                            )
+                        ),
+                        response = Response(DONE_TOTAL_BILL,ResponseType.None())
+                    )
+                )
+            }
+
+
+            override fun createCall(): LiveData<GenericApiResponse<Bill>> {
+                return openApiMainService.getTotalBill(
+                    bill = bill
+                )
+            }
+
+            // Ignore
+            override fun loadFromCache(): LiveData<CartViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: Bill?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptTotalBill", job)
             }
 
         }.asLiveData()

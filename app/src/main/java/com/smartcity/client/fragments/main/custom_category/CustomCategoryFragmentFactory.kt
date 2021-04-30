@@ -8,6 +8,7 @@ import com.bumptech.glide.RequestManager
 import com.smartcity.client.di.main.MainScope
 
 import com.smartcity.client.ui.main.cart.CartFragment
+import com.smartcity.client.ui.main.cart.PlaceOrderFragment
 
 import javax.inject.Inject
 
@@ -30,7 +31,12 @@ constructor(
                 )
             }
 
-
+            PlaceOrderFragment::class.java.name -> {
+                PlaceOrderFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
 
 
             else -> {

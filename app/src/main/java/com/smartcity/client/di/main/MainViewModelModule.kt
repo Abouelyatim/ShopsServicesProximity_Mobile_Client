@@ -3,7 +3,7 @@ package com.smartcity.client.di.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.smartcity.client.di.auth.keys.MainViewModelKey
-import com.smartcity.client.ui.main.store.StoreViewModel
+import com.smartcity.client.ui.main.account.AccountViewModel
 import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
 import com.smartcity.client.ui.main.cart.viewmodel.CartViewModel
 
@@ -20,8 +20,8 @@ abstract class MainViewModelModule {
 
     @Binds
     @IntoMap
-    @MainViewModelKey(StoreViewModel::class)
-    abstract fun bindAccountViewModel(accoutViewModel: StoreViewModel): ViewModel
+    @MainViewModelKey(AccountViewModel::class)
+    abstract fun bindAccountViewModel(accoutViewModel: AccountViewModel): ViewModel
 
     @Binds
     @IntoMap

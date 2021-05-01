@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.smartcity.client.R
-import com.smartcity.client.fragments.main.store.StoreNavHostFragment
+import com.smartcity.client.fragments.main.account.AccountNavHostFragment
 import com.smartcity.client.fragments.main.blog.BlogNavHostFragment
 
 import com.smartcity.client.util.BottomNavController.*
@@ -88,7 +88,7 @@ class BottomNavController(
         return when(menuItemId){
 
             R.id.menu_nav_account -> {
-                StoreNavHostFragment.create(R.navigation.nav_account)
+                AccountNavHostFragment.create(R.navigation.nav_account)
             }
 
             R.id.menu_nav_blog -> {

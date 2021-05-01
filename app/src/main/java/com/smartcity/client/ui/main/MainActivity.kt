@@ -15,7 +15,7 @@ import com.smartcity.client.models.AUTH_TOKEN_BUNDLE_KEY
 import com.smartcity.client.models.AuthToken
 import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.auth.AuthActivity
-import com.smartcity.client.ui.main.store.BaseStoreFragment
+import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.blog.*
 
 import com.smartcity.client.util.BOTTOM_NAV_BACKSTACK_KEY
@@ -71,7 +71,7 @@ class MainActivity : BaseActivity(),
             ?.fragments
         if(fragments != null){
             for(fragment in fragments){
-                if(fragment is BaseStoreFragment){
+                if(fragment is BaseAccountFragment){
                     fragment.cancelActiveJobs()
                 }
                 if(fragment is BaseBlogFragment){

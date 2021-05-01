@@ -2,16 +2,15 @@ package com.smartcity.client.api.main
 
 import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
-import com.smartcity.client.api.main.responses.*
+import com.smartcity.client.api.main.responses.ListAddressResponse
+import com.smartcity.client.api.main.responses.ListCustomCategoryResponse
+import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.models.AccountProperties
+import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
 import com.smartcity.client.models.product.Cart
-import com.smartcity.client.models.product.Product
 import com.smartcity.client.util.GenericApiResponse
 import com.smartcity.provider.models.Policy
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.http.*
 
 @MainScope
@@ -66,6 +65,21 @@ interface OpenApiMainService {
     fun getTotalBill(
         @Body bill: Bill
     ):LiveData<GenericApiResponse<Bill>>
+
+    @POST("address/create")
+    fun createAddress(
+        @Body address: Address
+    ):LiveData<GenericApiResponse<GenericResponse>>
+
+    @GET("address/{id}")
+    fun getUserAddresses(
+        @Path(value = "id") userId: Long
+    ):LiveData<GenericApiResponse<ListAddressResponse>>
+
+    @DELETE("address/delete/{id}")
+    fun deleteUserAddress(
+        @Path(value = "id") id: Long
+    ):LiveData<GenericApiResponse<GenericResponse>>
 }
 
 

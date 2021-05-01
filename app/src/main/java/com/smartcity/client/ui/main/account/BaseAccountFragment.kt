@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.store
+package com.smartcity.client.ui.main.account
 
 import android.content.Context
 import android.os.Bundle
@@ -12,8 +12,9 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.smartcity.client.R
 import com.smartcity.client.ui.DataStateChangeListener
+import com.smartcity.client.ui.UICommunicationListener
 
-abstract class BaseStoreFragment
+abstract class BaseAccountFragment
 constructor(
     @LayoutRes
     private val layoutRes: Int
@@ -23,9 +24,11 @@ constructor(
 
     lateinit var stateChangeListener: DataStateChangeListener
 
+    lateinit var uiCommunicationListener: UICommunicationListener
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupActionBarWithNavController(R.id.storeFragment, activity as AppCompatActivity)
+        setupActionBarWithNavController(R.id.accountFragment, activity as AppCompatActivity)
     }
 
     fun setupActionBarWithNavController(fragmentId: Int, activity: AppCompatActivity){
@@ -45,6 +48,12 @@ constructor(
             stateChangeListener = context as DataStateChangeListener
         }catch(e: ClassCastException){
             Log.e(TAG, "$context must implement DataStateChangeListener" )
+        }
+
+        try{
+            uiCommunicationListener = context as UICommunicationListener
+        }catch(e: ClassCastException){
+            Log.e(TAG, "$context must implement UICommunicationListener" )
         }
 
     }

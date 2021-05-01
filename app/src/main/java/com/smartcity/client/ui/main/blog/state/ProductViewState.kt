@@ -1,12 +1,7 @@
 package com.smartcity.client.ui.main.blog.state
 
-import android.net.Uri
 import android.os.Parcelable
-import com.smartcity.client.models.BlogPost
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.persistence.BlogQueryUtils.Companion.BLOG_ORDER_ASC
-import com.smartcity.client.persistence.BlogQueryUtils.Companion.ORDER_BY_ASC_DATE_UPDATED
-import com.smartcity.client.ui.main.store.state.StoreViewState
 import kotlinx.android.parcel.Parcelize
 
 const val BLOG_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.blog.state.BlogViewState"

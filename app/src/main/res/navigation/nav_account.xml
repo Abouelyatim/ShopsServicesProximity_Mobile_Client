@@ -4,12 +4,30 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/nav_account"
-        app:startDestination="@id/storeFragment">
+        app:startDestination="@id/accountFragment">
 
-    <fragment android:id="@+id/storeFragment"
-            android:name="com.smartcity.client.ui.main.store.StoreFragment"
+    <fragment android:id="@+id/accountFragment"
+            android:name="com.smartcity.client.ui.main.account.AccountFragment"
             android:label="@string/fragment_account"
-            tools:layout="@layout/fragment_store"/>
+            tools:layout="@layout/fragment_account">
+        <action
+                android:id="@+id/action_accountFragment_to_addressFragment"
+                app:destination="@id/addressFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/addressFragment"
+            android:name="com.smartcity.client.ui.main.account.address.AddressFragment"
+            android:label="fragment_address"
+            tools:layout="@layout/fragment_address" >
+        <action
+                android:id="@+id/action_addressFragment_to_addressFormFragment"
+                app:destination="@id/addressFormFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/addressFormFragment"
+            android:name="com.smartcity.client.ui.main.account.address.AddressFormFragment"
+            android:label="fragment_address_form"
+            tools:layout="@layout/fragment_address_form" />
 
 
 </navigation>

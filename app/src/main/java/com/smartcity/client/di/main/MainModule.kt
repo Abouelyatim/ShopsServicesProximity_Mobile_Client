@@ -4,7 +4,7 @@ import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.persistence.AccountPropertiesDao
 import com.smartcity.client.persistence.AppDatabase
 import com.smartcity.client.persistence.BlogPostDao
-import com.smartcity.client.repository.main.StoreRepository
+import com.smartcity.client.repository.main.AccountRepository
 import com.smartcity.client.repository.main.BlogRepository
 import com.smartcity.client.repository.main.CartRepository
 
@@ -32,8 +32,8 @@ object MainModule {
         openApiMainService: OpenApiMainService,
         accountPropertiesDao: AccountPropertiesDao,
         sessionManager: SessionManager
-    ): StoreRepository {
-        return StoreRepository(openApiMainService, accountPropertiesDao, sessionManager)
+    ): AccountRepository {
+        return AccountRepository(openApiMainService, accountPropertiesDao, sessionManager)
     }
 
     @JvmStatic

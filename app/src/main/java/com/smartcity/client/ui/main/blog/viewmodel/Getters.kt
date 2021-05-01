@@ -1,10 +1,7 @@
 package com.smartcity.client.ui.main.blog.viewmodel
 
-import android.net.Uri
 import com.smartcity.client.models.BlogPost
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.ui.main.blog.state.ProductViewState
-import com.smartcity.client.ui.main.store.state.StoreViewState
 
 fun ProductViewModel.getPage(): Int{
     getCurrentViewStateOrNew().let {

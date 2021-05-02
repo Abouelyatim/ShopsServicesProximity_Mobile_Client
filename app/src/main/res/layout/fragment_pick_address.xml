@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".ui.main.cart.PickAddressFragment">
+
+
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@color/new_default_background_color"
+            >
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/scroll_interest_height"
+                android:background="@color/new_default_background_color"
+                tools:context=".ui.main.account.address.AddressFragment">
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/pick_address_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    tools:listitem="@layout/layout_address_list_item"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    />
+
+
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+                android:id="@+id/next_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:background="@color/new_default_background_color"
+                android:padding="16dp">
+
+            <Button
+                    android:id="@+id/add_address_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/radius_button_blue"
+                    android:text="Add new address"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:layout_gravity="bottom"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <ImageView
+            android:id="@+id/empty_list"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/empty_list"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            />
+</androidx.constraintlayout.widget.ConstraintLayout>

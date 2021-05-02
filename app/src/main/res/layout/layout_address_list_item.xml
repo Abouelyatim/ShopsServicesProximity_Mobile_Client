@@ -8,6 +8,7 @@
         android:background="@drawable/radius_shape_white"
         android:clickable="true"
         android:focusable="true"
+        android:id="@+id/address_container"
         >
 
 
@@ -24,86 +25,15 @@
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/ic_outline_location_on_24"/>
 
-        <LinearLayout
-                android:layout_weight="1"
-                android:layout_width="0dp"
+        <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/address_city"
-                        android:text="city"
-                        android:textSize="19sp"
-                        />
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=","
-                        android:textSize="19sp"
-                        />
-            </LinearLayout>
-
-
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/address_street"
-                        android:text="street"
-                        android:textSize="19sp"
-                        />
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=","
-                        android:textSize="19sp"
-                        />
-            </LinearLayout>
-
-
-
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/address_house_number"
-                        android:text="house number"
-                        android:textSize="19sp"
-                        />
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=","
-                        android:textSize="19sp"
-                        />
-            </LinearLayout>
-
-
-            <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/address_zip_code"
-                        android:text="zip code"
-                        android:textSize="19sp"
-                        />
-            </LinearLayout>
-        </LinearLayout>
+                android:id="@+id/address_"
+                android:text="city"
+                android:textSize="17sp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                />
 
 
         <ImageButton

@@ -18,5 +18,26 @@
             android:id="@+id/placeOrderFragment"
             android:name="com.smartcity.client.ui.main.cart.PlaceOrderFragment"
             android:label="fragment_place_order"
-            tools:layout="@layout/fragment_place_order" />
+            tools:layout="@layout/fragment_place_order" >
+        <action
+                android:id="@+id/action_placeOrderFragment_to_pickAddressFragment"
+                app:destination="@id/pickAddressFragment" />
+        <action
+                android:id="@+id/action_placeOrderFragment_to_addAddressFragment"
+                app:destination="@id/addAddressFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/pickAddressFragment"
+            android:name="com.smartcity.client.ui.main.cart.PickAddressFragment"
+            android:label="fragment_pick_address"
+            tools:layout="@layout/fragment_pick_address" >
+        <action
+                android:id="@+id/action_pickAddressFragment_to_addAddressFragment"
+                app:destination="@id/addAddressFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/addAddressFragment"
+            android:name="com.smartcity.client.ui.main.cart.AddAddressFragment"
+            android:label="fragment_add_address"
+            tools:layout="@layout/fragment_add_address" />
 </navigation>

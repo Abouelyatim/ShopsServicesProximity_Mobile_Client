@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
+import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.di.main.MainScope
+import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.persistence.BlogPostDao
@@ -14,6 +16,7 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Response
 import com.smartcity.client.ui.ResponseType
+import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.ui.main.cart.state.CartViewState.*
 import com.smartcity.client.util.*
@@ -21,6 +24,7 @@ import com.smartcity.client.util.ErrorHandling.Companion.ERROR_EMPTY_CART
 import com.smartcity.client.util.SuccessHandling.Companion.DELETE_DONE
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_STORE_POLICY
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_TOTAL_BILL
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_USER_ADDRESSES
 import com.smartcity.provider.models.Policy
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -403,6 +407,121 @@ constructor(
 
             override fun setJob(job: Job) {
                 addJob("attemptTotalBill", job)
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptUserAddresses(
+        id: Long
+    ): LiveData<DataState<CartViewState>> {
+        return object :
+            NetworkBoundResource<ListAddressResponse, Address, CartViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<ListAddressResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = CartViewState(
+                            orderFields=OrderFields(addressList=response.body.results)
+                        ),
+                        response = Response(DONE_USER_ADDRESSES,ResponseType.None())
+                    )
+                )
+            }
+
+
+            override fun createCall(): LiveData<GenericApiResponse<ListAddressResponse>> {
+                return openApiMainService.getUserAddresses(
+                    userId = id
+                )
+            }
+
+            // Ignore
+            override fun loadFromCache(): LiveData<CartViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: Address?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptUserAddresses", job)
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptCreateAddress(
+        address: Address
+    ): LiveData<DataState<CartViewState>> {
+
+        val createAddressError=address.isValidForCreation()
+
+        if(!createAddressError.equals(Address.CreateAddressError.none())){
+            return returnErrorResponse(createAddressError, ResponseType.Dialog())
+
+        }
+
+        return object :
+            NetworkBoundResource<GenericResponse, Any, CartViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+
+                onCompleteJob(
+                    DataState.data(
+                        data = null
+                        ,
+                        response = Response(
+                            SuccessHandling.CREATED_DONE,
+                            ResponseType.Toast()
+                        )
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+
+                return openApiMainService.createAddress(
+                    address = address
+                )
+            }
+
+            override fun loadFromCache(): LiveData<CartViewState> {
+                return AbsentLiveData.create()
+            }
+
+
+
+            override fun setJob(job: Job) {
+                addJob("attemptCreateAddress", job)
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
             }
 
         }.asLiveData()

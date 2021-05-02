@@ -127,12 +127,69 @@
     </LinearLayout>
 
 
+
+            <LinearLayout
+                    android:id="@+id/delivery_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    >
+
+                <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="3dp"
+                        android:src="@drawable/ic_outline_location_on_24"/>
+
+                <LinearLayout
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/address_"
+                            android:text="XXX"
+                            android:textSize="15sp"
+                            android:textColor="#000"
+                            />
+
+                    <TextView
+                            android:id="@+id/change_delivery_address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Change delivery address"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/bleu"
+                            android:layout_marginTop="5dp"
+                            android:visibility="gone"
+                            />
+                    <TextView
+                            android:id="@+id/add_delivery_address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add new address"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/bleu"
+                            android:layout_marginTop="5dp"
+                            android:visibility="gone"
+                            />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
         <LinearLayout
                 android:id="@+id/pickup_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="16dp"
                 android:layout_marginTop="16dp"
                 android:visibility="gone"
                 >

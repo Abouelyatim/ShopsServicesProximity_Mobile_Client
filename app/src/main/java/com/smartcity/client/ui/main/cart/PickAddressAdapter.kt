@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.account.address
+package com.smartcity.client.ui.main.cart
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import com.smartcity.client.R
 import com.smartcity.client.models.Address
 import kotlinx.android.synthetic.main.layout_address_list_item.view.*
 
-class AddressAdapter (
+class PickAddressAdapter (
     private val interaction: Interaction? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
@@ -31,7 +31,7 @@ class AddressAdapter (
             AsyncDifferConfig.Builder(DIFF_CALLBACK).build()
         )
     internal inner class AddressRecyclerChangeCallback(
-        private val adapter: AddressAdapter
+        private val adapter: PickAddressAdapter
     ) : ListUpdateCallback {
 
         override fun onChanged(position: Int, count: Int, payload: Any?) {
@@ -89,13 +89,14 @@ class AddressAdapter (
         @SuppressLint("SetTextI18n")
         fun bind(item: Address) = with(itemView) {
             itemView.address_.text="${item.city}, ${item.street}, ${item.houseNumber.toString()}, ${item.zipCode.toString()}"
-            delete_address.setOnClickListener {
-                interaction?.deleteAddress(item.id!!)
+            itemView.delete_address.visibility=View.GONE
+            address_container.setOnClickListener {
+                interaction?.selectedAddress(item)
             }
         }
     }
 
     interface Interaction {
-        fun deleteAddress(addressId: Long)
+        fun selectedAddress(address: Address)
     }
 }

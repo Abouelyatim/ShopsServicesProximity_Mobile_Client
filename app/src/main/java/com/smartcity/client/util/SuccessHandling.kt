@@ -12,6 +12,7 @@ class SuccessHandling {
 
         const val DONE_STORE_POLICY="Done store policy"
         const val DONE_TOTAL_BILL="Done total bill"
+        const val DONE_USER_ADDRESSES="Done user addresses"
 
         const val DONE_ADD_TO_CART="Added to cart"
         const val DONE_UPDATE_CART_QUANTITY="Done"

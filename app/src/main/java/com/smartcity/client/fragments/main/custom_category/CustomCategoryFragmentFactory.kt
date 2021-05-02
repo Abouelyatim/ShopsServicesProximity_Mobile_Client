@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 
 import com.smartcity.client.di.main.MainScope
+import com.smartcity.client.ui.main.cart.AddAddressFragment
 
 import com.smartcity.client.ui.main.cart.CartFragment
+import com.smartcity.client.ui.main.cart.PickAddressFragment
 import com.smartcity.client.ui.main.cart.PlaceOrderFragment
 
 import javax.inject.Inject
@@ -38,6 +40,19 @@ constructor(
                 )
             }
 
+            PickAddressFragment::class.java.name -> {
+                PickAddressFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+            AddAddressFragment::class.java.name -> {
+                AddAddressFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
 
             else -> {
                 CartFragment(

@@ -76,6 +76,23 @@ constructor(
                 )
             }
 
+            is GetUserAddresses ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    cartRepository.attemptUserAddresses(
+                        authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is SaveAddress ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    stateEvent.address.userId=authToken.account_pk!!.toLong()
+                    cartRepository.attemptCreateAddress(
+                        stateEvent.address
+                    )
+                }?: AbsentLiveData.create()
+            }
+
             is None -> {
                 return liveData {
                     emit(

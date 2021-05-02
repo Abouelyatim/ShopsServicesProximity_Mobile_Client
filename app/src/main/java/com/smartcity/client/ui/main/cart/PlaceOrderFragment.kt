@@ -2,16 +2,19 @@ package com.smartcity.client.ui.main.cart
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
+import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
 import com.smartcity.client.models.OrderType
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
@@ -80,6 +83,12 @@ constructor(
         initProductsRecyclerView()
         setTotal()
         restoreUi()
+        pickAddressListener()
+        setDeliveryAddressUi(viewModel.getDeliveryAddress())
+
+        place_order_button.setOnClickListener {
+            Log.d("ii",viewModel.getAddressList().toString())
+        }
     }
 
     private fun restoreUi() {
@@ -88,12 +97,14 @@ constructor(
                 option_delivery_background.background = ResourcesCompat.getDrawable(resources,R.drawable.selected_order_option,null)
                 option_self_pickup_background.background = ResourcesCompat.getDrawable(resources,R.drawable.default_order_option,null)
                 displayPickupDescription(false)
+                displayDeliveryAddress(true)
                 displayConfirmOrder()
             }
             OrderType.SELFPICKUP ->{
                 option_self_pickup_background.background = ResourcesCompat.getDrawable(resources,R.drawable.selected_order_option,null)
                 option_delivery_background.background = ResourcesCompat.getDrawable(resources,R.drawable.default_order_option,null)
                 displayPickupDescription(true)
+                displayDeliveryAddress(false)
                 displayConfirmOrder()
             }
             else ->{
@@ -192,6 +203,14 @@ constructor(
         }
     }
 
+    private fun displayDeliveryAddress(boolean: Boolean){
+        if (boolean){
+            delivery_address.visibility=View.VISIBLE
+        }else{
+            delivery_address.visibility=View.GONE
+        }
+    }
+
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             stateChangeListener.onDataStateChange(dataState)
@@ -217,9 +236,20 @@ constructor(
                                     it.getContentIfNotHandled()?.let{
                                         it.orderFields.total?.let {
                                             viewModel.setTotalBill(it)
+                                            getUserAddresses()
                                         }
                                     }
 
+                                }
+                            }
+
+                            SuccessHandling.DONE_USER_ADDRESSES ->{
+                                data.data?.let{
+                                    it.getContentIfNotHandled()?.let{
+                                        it.orderFields.addressList?.let {
+                                            viewModel.setAddressList(it)
+                                        }
+                                    }
                                 }
                             }
 
@@ -238,11 +268,74 @@ constructor(
                 viewModel.getTotalBill()?.let { bill->
                     setTotalToPay(bill.total!!)
                 }
+
+
+                viewModel.getAddressList().apply {
+                    handelDeliveryAddressList(this)
+                }
+
             })
 
         })
     }
 
+    private fun handelDeliveryAddressList(list: List<Address>){
+        if(list.isEmpty()){
+            displayChangeDeliveryAddress(false)
+            displayAddDeliveryAddress(true)
+        }else{
+            setDeliveryAddressUi(viewModel.getDeliveryAddress())
+            displayChangeDeliveryAddress(true)
+            displayAddDeliveryAddress(false)
+        }
+    }
+
+    private fun pickAddressListener(){
+        change_delivery_address.setOnClickListener {
+            navPickAddress()
+        }
+
+        add_delivery_address.setOnClickListener {
+            navAddAddress()
+        }
+    }
+
+    private fun navAddAddress() {
+        findNavController().navigate(R.id.action_placeOrderFragment_to_addAddressFragment)
+    }
+
+    fun navPickAddress(){
+        findNavController().navigate(R.id.action_placeOrderFragment_to_pickAddressFragment)
+    }
+
+    private fun displayChangeDeliveryAddress(boolean: Boolean){
+        if (boolean){
+            change_delivery_address.visibility=View.VISIBLE
+        }else{
+            change_delivery_address.visibility=View.GONE
+        }
+    }
+
+    private fun displayAddDeliveryAddress(boolean: Boolean){
+        if (boolean){
+            add_delivery_address.visibility=View.VISIBLE
+        }else{
+            add_delivery_address.visibility=View.GONE
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setDeliveryAddressUi(address: Address?){
+        address?.let {
+            address_.text="${it.city}, ${it.street}, ${it.houseNumber.toString()}, ${it.zipCode.toString()}"
+        }
+    }
+
+    private fun getUserAddresses(){
+        viewModel.setStateEvent(
+            CartStateEvent.GetUserAddresses()
+        )
+    }
 
     private fun getStorePolicy() {
         viewModel.getSelectedCartProduct()?.let {
@@ -260,6 +353,7 @@ constructor(
             option_delivery_background.background = ResourcesCompat.getDrawable(resources,R.drawable.selected_order_option,null)
             option_self_pickup_background.background = ResourcesCompat.getDrawable(resources,R.drawable.default_order_option,null)
             displayPickupDescription(false)
+            displayDeliveryAddress(true)
             getTotalToPay(OrderType.DELIVERY)
             displayConfirmOrder()
         }
@@ -269,6 +363,7 @@ constructor(
             option_self_pickup_background.background = ResourcesCompat.getDrawable(resources,R.drawable.selected_order_option,null)
             option_delivery_background.background = ResourcesCompat.getDrawable(resources,R.drawable.default_order_option,null)
             displayPickupDescription(true)
+            displayDeliveryAddress(false)
             getTotalToPay(OrderType.SELFPICKUP)
             displayConfirmOrder()
         }
@@ -302,6 +397,7 @@ constructor(
         }
 
     }
+
 
     override fun onDestroy() {
         super.onDestroy()

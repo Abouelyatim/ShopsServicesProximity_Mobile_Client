@@ -1,5 +1,6 @@
 package com.smartcity.client.ui.main.cart.viewmodel
 
+import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
 import com.smartcity.client.models.OrderType
 import com.smartcity.client.models.product.Cart
@@ -45,5 +46,20 @@ fun CartViewModel.setOrderType(orderType: OrderType){
 fun CartViewModel.clearOrderFields(){
     val update = getCurrentViewStateOrNew()
     update.orderFields= CartViewState.OrderFields()
+    setViewState(update)
+}
+
+fun CartViewModel.setAddressList(addresses:List<Address>){
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.addressList=addresses
+    if(addresses.isNotEmpty()){
+        update.orderFields.deliveryAddress=addresses.first()
+    }
+    setViewState(update)
+}
+
+fun CartViewModel.setDeliveryAddress(address: Address){
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.deliveryAddress=address
     setViewState(update)
 }

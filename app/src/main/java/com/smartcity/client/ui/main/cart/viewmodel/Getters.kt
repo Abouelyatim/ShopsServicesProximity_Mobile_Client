@@ -1,5 +1,6 @@
 package com.smartcity.client.ui.main.cart.viewmodel
 
+import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
 import com.smartcity.client.models.OrderType
 import com.smartcity.client.models.product.Cart
@@ -31,5 +32,17 @@ fun CartViewModel.getTotalBill(): Bill? {
 fun CartViewModel.getOrderType(): OrderType? {
     getCurrentViewStateOrNew().let {
         return it.orderFields.orderType
+    }
+}
+
+fun CartViewModel.getAddressList(): List<Address> {
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.addressList
+    }
+}
+
+fun CartViewModel.getDeliveryAddress(): Address? {
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.deliveryAddress
     }
 }

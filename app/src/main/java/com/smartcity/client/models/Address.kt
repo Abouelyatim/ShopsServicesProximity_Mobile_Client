@@ -35,7 +35,7 @@ data class Address(
     override fun toString(): String {
         return "Address(id=$id," +
                 "houseNumber=$houseNumber," +
-                "street=$street" +
+                "street=$street," +
                 "city=$city," +
                 "zipCode=$zipCode," +
                 "userId=$userId)"

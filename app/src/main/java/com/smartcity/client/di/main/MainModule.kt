@@ -57,7 +57,7 @@ object MainModule {
     @JvmStatic
     @MainScope
     @Provides
-    fun provideCreateBlogRepository(
+    fun provideCartRepository(
         openApiMainService: OpenApiMainService,
         blogPostDao: BlogPostDao,
         sessionManager: SessionManager

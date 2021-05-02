@@ -1,9 +1,8 @@
-package com.smartcity.client.ui.main.cart
+package com.smartcity.client.ui.main.cart.cart
 
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -23,6 +22,7 @@ import com.smartcity.client.models.product.CartProductVariant
 import com.smartcity.client.ui.AreYouSureCallback
 import com.smartcity.client.ui.UIMessage
 import com.smartcity.client.ui.UIMessageType
+import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartViewState

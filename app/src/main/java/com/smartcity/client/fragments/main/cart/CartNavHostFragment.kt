@@ -1,4 +1,4 @@
-package com.smartcity.client.fragments.main.custom_category
+package com.smartcity.client.fragments.main.cart
 
 import android.content.Context
 import android.os.Bundle
@@ -6,11 +6,11 @@ import androidx.annotation.NavigationRes
 import androidx.navigation.fragment.NavHostFragment
 import com.smartcity.client.ui.main.MainActivity
 
-class CustomCategoryNavHostFragment : NavHostFragment(){
+class CartNavHostFragment : NavHostFragment(){
 
     override fun onAttach(context: Context) {
         childFragmentManager.fragmentFactory =
-            (activity as MainActivity).createBlogFragmentFactory
+            (activity as MainActivity).cartFragmentFactory
         super.onAttach(context)
     }
 
@@ -21,14 +21,14 @@ class CustomCategoryNavHostFragment : NavHostFragment(){
         @JvmStatic
         fun create(
             @NavigationRes graphId: Int = 0
-        ): CustomCategoryNavHostFragment {
+        ): CartNavHostFragment {
             var bundle: Bundle? = null
             if(graphId != 0){
                 bundle = Bundle()
                 bundle.putInt(KEY_GRAPH_ID, graphId)
             }
             val result =
-                CustomCategoryNavHostFragment()
+                CartNavHostFragment()
             if(bundle != null){
                 result.arguments = bundle
             }

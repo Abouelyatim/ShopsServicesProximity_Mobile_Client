@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.cart
+package com.smartcity.client.ui.main.cart.address
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater

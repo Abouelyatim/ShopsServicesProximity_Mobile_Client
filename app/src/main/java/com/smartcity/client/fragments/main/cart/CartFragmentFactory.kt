@@ -1,4 +1,4 @@
-package com.smartcity.client.fragments.main.custom_category
+package com.smartcity.client.fragments.main.cart
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
@@ -6,16 +6,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.ui.main.cart.AddAddressFragment
+import com.smartcity.client.ui.main.cart.address.AddAddressFragment
 
-import com.smartcity.client.ui.main.cart.CartFragment
-import com.smartcity.client.ui.main.cart.PickAddressFragment
-import com.smartcity.client.ui.main.cart.PlaceOrderFragment
+import com.smartcity.client.ui.main.cart.cart.CartFragment
+import com.smartcity.client.ui.main.cart.address.PickAddressFragment
+import com.smartcity.client.ui.main.cart.order.PlaceOrderFragment
 
 import javax.inject.Inject
 
 @MainScope
-class CustomCategoryFragmentFactory
+class CartFragmentFactory
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,

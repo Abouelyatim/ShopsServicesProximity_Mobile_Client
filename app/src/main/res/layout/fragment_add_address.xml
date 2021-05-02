@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         android:background="@color/new_default_background_color"
         android:orientation="vertical"
-        tools:context=".ui.main.cart.AddAddressFragment">
+        tools:context=".ui.main.cart.address.AddAddressFragment">
 
 
     <LinearLayout

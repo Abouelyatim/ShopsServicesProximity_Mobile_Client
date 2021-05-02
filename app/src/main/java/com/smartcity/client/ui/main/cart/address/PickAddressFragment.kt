@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.cart
+package com.smartcity.client.ui.main.cart.address
 
 import android.os.Bundle
 import android.view.View
@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.Address
+import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.ui.main.cart.viewmodel.CartViewModel
 import com.smartcity.client.ui.main.cart.viewmodel.getAddressList
 import com.smartcity.client.ui.main.cart.viewmodel.setDeliveryAddress
 import com.smartcity.client.util.TopSpacingItemDecoration
-import kotlinx.android.synthetic.main.fragment_address.*
 import kotlinx.android.synthetic.main.fragment_pick_address.*
 import kotlinx.android.synthetic.main.fragment_pick_address.add_address_button
 import kotlinx.android.synthetic.main.fragment_pick_address.empty_list

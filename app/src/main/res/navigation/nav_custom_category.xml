@@ -7,7 +7,7 @@
         app:startDestination="@id/customCategoryFragment">
 
     <fragment android:id="@+id/customCategoryFragment"
-            android:name="com.smartcity.client.ui.main.cart.CartFragment"
+            android:name="com.smartcity.client.ui.main.cart.cart.CartFragment"
             android:label="@string/fragment_create_blog"
             tools:layout="@layout/fragment_cart">
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
             android:id="@+id/placeOrderFragment"
-            android:name="com.smartcity.client.ui.main.cart.PlaceOrderFragment"
+            android:name="com.smartcity.client.ui.main.cart.order.PlaceOrderFragment"
             android:label="fragment_place_order"
             tools:layout="@layout/fragment_place_order" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
             android:id="@+id/pickAddressFragment"
-            android:name="com.smartcity.client.ui.main.cart.PickAddressFragment"
+            android:name="com.smartcity.client.ui.main.cart.address.PickAddressFragment"
             android:label="fragment_pick_address"
             tools:layout="@layout/fragment_pick_address" >
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
             android:id="@+id/addAddressFragment"
-            android:name="com.smartcity.client.ui.main.cart.AddAddressFragment"
+            android:name="com.smartcity.client.ui.main.cart.address.AddAddressFragment"
             android:label="fragment_add_address"
             tools:layout="@layout/fragment_add_address" />
 </navigation>

@@ -45,8 +45,8 @@ class MainActivity : BaseActivity(),
     lateinit var blogFragmentFactory: FragmentFactory
 
     @Inject
-    @Named("CreateBlogFragmentFactory")
-    lateinit var createBlogFragmentFactory: FragmentFactory
+    @Named("CartFragmentFactory")
+    lateinit var cartFragmentFactory: FragmentFactory
 
 
     private lateinit var bottomNavigationView: BottomNavigationView

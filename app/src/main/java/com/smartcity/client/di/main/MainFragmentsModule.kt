@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.fragments.main.account.AccountFragmentFactory
 import com.smartcity.client.fragments.main.blog.BlogFragmentFactory
-import com.smartcity.client.fragments.main.custom_category.CustomCategoryFragmentFactory
+import com.smartcity.client.fragments.main.cart.CartFragmentFactory
 
 
 import dagger.Module
@@ -45,12 +45,12 @@ object MainFragmentsModule {
     @JvmStatic
     @MainScope
     @Provides
-    @Named("CreateBlogFragmentFactory")
-    fun provideCreateBlogFragmentFactory(
+    @Named("CartFragmentFactory")
+    fun provideCartFragmentFactory(
         viewModelFactory: ViewModelProvider.Factory,
         requestManager: RequestManager
     ): FragmentFactory {
-        return CustomCategoryFragmentFactory(
+        return CartFragmentFactory(
             viewModelFactory,
             requestManager
         )

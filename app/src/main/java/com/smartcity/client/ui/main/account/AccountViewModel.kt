@@ -52,6 +52,24 @@ constructor(
                 )
             }
 
+            is SetUserInformation ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    stateEvent.userInformation.userId=authToken.account_pk!!.toLong()
+                    accountRepository.attemptSetUserInformation(
+                        stateEvent.userInformation
+                    )
+
+                }?: AbsentLiveData.create()
+            }
+
+            is GetUserInformation ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    accountRepository.attemptGetUserInformation(
+                        authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
             is None ->{
                 return liveData {
                     emit(

@@ -63,9 +63,17 @@ constructor(
         addresses_settings.setOnClickListener {
             navAddress()
         }
+
+        information_settings.setOnClickListener {
+            navInformation()
+        }
     }
 
     private fun navAddress(){
         findNavController().navigate(R.id.action_accountFragment_to_addressFragment)
+    }
+
+    private fun navInformation(){
+        findNavController().navigate(R.id.action_accountFragment_to_informationFragment)
     }
 }

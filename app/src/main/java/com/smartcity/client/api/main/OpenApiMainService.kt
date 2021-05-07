@@ -8,6 +8,7 @@ import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
+import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.util.GenericApiResponse
 import com.smartcity.provider.models.Policy
@@ -80,6 +81,16 @@ interface OpenApiMainService {
     fun deleteUserAddress(
         @Path(value = "id") id: Long
     ):LiveData<GenericApiResponse<GenericResponse>>
+
+    @POST("user/Information")
+    fun setUserInformation(
+        @Body userInformation: UserInformation
+    ): LiveData<GenericApiResponse<GenericResponse>>
+
+    @GET("user/Information/{id}")
+    fun getUserInformation(
+        @Path(value = "id") id:Long
+    ): LiveData<GenericApiResponse<UserInformation>>
 }
 
 

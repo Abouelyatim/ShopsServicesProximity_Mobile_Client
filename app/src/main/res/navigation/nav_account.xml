@@ -13,6 +13,9 @@
         <action
                 android:id="@+id/action_accountFragment_to_addressFragment"
                 app:destination="@id/addressFragment" />
+        <action
+                android:id="@+id/action_accountFragment_to_informationFragment"
+                app:destination="@id/informationFragment" />
     </fragment>
     <fragment
             android:id="@+id/addressFragment"
@@ -28,6 +31,11 @@
             android:name="com.smartcity.client.ui.main.account.address.AddressFormFragment"
             android:label="fragment_address_form"
             tools:layout="@layout/fragment_address_form" />
+    <fragment
+            android:id="@+id/informationFragment"
+            android:name="com.smartcity.client.ui.main.account.information.InformationFragment"
+            android:label="fragment_information"
+            tools:layout="@layout/fragment_information" />
 
 
 </navigation>

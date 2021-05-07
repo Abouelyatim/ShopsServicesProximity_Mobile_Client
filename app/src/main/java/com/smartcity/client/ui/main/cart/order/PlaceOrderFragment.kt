@@ -137,28 +137,12 @@ constructor(
         return total
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setTotal() {
-        order_product_total_price.text=getTotal().toString()+ Constants.DINAR_ALGERIAN
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun setTotalToPay(total:Double) {
-        order_product_total_to_pay_price.text=total.toString()+ Constants.DINAR_ALGERIAN
-        order_total_price_.text=total.toString()+ Constants.DINAR_ALGERIAN
-    }
 
     private fun setUpUi() {
         viewModel.getStorePolicy()?.let {policy->
             displayDeliveryOption(policy.delivery)
             pickupDescriptionText(policy.selfPickUpOption)
             pickupDescriptionTime(policy.validDuration)
-        }
-    }
-
-    private fun pickupDescriptionTime(time:Long){
-        time?.let {
-            pickup_description_time.text=it.toString()
         }
     }
 
@@ -325,12 +309,7 @@ constructor(
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setDeliveryAddressUi(address: Address?){
-        address?.let {
-            address_.text="${it.city}, ${it.street}, ${it.houseNumber.toString()}, ${it.zipCode.toString()}"
-        }
-    }
+
 
     private fun getUserAddresses(){
         viewModel.setStateEvent(
@@ -399,6 +378,29 @@ constructor(
 
     }
 
+    private fun pickupDescriptionTime(time:Long){
+        time?.let {
+            pickup_description_time.text=it.toString()
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setDeliveryAddressUi(address: Address?){
+        address?.let {
+            address_.text="${it.city}, ${it.street}, ${it.houseNumber.toString()}, ${it.zipCode.toString()}"
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setTotal() {
+        order_product_total_price.text=getTotal().toString()+ Constants.DINAR_ALGERIAN
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setTotalToPay(total:Double) {
+        order_product_total_to_pay_price.text=total.toString()+ Constants.DINAR_ALGERIAN
+        order_total_price_.text=total.toString()+ Constants.DINAR_ALGERIAN
+    }
 
     override fun onDestroy() {
         super.onDestroy()

@@ -7,6 +7,7 @@ import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
+import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.persistence.AccountPropertiesDao
 import com.smartcity.client.repository.JobManager
@@ -209,6 +210,125 @@ constructor(
             }
 
             override suspend fun updateLocalDb(cacheObject: Address?) {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptSetUserInformation(
+        userInformation: UserInformation
+    ): LiveData<DataState<AccountViewState>> {
+
+        val createUserInformationError=userInformation.isValidForCreation()
+        if(!createUserInformationError.equals(Address.CreateAddressError.none())){
+            return returnErrorResponse(createUserInformationError, ResponseType.Dialog())
+
+        }
+
+        return object :
+            NetworkBoundResource<GenericResponse, Any, AccountViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = null
+                        ,
+                        response = Response(
+                            SuccessHandling.CREATED_DONE,
+                            ResponseType.Toast()
+                        )
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+
+                return openApiMainService.setUserInformation(
+                    userInformation = userInformation
+                )
+            }
+
+            override fun loadFromCache(): LiveData<AccountViewState> {
+                return AbsentLiveData.create()
+            }
+
+
+
+            override fun setJob(job: Job) {
+                addJob("attemptSetUserInformation", job)
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptGetUserInformation(
+        id:Long
+    ): LiveData<DataState<AccountViewState>> {
+
+
+        return object :
+            NetworkBoundResource<UserInformation, Any, AccountViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<UserInformation>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = AccountViewState(
+                            userInformation=response.body
+                        )
+                        ,
+                        response = Response(
+                            SuccessHandling.DONE_USER_INFORMATION,
+                            ResponseType.None()
+                        )
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<UserInformation>> {
+
+                return openApiMainService.getUserInformation(
+                    id = id
+                )
+            }
+
+            override fun loadFromCache(): LiveData<AccountViewState> {
+                return AbsentLiveData.create()
+            }
+
+
+
+            override fun setJob(job: Job) {
+                addJob("attemptGetUserInformation", job)
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
 
             }
 

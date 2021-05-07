@@ -10,6 +10,7 @@ import com.smartcity.client.ui.main.cart.address.AddAddressFragment
 
 import com.smartcity.client.ui.main.cart.cart.CartFragment
 import com.smartcity.client.ui.main.cart.address.PickAddressFragment
+import com.smartcity.client.ui.main.cart.information.AddUserInformationFragment
 import com.smartcity.client.ui.main.cart.order.PlaceOrderFragment
 
 import javax.inject.Inject
@@ -49,6 +50,13 @@ constructor(
 
             AddAddressFragment::class.java.name -> {
                 AddAddressFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+            AddUserInformationFragment::class.java.name -> {
+                AddUserInformationFragment(
                     viewModelFactory,
                     requestManager
                 )

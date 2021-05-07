@@ -25,6 +25,9 @@
         <action
                 android:id="@+id/action_placeOrderFragment_to_addAddressFragment"
                 app:destination="@id/addAddressFragment" />
+        <action
+                android:id="@+id/action_placeOrderFragment_to_addUserInformationFragment"
+                app:destination="@id/addUserInformationFragment" />
     </fragment>
     <fragment
             android:id="@+id/pickAddressFragment"
@@ -40,4 +43,9 @@
             android:name="com.smartcity.client.ui.main.cart.address.AddAddressFragment"
             android:label="fragment_add_address"
             tools:layout="@layout/fragment_add_address" />
+    <fragment
+            android:id="@+id/addUserInformationFragment"
+            android:name="com.smartcity.client.ui.main.cart.information.AddUserInformationFragment"
+            android:label="fragment_add_user_information"
+            tools:layout="@layout/fragment_add_user_information" />
 </navigation>

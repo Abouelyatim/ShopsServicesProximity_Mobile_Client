@@ -36,5 +36,8 @@ sealed class CartStateEvent {
         var address: Address
     ):CartStateEvent()
 
+    class GetUserInformation(
+    ):CartStateEvent()
+
     class None: CartStateEvent()
 }

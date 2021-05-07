@@ -3,6 +3,7 @@ package com.smartcity.client.ui.main.cart.viewmodel
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
 import com.smartcity.client.models.OrderType
+import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.provider.models.Policy
@@ -61,5 +62,11 @@ fun CartViewModel.setAddressList(addresses:List<Address>){
 fun CartViewModel.setDeliveryAddress(address: Address){
     val update = getCurrentViewStateOrNew()
     update.orderFields.deliveryAddress=address
+    setViewState(update)
+}
+
+fun CartViewModel.setUserInformation(userInformation: UserInformation){
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.userInformation=userInformation
     setViewState(update)
 }

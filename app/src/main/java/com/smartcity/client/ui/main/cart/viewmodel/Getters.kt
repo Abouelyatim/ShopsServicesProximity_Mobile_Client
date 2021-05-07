@@ -3,6 +3,7 @@ package com.smartcity.client.ui.main.cart.viewmodel
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
 import com.smartcity.client.models.OrderType
+import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.provider.models.Policy
 
@@ -44,5 +45,11 @@ fun CartViewModel.getAddressList(): List<Address> {
 fun CartViewModel.getDeliveryAddress(): Address? {
     getCurrentViewStateOrNew().let {
         return it.orderFields.deliveryAddress
+    }
+}
+
+fun CartViewModel.getUserInformation(): UserInformation? {
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.userInformation
     }
 }

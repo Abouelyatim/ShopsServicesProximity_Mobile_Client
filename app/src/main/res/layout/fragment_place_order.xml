@@ -201,7 +201,7 @@
 
                     >
                 <ImageView
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="3dp"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_baseline_attach_money_24"/>
@@ -228,7 +228,7 @@
 
                     >
                 <ImageView
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginEnd="3dp"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_baseline_access_time_24"/>
@@ -266,9 +266,97 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
 
 
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/user_information_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            >
+
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@color/default_background_color"
+                />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RECEIVER INFORMATION"
+                    android:textSize="14sp"
+                    android:padding="5dp"
+                    android:textColor="@color/dark"
+                    android:textStyle="bold"
+                    />
+
+            <LinearLayout
+                    android:layout_marginBottom="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+                <ImageView
+                        android:layout_marginEnd="3dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_outline_account_circle_24"/>
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_weight="1">
+
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="*Only this person receives the order"
+                            android:textColor="@color/red0"
+                            android:textSize="12sp"
+                            android:gravity="start"
+                            />
+
+                    <TextView
+                            android:id="@+id/user_information"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="XXX"
+                            android:textColor="#000"
+                            android:textSize="17sp"
+                            android:gravity="start"
+                            />
+
+
+
+                    <TextView
+                            android:id="@+id/change_user_information"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Change order receiver"
+                            android:textStyle="bold"
+                            android:textSize="16sp"
+                            android:textColor="@color/bleu"
+                            android:layout_marginTop="3dp"
+                            />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 
     <View

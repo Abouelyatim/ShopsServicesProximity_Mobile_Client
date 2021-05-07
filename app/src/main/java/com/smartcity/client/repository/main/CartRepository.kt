@@ -8,6 +8,7 @@ import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
+import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.persistence.BlogPostDao
 import com.smartcity.client.repository.JobManager
@@ -518,6 +519,66 @@ constructor(
 
             override fun setJob(job: Job) {
                 addJob("attemptCreateAddress", job)
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptGetUserInformation(
+        id:Long
+    ): LiveData<DataState<CartViewState>> {
+
+
+        return object :
+            NetworkBoundResource<UserInformation, Any, CartViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<UserInformation>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = CartViewState(
+                            orderFields = OrderFields(
+                                userInformation = response.body
+                            )
+                        )
+                        ,
+                        response = Response(
+                            SuccessHandling.DONE_USER_INFORMATION,
+                            ResponseType.None()
+                        )
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<UserInformation>> {
+
+                return openApiMainService.getUserInformation(
+                    id = id
+                )
+            }
+
+            override fun loadFromCache(): LiveData<CartViewState> {
+                return AbsentLiveData.create()
+            }
+
+
+
+            override fun setJob(job: Job) {
+                addJob("attemptGetUserInformation", job)
             }
 
             override suspend fun updateLocalDb(cacheObject: Any?) {

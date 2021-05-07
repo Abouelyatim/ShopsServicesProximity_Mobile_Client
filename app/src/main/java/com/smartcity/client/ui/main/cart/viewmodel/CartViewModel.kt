@@ -9,6 +9,7 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Loading
+import com.smartcity.client.ui.main.account.state.AccountStateEvent
 
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartStateEvent.*
@@ -89,6 +90,14 @@ constructor(
                     stateEvent.address.userId=authToken.account_pk!!.toLong()
                     cartRepository.attemptCreateAddress(
                         stateEvent.address
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is GetUserInformation ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    cartRepository.attemptGetUserInformation(
+                        authToken.account_pk!!.toLong()
                     )
                 }?: AbsentLiveData.create()
             }

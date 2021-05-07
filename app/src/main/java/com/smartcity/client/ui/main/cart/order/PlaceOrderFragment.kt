@@ -17,6 +17,8 @@ import com.smartcity.client.R
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
 import com.smartcity.client.models.OrderType
+import com.smartcity.client.models.UserInformation
+import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
@@ -85,7 +87,8 @@ constructor(
         setTotal()
         restoreUi()
         pickAddressListener()
-        setDeliveryAddressUi(viewModel.getDeliveryAddress())
+        addUserInformationListener()
+
 
         place_order_button.setOnClickListener {
             Log.d("ii",viewModel.getAddressList().toString())
@@ -93,12 +96,14 @@ constructor(
     }
 
     private fun restoreUi() {
+        setDeliveryAddressUi(viewModel.getDeliveryAddress())
         when(viewModel.getOrderType()){
             OrderType.DELIVERY ->{
                 option_delivery_background.background = ResourcesCompat.getDrawable(resources,R.drawable.selected_order_option,null)
                 option_self_pickup_background.background = ResourcesCompat.getDrawable(resources,R.drawable.default_order_option,null)
                 displayPickupDescription(false)
                 displayDeliveryAddress(true)
+                displayUserInformation(true)
                 displayConfirmOrder()
             }
             OrderType.SELFPICKUP ->{
@@ -106,27 +111,13 @@ constructor(
                 option_delivery_background.background = ResourcesCompat.getDrawable(resources,R.drawable.default_order_option,null)
                 displayPickupDescription(true)
                 displayDeliveryAddress(false)
+                displayUserInformation(true)
                 displayConfirmOrder()
             }
             else ->{
 
             }
         }
-    }
-
-    private fun getTotalToPay(orderType: OrderType) {
-        viewModel.getStorePolicy()?.let {policy->
-            viewModel.setStateEvent(
-                CartStateEvent.GetTotalBill(
-                    Bill(
-                        policy.id,
-                        getTotal(),
-                        orderType
-                    )
-                )
-            )
-        }
-
     }
 
     private fun getTotal():Double {
@@ -233,6 +224,19 @@ constructor(
                                     it.getContentIfNotHandled()?.let{
                                         it.orderFields.addressList?.let {
                                             viewModel.setAddressList(it)
+                                            getUserInformation()
+                                        }
+                                    }
+                                }
+                            }
+
+                            SuccessHandling.DONE_USER_INFORMATION ->{
+                                data.data?.let{
+                                    it.getContentIfNotHandled()?.let{
+                                        it.orderFields.userInformation?.let {
+                                            if(viewModel.getUserInformation()==null){
+                                                viewModel.setUserInformation(it)
+                                            }
                                         }
                                     }
                                 }
@@ -259,6 +263,9 @@ constructor(
                     handelDeliveryAddressList(this)
                 }
 
+                viewModel.getUserInformation()?.let {
+                    setUserInformation(it)
+                }
             })
 
         })
@@ -285,12 +292,22 @@ constructor(
         }
     }
 
+    private fun addUserInformationListener(){
+        change_user_information.setOnClickListener {
+            navUserInformation()
+        }
+    }
+
     private fun navAddAddress() {
         findNavController().navigate(R.id.action_placeOrderFragment_to_addAddressFragment)
     }
 
-    fun navPickAddress(){
+    private fun navPickAddress(){
         findNavController().navigate(R.id.action_placeOrderFragment_to_pickAddressFragment)
+    }
+
+    private fun navUserInformation(){
+        findNavController().navigate(R.id.action_placeOrderFragment_to_addUserInformationFragment)
     }
 
     private fun displayChangeDeliveryAddress(boolean: Boolean){
@@ -309,21 +326,11 @@ constructor(
         }
     }
 
-
-
-    private fun getUserAddresses(){
-        viewModel.setStateEvent(
-            CartStateEvent.GetUserAddresses()
-        )
-    }
-
-    private fun getStorePolicy() {
-        viewModel.getSelectedCartProduct()?.let {
-            viewModel.setStateEvent(
-                CartStateEvent.GetStorePolicy(
-                    it.storeId
-                )
-            )
+    private fun displayUserInformation(boolean: Boolean){
+        if (boolean){
+            user_information_container.visibility=View.VISIBLE
+        }else{
+            user_information_container.visibility=View.GONE
         }
     }
 
@@ -334,6 +341,7 @@ constructor(
             option_self_pickup_background.background = ResourcesCompat.getDrawable(resources,R.drawable.default_order_option,null)
             displayPickupDescription(false)
             displayDeliveryAddress(true)
+            displayUserInformation(true)
             getTotalToPay(OrderType.DELIVERY)
             displayConfirmOrder()
         }
@@ -344,6 +352,7 @@ constructor(
             option_delivery_background.background = ResourcesCompat.getDrawable(resources,R.drawable.default_order_option,null)
             displayPickupDescription(true)
             displayDeliveryAddress(false)
+            displayUserInformation(true)
             getTotalToPay(OrderType.SELFPICKUP)
             displayConfirmOrder()
         }
@@ -402,8 +411,50 @@ constructor(
         order_total_price_.text=total.toString()+ Constants.DINAR_ALGERIAN
     }
 
+    @SuppressLint("SetTextI18n")
+    private fun setUserInformation(userInformation: UserInformation) {
+        user_information.text="${userInformation.firstName} ${userInformation.lastName} born in ${userInformation.birthDay}"
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         stateChangeListener.displayBottomNavigation(true)
+    }
+    
+    private fun getTotalToPay(orderType: OrderType) {
+        viewModel.getStorePolicy()?.let {policy->
+            viewModel.setStateEvent(
+                CartStateEvent.GetTotalBill(
+                    Bill(
+                        policy.id,
+                        getTotal(),
+                        orderType
+                    )
+                )
+            )
+        }
+
+    }
+
+    private fun getUserAddresses(){
+        viewModel.setStateEvent(
+            CartStateEvent.GetUserAddresses()
+        )
+    }
+
+    private fun getStorePolicy() {
+        viewModel.getSelectedCartProduct()?.let {
+            viewModel.setStateEvent(
+                CartStateEvent.GetStorePolicy(
+                    it.storeId
+                )
+            )
+        }
+    }
+
+    private fun getUserInformation(){
+        viewModel.setStateEvent(
+            CartStateEvent.GetUserInformation()
+        )
     }
 }

@@ -8,6 +8,7 @@ import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
+import com.smartcity.client.models.Order
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.persistence.BlogPostDao
@@ -66,7 +67,10 @@ constructor(
                                 cartList = response.body
                             )
                         ),
-                        response = null
+                        response = Response(
+                            SuccessHandling.DONE_USER_CART,
+                            ResponseType.None()
+                        )
                     )
                 )
             }
@@ -235,12 +239,13 @@ constructor(
 
 
     fun attemptPlaceOrder(
-        userId: Long,
-        cart:Cart?
+        order: Order
     ): LiveData<DataState<CartViewState>> {
 
-        if(cart==null || cart.cartProductVariants.isEmpty()) {
-            return returnErrorResponse(ERROR_EMPTY_CART, ResponseType.Dialog())
+        val createOrderError=order.isValidForCreation()
+        if(!createOrderError.equals(Address.CreateAddressError.none())){
+            return returnErrorResponse(createOrderError, ResponseType.Dialog())
+
         }
         return object :
             NetworkBoundResource<GenericResponse, Any, CartViewState>(
@@ -284,7 +289,7 @@ constructor(
             override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
 
                 return openApiMainService.placeOrder(
-                    userId
+                    order
                 )
             }
 

@@ -14,10 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.Bill
-import com.smartcity.client.models.OrderType
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
@@ -91,8 +88,25 @@ constructor(
 
 
         place_order_button.setOnClickListener {
-            Log.d("ii",viewModel.getAddressList().toString())
+            placeOrder()
         }
+    }
+
+    private fun placeOrder(){
+        viewModel.setStateEvent(
+            CartStateEvent.PlaceOrderEvent(
+                Order(
+                    -1,
+                    viewModel.getSelectedCartProduct()!!.storeId,
+                    viewModel.getOrderType()!!,
+                    viewModel.getDeliveryAddress(),
+                    viewModel.getSelectedCartProduct()!!.cartProductVariants.map { it.id },
+                    viewModel.getUserInformation()!!.firstName,
+                    viewModel.getUserInformation()!!.lastName,
+                    viewModel.getUserInformation()!!.birthDay
+                )
+            )
+        )
     }
 
     private fun restoreUi() {
@@ -242,6 +256,22 @@ constructor(
                                 }
                             }
 
+                            SuccessHandling.DONE_PLACE_ORDER ->{
+                                getUserCart()
+                            }
+
+                            SuccessHandling.DONE_USER_CART ->{
+                                //set cart list get it from network
+                                data.data?.let{
+                                    it.getContentIfNotHandled()?.let{
+                                        it.cartFields.cartList?.let {
+                                            viewModel.setCartList(it)
+                                        }
+                                    }
+                                    findNavController().popBackStack()
+                                }
+                            }
+
                             else ->{
 
                             }
@@ -250,6 +280,7 @@ constructor(
                     }
                 }
             }
+
 
 
             setUpUi()
@@ -269,6 +300,12 @@ constructor(
             })
 
         })
+    }
+
+    private fun getUserCart() {
+        viewModel.setStateEvent(
+            CartStateEvent.GetUserCart()
+        )
     }
 
     private fun handelDeliveryAddressList(list: List<Address>){
@@ -420,7 +457,7 @@ constructor(
         super.onDestroy()
         stateChangeListener.displayBottomNavigation(true)
     }
-    
+
     private fun getTotalToPay(orderType: OrderType) {
         viewModel.getStorePolicy()?.let {policy->
             viewModel.setStateEvent(

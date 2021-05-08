@@ -18,6 +18,7 @@ class SuccessHandling {
         const val DONE_UPDATE_CART_QUANTITY="Done"
         const val DONE_PLACE_ORDER="Done"
         const val DELETE_DONE = "deleted."
+        const val DONE_USER_CART = "Done userCart."
         const val CUSTOM_CATEGORY_UPDATE_DONE = "Done update"
 
         const val PRODUCT_CREATION_DONE = "Done cration"

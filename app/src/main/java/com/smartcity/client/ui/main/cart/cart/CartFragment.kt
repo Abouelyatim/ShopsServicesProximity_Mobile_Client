@@ -30,7 +30,9 @@ import com.smartcity.client.ui.main.cart.viewmodel.*
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
+import kotlinx.android.synthetic.main.fragment_address.*
 import kotlinx.android.synthetic.main.fragment_cart.*
+import kotlinx.android.synthetic.main.fragment_cart.empty_list
 import javax.inject.Inject
 
 class CartFragment
@@ -138,18 +140,16 @@ constructor(
                         if(response.message.equals(SuccessHandling.DONE_UPDATE_CART_QUANTITY)){
                             getUserCart()
                         }
-                        if(response.message.equals(SuccessHandling.DONE_PLACE_ORDER)){
-                            getUserCart()
-                        }
                     }
                 }
             }
-            //set Custom Category list get it from network
+            //set cart list get it from network
             dataState.data?.let { data ->
                 data.data?.let{
                     it.getContentIfNotHandled()?.let{
                         it.cartFields.cartList?.let {
                             viewModel.setCartList(it)
+                            setEmptyListUi(it.cartProductVariants.isEmpty())
                         }
                     }
 
@@ -259,7 +259,7 @@ constructor(
 
         val confirmButton=dialogView.findViewById<Button>(R.id.confirm_order_button)
         confirmButton.setOnClickListener {
-            placeOrder()
+            //placeOrder()
             dialog.dismiss()
         }
 
@@ -279,13 +279,14 @@ constructor(
         findNavController().navigate(R.id.action_customCategoryFragment_to_placeOrderFragment)
     }
 
-    private fun placeOrder(){
-        viewModel.setStateEvent(
-            CartStateEvent.PlaceOrderEvent(
-                viewModel.getCartList()
-            )
-        )
+    private fun setEmptyListUi(empty:Boolean){
+        if(empty){
+            empty_list.visibility=View.VISIBLE
+        }else{
+            empty_list.visibility=View.GONE
+        }
     }
+
 }
 
 

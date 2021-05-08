@@ -58,9 +58,9 @@ constructor(
 
             is PlaceOrderEvent ->{
                 return sessionManager.cachedToken.value?.let { authToken ->
+                    stateEvent.order.userId=authToken.account_pk!!.toLong()
                     cartRepository.attemptPlaceOrder(
-                        authToken.account_pk!!.toLong(),
-                        stateEvent.cart
+                        stateEvent.order
                     )
                 }?: AbsentLiveData.create()
             }

@@ -2,6 +2,7 @@ package com.smartcity.client.ui.main.cart.state
 
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
+import com.smartcity.client.models.Order
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 
@@ -19,7 +20,7 @@ sealed class CartStateEvent {
     ): CartStateEvent()
 
     class PlaceOrderEvent(
-        val cart:Cart?
+        val order: Order
     ): CartStateEvent()
 
     class GetStorePolicy(

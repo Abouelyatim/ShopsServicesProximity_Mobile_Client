@@ -8,6 +8,7 @@ import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Bill
+import com.smartcity.client.models.Order
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.util.GenericApiResponse
@@ -52,9 +53,9 @@ interface OpenApiMainService {
         @Query("variantId") variantId: Long
     ):LiveData<GenericApiResponse<GenericResponse>>
 
-    @POST("order/create/{id}")
+    @POST("order/create")
     fun placeOrder(
-        @Path("id") userId: Long
+        @Body order: Order
     ):LiveData<GenericApiResponse<GenericResponse>>
 
     @GET("policy/store/{id}")

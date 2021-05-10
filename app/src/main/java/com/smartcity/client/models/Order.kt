@@ -8,17 +8,25 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Order(
+    @SerializedName("id")
+    @Expose
+    var id:Long?,
+
     @SerializedName("userId")
     @Expose
-    var userId:Long,
+    var userId:Long?,
 
     @SerializedName("storeId")
     @Expose
-    var storeId:Long,
+    var storeId:Long?,
+
+    @SerializedName("bill")
+    @Expose
+    var bill:Bill?,
 
     @SerializedName("orderType")
     @Expose
-    var orderType:OrderType,
+    var orderType:OrderType?,
 
     @SerializedName("address")
     @Expose
@@ -26,19 +34,39 @@ data class Order(
 
     @SerializedName("cartProductVariantIds")
     @Expose
-    var cartProductVariantIds:List<CartProductVariantId>,
+    var cartProductVariantIds:List<CartProductVariantId>?,
+
+    @SerializedName("orderProductVariants")
+    @Expose
+    var orderProductVariants: List<OrderProductVariant>?,
 
     @SerializedName("receiverFirstName")
     @Expose
-    var receiverFirstName:String,
+    var firstName:String?,
 
     @SerializedName("receiverLastName")
     @Expose
-    var receiverLastName:String,
+    var lastName:String?,
 
     @SerializedName("receiverBirthDay")
     @Expose
-    var receiverBirthDay:String
+    var birthDay:String?,
+
+    @SerializedName("createAt")
+    @Expose
+    var createAt:String?,
+
+    @SerializedName("validDuration")
+    @Expose
+    var validDuration:Long?,
+
+    @SerializedName("storeName")
+    @Expose
+    var storeName:String?,
+
+    @SerializedName("storeAddress")
+    @Expose
+    var storeAddress:String?
 ) : Parcelable {
 
     class CreateOrderError {
@@ -62,11 +90,11 @@ data class Order(
 
     fun isValidForCreation(): String{
 
-        if(receiverFirstName.isEmpty()
-            || receiverLastName.isEmpty()
-            || receiverBirthDay.isEmpty()){
+       /* if(firstName.isEmpty()
+            || lastName.isEmpty()
+            || birthDay.isEmpty()){
             return CreateOrderError.mustFillUserInformation()
-        }
+        }*/
 
         if(orderType==OrderType.DELIVERY && address==null){
             return CreateOrderError.mustFillDeliveryAddress()

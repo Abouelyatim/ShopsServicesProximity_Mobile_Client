@@ -8,6 +8,8 @@ import com.smartcity.client.ui.main.account.AccountFragment
 import com.smartcity.client.ui.main.account.address.AddressFormFragment
 import com.smartcity.client.ui.main.account.address.AddressFragment
 import com.smartcity.client.ui.main.account.information.InformationFragment
+import com.smartcity.client.ui.main.account.orders.OrdersFragment
+import com.smartcity.client.ui.main.account.orders.ViewOrderFragment
 
 
 import javax.inject.Inject
@@ -44,6 +46,18 @@ constructor(
 
             InformationFragment::class.java.name -> {
                 InformationFragment(
+                    viewModelFactory,
+                    requestManager)
+            }
+
+            OrdersFragment::class.java.name -> {
+                OrdersFragment(
+                    viewModelFactory,
+                    requestManager)
+            }
+
+            ViewOrderFragment::class.java.name -> {
+                ViewOrderFragment(
                     viewModelFactory,
                     requestManager)
             }

@@ -1,7 +1,6 @@
 package com.smartcity.client.ui.main.account.information
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
@@ -12,11 +11,11 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.smartcity.client.R
 import com.smartcity.client.models.UserInformation
-import com.smartcity.client.ui.main.account.AccountViewModel
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
+import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.client.util.DateUtils.Companion.convertLongToStringDate
 import com.smartcity.client.util.SuccessHandling
 import kotlinx.android.synthetic.main.fragment_information.*
@@ -150,4 +149,8 @@ constructor(
         materialDatePicker.show(activity!!.supportFragmentManager,"DATE_PICKER")
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.cancelActiveJobs()
+    }
 }

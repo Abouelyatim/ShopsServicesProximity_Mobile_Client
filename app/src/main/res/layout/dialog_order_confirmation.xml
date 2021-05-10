@@ -123,7 +123,7 @@
                 android:id="@+id/back_order"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/next_interest_button_height"
-                android:background="@drawable/radius_button_white"
+                android:background="@drawable/radius_shape_white"
                 android:text="Back"
                 android:textAllCaps="false"
                 android:textColor="#000"

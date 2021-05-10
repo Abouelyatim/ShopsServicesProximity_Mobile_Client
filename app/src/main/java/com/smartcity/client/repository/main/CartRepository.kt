@@ -7,7 +7,7 @@ import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
-import com.smartcity.client.models.Bill
+import com.smartcity.client.models.BillTotal
 import com.smartcity.client.models.Order
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
@@ -18,11 +18,9 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Response
 import com.smartcity.client.ui.ResponseType
-import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.ui.main.cart.state.CartViewState.*
 import com.smartcity.client.util.*
-import com.smartcity.client.util.ErrorHandling.Companion.ERROR_EMPTY_CART
 import com.smartcity.client.util.SuccessHandling.Companion.DELETE_DONE
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_STORE_POLICY
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_TOTAL_BILL
@@ -365,10 +363,10 @@ constructor(
     }
 
     fun attemptTotalBill(
-        bill: Bill
+        bill: BillTotal
     ): LiveData<DataState<CartViewState>> {
         return object :
-            NetworkBoundResource<Bill, Bill, CartViewState>(
+            NetworkBoundResource<BillTotal, BillTotal, CartViewState>(
                 sessionManager.isConnectedToTheInternet(),
                 true,
                 true,
@@ -379,7 +377,7 @@ constructor(
 
             }
 
-            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<Bill>) {
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<BillTotal>) {
                 Log.d(TAG, "handleApiSuccessResponse: ${response}")
 
                 onCompleteJob(
@@ -395,7 +393,7 @@ constructor(
             }
 
 
-            override fun createCall(): LiveData<GenericApiResponse<Bill>> {
+            override fun createCall(): LiveData<GenericApiResponse<BillTotal>> {
                 return openApiMainService.getTotalBill(
                     bill = bill
                 )
@@ -407,7 +405,7 @@ constructor(
             }
 
             // Ignore
-            override suspend fun updateLocalDb(cacheObject: Bill?) {
+            override suspend fun updateLocalDb(cacheObject: BillTotal?) {
 
             }
 

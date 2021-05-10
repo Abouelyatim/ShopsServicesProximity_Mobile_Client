@@ -41,6 +41,6 @@ class SuccessHandling {
         const val DONE_Product_Main ="Done ProductMain"
         const val DONE_All_Product ="Done AllProduct"
         const val DONE_USER_INFORMATION ="Done userInformation"
-
+        const val DONE_USER_ORDERS ="Done userOrders"
     }
 }

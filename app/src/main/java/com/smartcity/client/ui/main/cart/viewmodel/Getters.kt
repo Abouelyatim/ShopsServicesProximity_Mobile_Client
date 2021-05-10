@@ -1,7 +1,7 @@
 package com.smartcity.client.ui.main.cart.viewmodel
 
 import com.smartcity.client.models.Address
-import com.smartcity.client.models.Bill
+import com.smartcity.client.models.BillTotal
 import com.smartcity.client.models.OrderType
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
@@ -25,7 +25,7 @@ fun CartViewModel.getSelectedCartProduct(): Cart? {
     }
 }
 
-fun CartViewModel.getTotalBill(): Bill? {
+fun CartViewModel.getTotalBill(): BillTotal? {
     getCurrentViewStateOrNew().let {
         return it.orderFields.total
     }

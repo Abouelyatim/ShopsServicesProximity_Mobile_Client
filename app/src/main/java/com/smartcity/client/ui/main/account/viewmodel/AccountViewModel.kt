@@ -1,10 +1,10 @@
-package com.smartcity.client.ui.main.account
+package com.smartcity.client.ui.main.account.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
-import com.smartcity.client.models.OrderType
+import com.smartcity.client.models.Order
 import com.smartcity.client.repository.main.AccountRepository
 import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
@@ -13,7 +13,6 @@ import com.smartcity.client.ui.Loading
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountStateEvent.*
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.cart.viewmodel.CartViewModel
 import com.smartcity.client.util.AbsentLiveData
 import javax.inject.Inject
 
@@ -70,6 +69,14 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
+            is GetUserOrdersEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    accountRepository.attemptUserOrders(
+                        authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
             is None ->{
                 return liveData {
                     emit(
@@ -84,23 +91,9 @@ constructor(
         }
     }
 
-
-    fun getAddressList(): List<Address> {
-        getCurrentViewStateOrNew().let {
-            return it.addressList
-        }
-    }
-
-    fun setAddressList(addresses:List<Address>){
-        val update = getCurrentViewStateOrNew()
-        update.addressList=addresses
-        setViewState(update)
-    }
-
     override fun initNewViewState(): AccountViewState {
         return AccountViewState()
     }
-
 
     fun cancelActiveJobs(){
         accountRepository.cancelActiveJobs() // cancel active jobs

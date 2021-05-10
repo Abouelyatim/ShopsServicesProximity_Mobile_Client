@@ -1,7 +1,7 @@
 package com.smartcity.client.ui.main.cart.viewmodel
 
 import com.smartcity.client.models.Address
-import com.smartcity.client.models.Bill
+import com.smartcity.client.models.BillTotal
 import com.smartcity.client.models.OrderType
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
@@ -32,7 +32,7 @@ fun CartViewModel.setSelectedCartProduct(cart: Cart){
     setViewState(update)
 }
 
-fun CartViewModel.setTotalBill(bill: Bill){
+fun CartViewModel.setTotalBill(bill: BillTotal){
     val update = getCurrentViewStateOrNew()
     update.orderFields.total=bill
     setViewState(update)

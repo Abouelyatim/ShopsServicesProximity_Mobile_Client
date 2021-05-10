@@ -9,11 +9,12 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.Address
-import com.smartcity.client.ui.main.account.AccountViewModel
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
+import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
+import com.smartcity.client.ui.main.account.viewmodel.setAddressList
 import com.smartcity.client.util.SuccessHandling
 import kotlinx.android.synthetic.main.fragment_address_form.*
 import javax.inject.Inject

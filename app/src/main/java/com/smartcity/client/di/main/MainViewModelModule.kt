@@ -3,7 +3,7 @@ package com.smartcity.client.di.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.smartcity.client.di.auth.keys.MainViewModelKey
-import com.smartcity.client.ui.main.account.AccountViewModel
+import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
 import com.smartcity.client.ui.main.cart.viewmodel.CartViewModel
 

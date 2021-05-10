@@ -45,7 +45,6 @@ constructor(
     SwipeRefreshLayout.OnRefreshListener
 {
     private lateinit var recyclerCartAdapter: CartAdapter
-    private lateinit var dialogView: View
 
     val viewModel: CartViewModel by viewModels{
         viewModelFactory
@@ -159,6 +158,11 @@ constructor(
         })
         //submit list to recycler view
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            viewModel.getCartList()?.let {
+                setEmptyListUi(it.cartProductVariants.isEmpty())
+            }
+
+
             recyclerCartAdapter.submitList(
                 generateProductCartList(
                     viewModel.getCartList()!!.cartProductVariants.sortedByDescending  { it.productVariant.price }
@@ -241,38 +245,12 @@ constructor(
 
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun showOrderConfirmationDialog(){
-        val dialog = BottomSheetDialog(context!!,R.style.BottomSheetDialogTheme)
-        dialogView = layoutInflater.inflate(R.layout.dialog_order_confirmation, null)
-        dialog.setCancelable(true)
-        dialog.setContentView(dialogView)
 
-
-        val total=dialogView.findViewById<TextView>(R.id.order_total)
-        total.text=calculateTotalPrice().toString()+Constants.DINAR_ALGERIAN
-
-        val backButton=dialogView.findViewById<Button>(R.id.back_order)
-        backButton.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        val confirmButton=dialogView.findViewById<Button>(R.id.confirm_order_button)
-        confirmButton.setOnClickListener {
-            //placeOrder()
-            dialog.dismiss()
-        }
-
-        dialog.show()
-
-
-    }
 
     override fun placeOrder(item: Cart) {
         viewModel.clearOrderFields()
         viewModel.setSelectedCartProduct(item)
         navPlaceOrder()
-        //showOrderConfirmationDialog()
     }
 
     private fun navPlaceOrder(){

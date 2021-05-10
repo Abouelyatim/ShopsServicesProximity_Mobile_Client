@@ -2,7 +2,7 @@ package com.smartcity.client.ui.main.cart.state
 
 import android.os.Parcelable
 import com.smartcity.client.models.Address
-import com.smartcity.client.models.Bill
+import com.smartcity.client.models.BillTotal
 import com.smartcity.client.models.OrderType
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
@@ -26,7 +26,7 @@ class CartViewState(
     data class OrderFields(
         var storePolicy: Policy?=null,
         var selectedCartProduct: Cart?=null,
-        var total:Bill?=null,
+        var total:BillTotal?=null,
         var orderType: OrderType?=null,
         var addressList:List<Address> = listOf(),
         var deliveryAddress:Address? =null,

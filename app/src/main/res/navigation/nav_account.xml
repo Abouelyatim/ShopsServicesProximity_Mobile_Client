@@ -16,6 +16,9 @@
         <action
                 android:id="@+id/action_accountFragment_to_informationFragment"
                 app:destination="@id/informationFragment" />
+        <action
+                android:id="@+id/action_accountFragment_to_ordersFragment"
+                app:destination="@id/ordersFragment" />
     </fragment>
     <fragment
             android:id="@+id/addressFragment"
@@ -36,6 +39,20 @@
             android:name="com.smartcity.client.ui.main.account.information.InformationFragment"
             android:label="fragment_information"
             tools:layout="@layout/fragment_information" />
+    <fragment
+            android:id="@+id/ordersFragment"
+            android:name="com.smartcity.client.ui.main.account.orders.OrdersFragment"
+            android:label="fragment_orders"
+            tools:layout="@layout/fragment_orders" >
+        <action
+                android:id="@+id/action_ordersFragment_to_viewOrderFragment"
+                app:destination="@id/viewOrderFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/viewOrderFragment"
+            android:name="com.smartcity.client.ui.main.account.orders.ViewOrderFragment"
+            android:label="fragment_view_order"
+            tools:layout="@layout/fragment_view_order" />
 
 
 </navigation>

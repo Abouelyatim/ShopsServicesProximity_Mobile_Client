@@ -10,6 +10,7 @@ import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountViewState
+import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import kotlinx.android.synthetic.main.fragment_account.*
 import javax.inject.Inject
 
@@ -67,6 +68,14 @@ constructor(
         information_settings.setOnClickListener {
             navInformation()
         }
+
+        orders_settings.setOnClickListener {
+            navOrders()
+        }
+    }
+
+    private fun navOrders(){
+        findNavController().navigate(R.id.action_accountFragment_to_ordersFragment)
     }
 
     private fun navAddress(){

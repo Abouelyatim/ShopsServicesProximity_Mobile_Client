@@ -6,23 +6,17 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Bill (
-    @SerializedName("policyId")
-    @Expose
-    var policyId:Long?,
-
+data class Bill(
     @SerializedName("total")
     @Expose
-    var total:Double?,
+    var total:Double,
 
-    @SerializedName("orderType")
+    @SerializedName("alreadyPaid")
     @Expose
-    var orderType:OrderType?
-): Parcelable {
+    var alreadyPaid:Double,
 
-    override fun toString(): String {
-        return "Bill(policyId=$policyId," +
-                "total=$total," +
-                "orderType=$orderType)"
-    }
+    @SerializedName("createdAt")
+    @Expose
+    var createdAt:String
+) : Parcelable {
 }

@@ -30,6 +30,16 @@ class DateUtils {
                 throw Exception(e)
             }
         }
+
+        fun convertStringToStringDate(date: String): String{
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH)
+            try {
+                val date = sdf.format(sdf.parse(date)).replace("T"," ")
+                return date
+            } catch (e: Exception) {
+                throw Exception(e)
+            }
+        }
     }
 
 

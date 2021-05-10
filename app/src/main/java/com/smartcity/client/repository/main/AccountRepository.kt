@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.responses.ListAddressResponse
+import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
+import com.smartcity.client.models.Order
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.persistence.AccountPropertiesDao
@@ -330,6 +332,60 @@ constructor(
 
             override suspend fun updateLocalDb(cacheObject: Any?) {
 
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptUserOrders(
+        id: Long
+    ): LiveData<DataState<AccountViewState>> {
+        return object :
+            NetworkBoundResource<ListOrderResponse, Order, AccountViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<ListOrderResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = AccountViewState(
+                            orderFields= AccountViewState.OrderFields(
+                                ordersList = response.body.results
+                            )
+                        ),
+                        response = Response(SuccessHandling.DONE_USER_ORDERS,ResponseType.None())
+                    )
+                )
+            }
+
+
+            override fun createCall(): LiveData<GenericApiResponse<ListOrderResponse>> {
+                return openApiMainService.getUserOrders(
+                    id = id
+                )
+            }
+
+            // Ignore
+            override fun loadFromCache(): LiveData<AccountViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: Order?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptUserOrders", job)
             }
 
         }.asLiveData()

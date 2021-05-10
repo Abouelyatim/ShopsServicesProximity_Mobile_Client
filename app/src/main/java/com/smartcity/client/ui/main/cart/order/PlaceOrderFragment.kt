@@ -2,8 +2,9 @@ package com.smartcity.client.ui.main.cart.order
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
@@ -13,9 +14,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.smartcity.client.R
 import com.smartcity.client.models.*
-import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
@@ -36,6 +37,7 @@ constructor(
     private val requestManager: RequestManager
 ): BaseCartFragment(R.layout.fragment_place_order)
 {
+    private lateinit var dialogView: View
 
     private var orderProductRecyclerAdapter: OrderProductAdapter?=null
 
@@ -88,7 +90,7 @@ constructor(
 
 
         place_order_button.setOnClickListener {
-            placeOrder()
+            showOrderConfirmationDialog()
         }
     }
 
@@ -96,14 +98,21 @@ constructor(
         viewModel.setStateEvent(
             CartStateEvent.PlaceOrderEvent(
                 Order(
-                    -1,
-                    viewModel.getSelectedCartProduct()!!.storeId,
-                    viewModel.getOrderType()!!,
-                    viewModel.getDeliveryAddress(),
-                    viewModel.getSelectedCartProduct()!!.cartProductVariants.map { it.id },
-                    viewModel.getUserInformation()!!.firstName,
-                    viewModel.getUserInformation()!!.lastName,
-                    viewModel.getUserInformation()!!.birthDay
+                    id=-1,
+                    storeId = viewModel.getSelectedCartProduct()!!.storeId,
+                    orderType = viewModel.getOrderType()!!,
+                    address = viewModel.getDeliveryAddress(),
+                    cartProductVariantIds = viewModel.getSelectedCartProduct()!!.cartProductVariants.map { it.id },
+                    firstName = viewModel.getUserInformation()!!.firstName,
+                    lastName = viewModel.getUserInformation()!!.lastName,
+                    birthDay = viewModel.getUserInformation()!!.birthDay,
+                    bill = null,
+                    createAt = "",
+                    storeAddress = "",
+                    storeName = "",
+                    userId = -1,
+                    validDuration = -1,
+                    orderProductVariants = null
                 )
             )
         )
@@ -462,7 +471,7 @@ constructor(
         viewModel.getStorePolicy()?.let {policy->
             viewModel.setStateEvent(
                 CartStateEvent.GetTotalBill(
-                    Bill(
+                    BillTotal(
                         policy.id,
                         getTotal(),
                         orderType
@@ -493,5 +502,32 @@ constructor(
         viewModel.setStateEvent(
             CartStateEvent.GetUserInformation()
         )
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun showOrderConfirmationDialog(){
+        val dialog = BottomSheetDialog(context!!,R.style.BottomSheetDialogTheme)
+        dialogView = layoutInflater.inflate(R.layout.dialog_order_confirmation, null)
+        dialog.setCancelable(true)
+        dialog.setContentView(dialogView)
+
+
+        val total=dialogView.findViewById<TextView>(R.id.order_total)
+        //total.text=calculateTotalPrice().toString()+Constants.DINAR_ALGERIAN
+
+        val backButton=dialogView.findViewById<Button>(R.id.back_order)
+        backButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        val confirmButton=dialogView.findViewById<Button>(R.id.confirm_order_button)
+        confirmButton.setOnClickListener {
+            placeOrder()
+            dialog.dismiss()
+        }
+
+        dialog.show()
+
+
     }
 }

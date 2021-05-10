@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.api.main.responses.ListCustomCategoryResponse
+import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
-import com.smartcity.client.models.Bill
+import com.smartcity.client.models.BillTotal
 import com.smartcity.client.models.Order
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
@@ -65,8 +66,8 @@ interface OpenApiMainService {
 
     @POST("bill/total")
     fun getTotalBill(
-        @Body bill: Bill
-    ):LiveData<GenericApiResponse<Bill>>
+        @Body bill: BillTotal
+    ):LiveData<GenericApiResponse<BillTotal>>
 
     @POST("address/create")
     fun createAddress(
@@ -92,6 +93,11 @@ interface OpenApiMainService {
     fun getUserInformation(
         @Path(value = "id") id:Long
     ): LiveData<GenericApiResponse<UserInformation>>
+
+    @GET("order/current-user/{id}")
+    fun getUserOrders(
+        @Path(value = "id") id:Long
+    ): LiveData<GenericApiResponse<ListOrderResponse>>
 }
 
 

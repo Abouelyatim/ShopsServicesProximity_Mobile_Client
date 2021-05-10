@@ -21,5 +21,7 @@ sealed class AccountStateEvent{
     class GetUserInformation(
     ):AccountStateEvent()
 
+    class GetUserOrdersEvent():AccountStateEvent()
+
     class None: AccountStateEvent()
 }

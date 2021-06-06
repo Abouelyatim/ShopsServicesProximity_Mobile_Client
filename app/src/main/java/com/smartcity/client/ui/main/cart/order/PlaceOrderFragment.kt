@@ -112,7 +112,8 @@ constructor(
                     storeName = "",
                     userId = -1,
                     validDuration = -1,
-                    orderProductVariants = null
+                    orderProductVariants = null,
+                    orderState = null
                 )
             )
         )

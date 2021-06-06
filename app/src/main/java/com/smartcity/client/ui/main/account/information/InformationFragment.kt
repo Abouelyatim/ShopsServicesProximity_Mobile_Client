@@ -1,6 +1,7 @@
 package com.smartcity.client.ui.main.account.information
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
@@ -147,10 +148,5 @@ constructor(
             input_birthday.setText(convertLongToStringDate(it!!))
         }
         materialDatePicker.show(activity!!.supportFragmentManager,"DATE_PICKER")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.cancelActiveJobs()
     }
 }

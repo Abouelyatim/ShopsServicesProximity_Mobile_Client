@@ -77,6 +77,18 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
+            is ConfirmOrderDeliveredEvent ->{
+                return accountRepository.attemptConfirmOrderDelivered(
+                    stateEvent.id
+                )
+            }
+
+            is ConfirmOrderPickedUpEvent ->{
+                return accountRepository.attemptConfirmOrderPickedUp(
+                    stateEvent.id
+                )
+            }
+
             is None ->{
                 return liveData {
                     emit(

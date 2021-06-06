@@ -126,10 +126,50 @@ class OrdersAdapter (
             itemView.address_container.setOnClickListener {
                 interaction?.selectedOrder(item)
             }
+
+
+            item.orderState?.let {orderState->
+                if(orderState.newOrder || orderState.accepted){
+                    order_status.text="Processing"
+                }
+
+                when(item.orderType){
+                    OrderType.DELIVERY ->{
+                        if(orderState.delivered){
+                            order_status.text="Delivered"
+                            if(!orderState.confirmedDelivered){
+                                itemView.confirm_action.visibility=View.VISIBLE
+                                itemView.confirm_delivery.visibility=View.VISIBLE
+                                itemView.confirm_button.setOnClickListener {
+                                    interaction?.confirmDelivery(item)
+                                }
+                            }
+                        }
+                    }
+
+                    OrderType.SELFPICKUP ->{
+                        if(orderState.pickedUp){
+                            order_status.text="PickedUp"
+                            if(!orderState.confirmedPickedUp){
+                                itemView.confirm_action.visibility=View.VISIBLE
+                                itemView.confirm_pick_up.visibility=View.VISIBLE
+                                itemView.confirm_button.setOnClickListener{
+                                    interaction?.confirmPickUp(item)
+                                }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+
         }
     }
 
     interface Interaction {
         fun selectedOrder(item: Order)
+        fun confirmDelivery(order: Order)
+        fun confirmPickUp(order: Order)
     }
 }

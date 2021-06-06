@@ -40,6 +40,10 @@ data class Order(
     @Expose
     var orderProductVariants: List<OrderProductVariant>?,
 
+    @SerializedName("orderState")
+    @Expose
+    var orderState:OrderState?,
+
     @SerializedName("receiverFirstName")
     @Expose
     var firstName:String?,

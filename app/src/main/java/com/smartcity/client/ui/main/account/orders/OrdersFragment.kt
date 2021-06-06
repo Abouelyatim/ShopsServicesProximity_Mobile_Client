@@ -20,6 +20,8 @@ import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.client.ui.main.account.viewmodel.getOrdersList
 import com.smartcity.client.ui.main.account.viewmodel.setOrdersList
 import com.smartcity.client.ui.main.account.viewmodel.setSelectedOrder
+import com.smartcity.client.ui.main.cart.viewmodel.*
+import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_orders.*
 import javax.inject.Inject
@@ -95,6 +97,16 @@ constructor(
                     }
                 }
             }
+
+            if (dataState!=null){
+                dataState.data?.let { data ->
+                    data.response?.peekContent()?.let{ response ->
+                        if(response.message==SuccessHandling.CUSTOM_CATEGORY_UPDATE_DONE){
+                            getOrders()
+                        }
+                    }
+                }
+            }
         })
 
         //submit list to recycler view
@@ -134,12 +146,28 @@ constructor(
         navViewOrder()
     }
 
+    override fun confirmDelivery(order: Order) {
+        viewModel.setStateEvent(
+            AccountStateEvent.ConfirmOrderDeliveredEvent(
+                order.id!!
+            )
+        )
+    }
+
+    override fun confirmPickUp(order: Order) {
+        viewModel.setStateEvent(
+            AccountStateEvent.ConfirmOrderPickedUpEvent(
+                order.id!!
+            )
+        )
+    }
+
     private fun navViewOrder() {
         findNavController().navigate(R.id.action_ordersFragment_to_viewOrderFragment)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        orders_recyclerview.adapter=null
+        //orders_recyclerview.adapter=null
     }
 }

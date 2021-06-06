@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
@@ -11,6 +12,7 @@ import com.smartcity.client.R
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
+import com.smartcity.client.util.SuccessHandling
 import kotlinx.android.synthetic.main.fragment_account.*
 import javax.inject.Inject
 
@@ -61,6 +63,8 @@ constructor(
         stateChangeListener.expandAppBar()
         stateChangeListener.displayBottomNavigation(true)
 
+        subscribeObservers()
+
         addresses_settings.setOnClickListener {
             navAddress()
         }
@@ -72,6 +76,13 @@ constructor(
         orders_settings.setOnClickListener {
             navOrders()
         }
+    }
+
+    private fun subscribeObservers() {
+        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
+            stateChangeListener.onDataStateChange(dataState)
+
+        })
     }
 
     private fun navOrders(){

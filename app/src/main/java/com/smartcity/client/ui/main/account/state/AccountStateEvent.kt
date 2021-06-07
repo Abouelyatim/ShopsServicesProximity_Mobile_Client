@@ -23,11 +23,7 @@ sealed class AccountStateEvent{
 
     class GetUserOrdersEvent():AccountStateEvent()
 
-    class ConfirmOrderDeliveredEvent(
-        var id:Long
-    ) : AccountStateEvent()
-
-    class ConfirmOrderPickedUpEvent(
+    class ConfirmOrderReceivedEvent(
         var id:Long
     ) : AccountStateEvent()
 

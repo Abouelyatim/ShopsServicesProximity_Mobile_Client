@@ -77,14 +77,8 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
-            is ConfirmOrderDeliveredEvent ->{
-                return accountRepository.attemptConfirmOrderDelivered(
-                    stateEvent.id
-                )
-            }
-
-            is ConfirmOrderPickedUpEvent ->{
-                return accountRepository.attemptConfirmOrderPickedUp(
+            is ConfirmOrderReceivedEvent ->{
+                return accountRepository.attemptConfirmOrderReceived(
                     stateEvent.id
                 )
             }

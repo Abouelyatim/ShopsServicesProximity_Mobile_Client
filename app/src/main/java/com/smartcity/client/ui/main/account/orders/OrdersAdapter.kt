@@ -110,6 +110,10 @@ class OrdersAdapter (
 
             itemView.order_id.text=item.id.toString()
 
+            itemView.order_type_delivery.visibility=View.GONE
+            itemView.order_type_self_pickup.visibility=View.GONE
+            itemView.confirm_action.visibility=View.GONE
+
             when(item.orderType){
                 OrderType.DELIVERY ->{
                     itemView.order_type.text="Delivery"
@@ -133,28 +137,42 @@ class OrdersAdapter (
                     order_status.text="Processing"
                 }
 
+                if(orderState.rejected){
+                    order_status.text="Rejected"
+                }
+
+                if(orderState.ready){
+                    order_status.text="Ready"
+                }
+
                 when(item.orderType){
                     OrderType.DELIVERY ->{
+                        if(orderState.ready){
+                            order_status.text="Ready to delivery"
+                        }
+
                         if(orderState.delivered){
                             order_status.text="Delivered"
-                            if(!orderState.confirmedDelivered){
+                            if(!orderState.received){
                                 itemView.confirm_action.visibility=View.VISIBLE
-                                itemView.confirm_delivery.visibility=View.VISIBLE
-                                itemView.confirm_button.setOnClickListener {
-                                    interaction?.confirmDelivery(item)
+                                itemView.received_button.setOnClickListener {
+                                    interaction?.confirmReceived(item)
                                 }
                             }
                         }
                     }
 
                     OrderType.SELFPICKUP ->{
+                        if(orderState.ready){
+                            order_status.text="Ready to picked up"
+                        }
+
                         if(orderState.pickedUp){
-                            order_status.text="PickedUp"
-                            if(!orderState.confirmedPickedUp){
+                            order_status.text="Picked Up"
+                            if(!orderState.received){
                                 itemView.confirm_action.visibility=View.VISIBLE
-                                itemView.confirm_pick_up.visibility=View.VISIBLE
-                                itemView.confirm_button.setOnClickListener{
-                                    interaction?.confirmPickUp(item)
+                                itemView.received_button.setOnClickListener{
+                                    interaction?.confirmReceived(item)
                                 }
                             }
                         }
@@ -169,7 +187,6 @@ class OrdersAdapter (
 
     interface Interaction {
         fun selectedOrder(item: Order)
-        fun confirmDelivery(order: Order)
-        fun confirmPickUp(order: Order)
+        fun confirmReceived(order: Order)
     }
 }

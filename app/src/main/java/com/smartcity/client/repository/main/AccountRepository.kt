@@ -389,7 +389,7 @@ constructor(
         }.asLiveData()
     }
 
-    fun attemptConfirmOrderDelivered(
+    fun attemptConfirmOrderReceived(
         id:Long
     ): LiveData<DataState<AccountViewState>> {
 
@@ -426,7 +426,7 @@ constructor(
             }
 
             override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
-                return openApiMainService.confirmOrderDelivered(
+                return openApiMainService.confirmOrderReceived(
                     id= id
                 )
             }
@@ -436,61 +436,7 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                addJob("attemptConfirmOrderDelivered", job)
-            }
-
-
-        }.asLiveData()
-    }
-
-    fun attemptConfirmOrderPickedUp(
-        id:Long
-    ): LiveData<DataState<AccountViewState>> {
-
-        return object: NetworkBoundResource<GenericResponse, Any, AccountViewState>(
-            sessionManager.isConnectedToTheInternet(),
-            true,
-            true,
-            false
-        ){
-
-
-            // not applicable
-            override suspend fun createCacheRequestAndReturn() {
-
-            }
-
-            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<GenericResponse>) {
-                Log.d(TAG, "handleApiSuccessResponse: ${response}")
-
-                onCompleteJob(
-                    DataState.data(
-                        data = null,
-                        response = Response(
-                            SuccessHandling.CUSTOM_CATEGORY_UPDATE_DONE,
-                            ResponseType.Toast()
-                        )
-                    )
-                )
-            }
-
-            // not applicable
-            override fun loadFromCache(): LiveData<AccountViewState> {
-                return AbsentLiveData.create()
-            }
-
-            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
-                return openApiMainService.confirmOrderPickedUp(
-                    id= id
-                )
-            }
-
-            // not applicable
-            override suspend fun updateLocalDb(cacheObject: Any?) {
-            }
-
-            override fun setJob(job: Job) {
-                addJob("attemptConfirmOrderPickedUp", job)
+                addJob("attemptConfirmOrderReceived", job)
             }
 
 

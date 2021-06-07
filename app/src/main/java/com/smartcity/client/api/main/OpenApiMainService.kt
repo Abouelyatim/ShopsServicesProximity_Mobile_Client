@@ -99,13 +99,8 @@ interface OpenApiMainService {
         @Path(value = "id") id:Long
     ): LiveData<GenericApiResponse<ListOrderResponse>>
 
-    @PUT("order/current-user/{id}/delivered")
-    fun confirmOrderDelivered(
-        @Path(value = "id") id:Long
-    ): LiveData<GenericApiResponse<GenericResponse>>
-
-    @PUT("order/current-user/{id}/pickedUp")
-    fun confirmOrderPickedUp(
+    @PUT("order/current-user/{id}/received")
+    fun confirmOrderReceived(
         @Path(value = "id") id:Long
     ): LiveData<GenericApiResponse<GenericResponse>>
 }

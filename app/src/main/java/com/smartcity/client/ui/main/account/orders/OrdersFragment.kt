@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.Order
+import com.smartcity.client.ui.AreYouSureCallback
+import com.smartcity.client.ui.UIMessage
+import com.smartcity.client.ui.UIMessageType
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
@@ -146,21 +149,28 @@ constructor(
         navViewOrder()
     }
 
-    override fun confirmDelivery(order: Order) {
-        viewModel.setStateEvent(
-            AccountStateEvent.ConfirmOrderDeliveredEvent(
-                order.id!!
+
+    override fun confirmReceived(order: Order) {
+        val callback: AreYouSureCallback = object: AreYouSureCallback {
+            override fun proceed() {
+                viewModel.setStateEvent(
+                    AccountStateEvent.ConfirmOrderReceivedEvent(
+                        order.id!!
+                    )
+                )
+            }
+            override fun cancel() {
+                // ignore
+            }
+        }
+        uiCommunicationListener.onUIMessageReceived(
+            UIMessage(
+                getString(R.string.are_you_sure_received_order),
+                UIMessageType.AreYouSureDialog(callback)
             )
         )
     }
 
-    override fun confirmPickUp(order: Order) {
-        viewModel.setStateEvent(
-            AccountStateEvent.ConfirmOrderPickedUpEvent(
-                order.id!!
-            )
-        )
-    }
 
     private fun navViewOrder() {
         findNavController().navigate(R.id.action_ordersFragment_to_viewOrderFragment)

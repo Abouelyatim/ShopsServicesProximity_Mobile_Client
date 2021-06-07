@@ -61,6 +61,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="text_yes">yes</string>
     <string name="are_you_sure_publish">Are you sure you want to publish this?</string>
+    <string name="are_you_sure_received_order">Is this order received?</string>
     <string name="are_you_sure_delete">Are you sure you want to delete this? This can\'t be un-done.</string>
     <string name="text_info">Info</string>
     <string name="delete">Delete</string>

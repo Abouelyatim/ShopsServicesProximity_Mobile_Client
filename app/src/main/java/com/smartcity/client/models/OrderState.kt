@@ -19,6 +19,10 @@ data class OrderState(
     @Expose
     var rejected:Boolean,
 
+    @SerializedName("ready")
+    @Expose
+    var ready:Boolean,
+
     @SerializedName("delivered")
     @Expose
     var delivered:Boolean,
@@ -27,13 +31,9 @@ data class OrderState(
     @Expose
     var pickedUp:Boolean,
 
-    @SerializedName("confirmedDelivered")
+    @SerializedName("received")
     @Expose
-    var confirmedDelivered:Boolean,
-
-    @SerializedName("confirmedPickedUp")
-    @Expose
-    var confirmedPickedUp:Boolean
+    var received:Boolean
 
 ) : Parcelable {
 }

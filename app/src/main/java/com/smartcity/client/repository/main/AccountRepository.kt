@@ -335,7 +335,7 @@ constructor(
         }.asLiveData()
     }
 
-    fun attemptUserOrders(
+    fun attemptUserInProgressOrders(
         id: Long
     ): LiveData<DataState<AccountViewState>> {
         return object :
@@ -367,7 +367,7 @@ constructor(
 
 
             override fun createCall(): LiveData<GenericApiResponse<ListOrderResponse>> {
-                return openApiMainService.getUserOrders(
+                return openApiMainService.getUserInProgressOrders(
                     id = id
                 )
             }
@@ -383,7 +383,61 @@ constructor(
             }
 
             override fun setJob(job: Job) {
-                addJob("attemptUserOrders", job)
+                addJob("attemptUserInProgressOrders", job)
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptUserFinalizedOrders(
+        id: Long
+    ): LiveData<DataState<AccountViewState>> {
+        return object :
+            NetworkBoundResource<ListOrderResponse, Order, AccountViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<ListOrderResponse>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = AccountViewState(
+                            orderFields= AccountViewState.OrderFields(
+                                ordersList = response.body.results
+                            )
+                        ),
+                        response = Response(SuccessHandling.DONE_USER_ORDERS,ResponseType.None())
+                    )
+                )
+            }
+
+
+            override fun createCall(): LiveData<GenericApiResponse<ListOrderResponse>> {
+                return openApiMainService.getUserFinalizedOrders(
+                    id = id
+                )
+            }
+
+            // Ignore
+            override fun loadFromCache(): LiveData<AccountViewState> {
+                return AbsentLiveData.create()
+            }
+
+            // Ignore
+            override suspend fun updateLocalDb(cacheObject: Order?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptUserFinalizedOrders", job)
             }
 
         }.asLiveData()

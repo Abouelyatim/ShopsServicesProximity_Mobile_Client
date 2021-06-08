@@ -94,8 +94,13 @@ interface OpenApiMainService {
         @Path(value = "id") id:Long
     ): LiveData<GenericApiResponse<UserInformation>>
 
-    @GET("order/current-user/{id}")
-    fun getUserOrders(
+    @GET("order/current-user/{id}/inProgress")
+    fun getUserInProgressOrders(
+        @Path(value = "id") id:Long
+    ): LiveData<GenericApiResponse<ListOrderResponse>>
+
+    @GET("order/current-user/{id}/finalized")
+    fun getUserFinalizedOrders(
         @Path(value = "id") id:Long
     ): LiveData<GenericApiResponse<ListOrderResponse>>
 

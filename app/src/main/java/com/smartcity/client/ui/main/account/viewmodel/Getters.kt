@@ -14,9 +14,20 @@ fun AccountViewModel.getOrdersList(): List<Order> {
         return it.orderFields.ordersList
     }
 }
+fun AccountViewModel.getOrderActionRecyclerPosition():Int{
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.orderActionRecyclerPosition
+    }
+}
 
 fun AccountViewModel.getAddressList(): List<Address> {
     getCurrentViewStateOrNew().let {
         return it.addressList
+    }
+}
+
+fun AccountViewModel.getOrderAction(): List<Triple<String,Int,Int>> {
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.orderAction
     }
 }

@@ -12,6 +12,8 @@ import com.smartcity.client.R
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
+import com.smartcity.client.ui.main.account.viewmodel.clearOrderList
+import com.smartcity.client.ui.main.account.viewmodel.setOrderActionRecyclerPosition
 import com.smartcity.client.util.SuccessHandling
 import kotlinx.android.synthetic.main.fragment_account.*
 import javax.inject.Inject
@@ -86,6 +88,8 @@ constructor(
     }
 
     private fun navOrders(){
+        viewModel.setOrderActionRecyclerPosition(0)
+        viewModel.clearOrderList()
         findNavController().navigate(R.id.action_accountFragment_to_ordersFragment)
     }
 

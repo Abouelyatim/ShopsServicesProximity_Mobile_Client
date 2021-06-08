@@ -20,7 +20,9 @@ class AccountViewState(
 
     @Parcelize
     data class OrderFields(
-        var ordersList:List<Order> = ArrayList<Order>()
+        var ordersList:List<Order> = ArrayList<Order>(),
+        var orderAction: List<Triple<String,Int,Int>> = listOf(),
+        var orderActionRecyclerPosition: Int =0
     ) : Parcelable
 
     @Parcelize

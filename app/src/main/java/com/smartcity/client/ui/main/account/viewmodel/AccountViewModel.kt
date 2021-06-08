@@ -69,9 +69,17 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
-            is GetUserOrdersEvent ->{
+            is GetUserInProgressOrdersEvent ->{
                 return sessionManager.cachedToken.value?.let { authToken ->
-                    accountRepository.attemptUserOrders(
+                    accountRepository.attemptUserInProgressOrders(
+                        authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is GetUserFinalizedOrdersEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    accountRepository.attemptUserFinalizedOrders(
                         authToken.account_pk!!.toLong()
                     )
                 }?: AbsentLiveData.create()

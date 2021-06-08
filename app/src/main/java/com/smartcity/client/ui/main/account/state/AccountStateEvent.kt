@@ -21,7 +21,9 @@ sealed class AccountStateEvent{
     class GetUserInformation(
     ):AccountStateEvent()
 
-    class GetUserOrdersEvent():AccountStateEvent()
+    class GetUserInProgressOrdersEvent():AccountStateEvent()
+
+    class GetUserFinalizedOrdersEvent():AccountStateEvent()
 
     class ConfirmOrderReceivedEvent(
         var id:Long

@@ -1,6 +1,7 @@
 package com.smartcity.client.ui.main
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -24,7 +25,9 @@ import com.smartcity.client.util.BottomNavController.*
 import com.smartcity.client.util.setUpNavigation
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import com.smartcity.client.ui.main.cart.BaseCartFragment
+import com.smartcity.client.util.PreferenceKeys
 
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.progress_bar
@@ -48,6 +51,9 @@ class MainActivity : BaseActivity(),
     @Named("CartFragmentFactory")
     lateinit var cartFragmentFactory: FragmentFactory
 
+    @Inject
+    @Named("GetSharedPreferences")
+    lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var bottomNavigationView: BottomNavigationView
 
@@ -131,6 +137,35 @@ class MainActivity : BaseActivity(),
 
         subscribeObservers()
         restoreSession(savedInstanceState)
+
+        //todo subscribe only once- with token
+        subscribeNotificationTopic(sharedPreferences)
+
+        //todo use fcm token to identify user
+
+        /* FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+             if (!task.isSuccessful) {
+                 Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                 return@OnCompleteListener
+             }
+             val token = task.result
+             Log.d("tokenid", "${token}")
+         })*/
+    }
+
+    private fun subscribeNotificationTopic(sharedPreferences: SharedPreferences) {
+        val previousAuthUserEmail: String? = sharedPreferences.getString(PreferenceKeys.PREVIOUS_AUTH_USER, null)
+        previousAuthUserEmail?.let {
+            val topic="user-"+it.replace("@","")
+            Log.d(TAG, topic)
+            FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful)
+                        Log.d(TAG, "Email topic subscription successful")
+                    else
+                        Log.e(TAG, "Email topic subscription failed. Error: " + task.exception?.localizedMessage)
+                }
+        }
     }
 
     override fun displayRetryView() {

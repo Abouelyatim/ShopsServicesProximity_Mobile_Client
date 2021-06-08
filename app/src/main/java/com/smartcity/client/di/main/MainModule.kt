@@ -1,5 +1,6 @@
 package com.smartcity.client.di.main
 
+import android.content.SharedPreferences
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.persistence.AccountPropertiesDao
 import com.smartcity.client.persistence.AppDatabase
@@ -13,6 +14,8 @@ import com.smartcity.client.session.SessionManager
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import javax.inject.Named
+
 @Module
 object MainModule {
 
@@ -63,6 +66,16 @@ object MainModule {
         sessionManager: SessionManager
     ): CartRepository {
         return CartRepository(openApiMainService, blogPostDao, sessionManager)
+    }
+
+    @JvmStatic
+    @MainScope
+    @Provides
+    @Named("GetSharedPreferences")
+    fun provideSharedPreferences(
+        sharedPreferences: SharedPreferences
+    ): SharedPreferences {
+        return sharedPreferences
     }
 }
 

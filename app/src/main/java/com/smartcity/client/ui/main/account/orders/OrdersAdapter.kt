@@ -104,9 +104,9 @@ class OrdersAdapter (
             itemView.order_store_name.text=item.storeName
             itemView.order_store_address.text=item.storeAddress
 
-            itemView.order_total.text=item.bill!!.total.toString()+ Constants.DINAR_ALGERIAN
-            itemView.order_paid.text=item.bill!!.alreadyPaid.toString()+ Constants.DINAR_ALGERIAN
-            itemView.order_rest.text=(item.bill!!.total-item.bill!!.alreadyPaid).toString()+ Constants.DINAR_ALGERIAN
+            itemView.order_total.text=item.bill!!.total.toString()+ Constants.DOLLAR
+            itemView.order_paid.text=item.bill!!.alreadyPaid.toString()+ Constants.DOLLAR
+            itemView.order_rest.text=(item.bill!!.total-item.bill!!.alreadyPaid).toString()+ Constants.DOLLAR
 
             itemView.order_id.text=item.id.toString()
 

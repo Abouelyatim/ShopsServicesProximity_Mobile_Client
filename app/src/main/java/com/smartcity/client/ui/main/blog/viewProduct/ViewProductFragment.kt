@@ -23,6 +23,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
 import com.smartcity.client.R
 import com.smartcity.client.models.product.AttributeValue
+import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.models.product.ProductVariants
 import com.smartcity.client.ui.main.blog.BaseBlogFragment
@@ -93,7 +94,8 @@ constructor(
 
 
         initViewPager()
-        setPrice(product_price)
+        setNewPrice(product_new_price)
+        setDiscountValue()
         setName()
         setOptions()
         setDescription()
@@ -124,16 +126,108 @@ constructor(
 
     @SuppressLint("SetTextI18n")
     private fun getPrice():String {
-        val prices =product.productVariants.map { productVariant -> productVariant.price }
+        val prices = mutableListOf<Double>()
+        product.productVariants.map {
+            val offer=it.offer
+            if (offer!=null){
+                when(offer.type){
+                    OfferType.PERCENTAGE ->{
+                        prices.add(it.price-(it.price*offer.percentage!!/100))
+                    }
+
+                    OfferType.FIXED ->{
+                        prices.add(it.price-offer.newPrice!!)
+                    }
+                    null -> {}
+                }
+            }else{
+                prices.add(it.price)
+            }
+        }
+
         if(prices.max() != prices.min()){
-            return "${prices.min()}${Constants.DINAR_ALGERIAN} - ${prices.max()}${Constants.DINAR_ALGERIAN}"
+            return "${Constants.DOLLAR} ${prices.min()} - ${prices.max()}"
         }else{
-            return "${prices.max()}${Constants.DINAR_ALGERIAN}"
+            return "${prices.max()}${Constants.DOLLAR}"
         }
     }
 
     private fun setName() {
         product_name.text=product.name
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setNewPrice(view: View) {
+        val prices = mutableListOf<Double>()
+        product.productVariants.map {
+            val offer=it.offer
+            if (offer!=null){
+                when(offer.type){
+                    OfferType.PERCENTAGE ->{
+                        prices.add(it.price-(it.price*offer.percentage!!/100))
+                    }
+
+                    OfferType.FIXED ->{
+                        prices.add(it.price-offer.newPrice!!)
+                    }
+                    null -> {}
+                }
+            }else{
+                prices.add(it.price)
+            }
+        }
+
+
+        if(prices.max() != prices.min()){
+            (view as TextView).text= "${Constants.DOLLAR} ${prices.min()} - ${prices.max()}"
+        }else{
+            (view as TextView).text= "${prices.max()}${Constants.DOLLAR}"
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setOldPrice(){
+        product_old_price.visibility=View.VISIBLE
+        val prices =product.productVariants.map { productVariant -> productVariant.price }
+
+        if(prices.max() != prices.min()){
+            product_old_price.text= "${Constants.DOLLAR} ${prices.min()} - ${prices.max()}"
+        }else{
+            product_old_price.text= "${prices.max()}${Constants.DOLLAR}"
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setDiscountValue(){
+        val percentages= mutableListOf<Int>()
+        val fixed = mutableListOf<Double>()
+        product.productVariants.map {
+            val offer=it.offer
+            if(offer!=null){
+                when(offer.type){
+                    OfferType.PERCENTAGE ->{
+                        percentages.add(offer.percentage!!)
+                    }
+
+                    OfferType.FIXED ->{
+                        fixed.add(offer.newPrice!!)
+                    }
+                }
+            }
+        }
+
+        if(percentages.isNotEmpty()){
+            discount_percentage.visibility=View.VISIBLE
+            discount_percentage.text="-${percentages.max()}%"
+            setOldPrice()
+        }
+
+
+        if(fixed.isNotEmpty()){
+            discount_fixed.visibility=View.VISIBLE
+            discount_fixed.text="-${fixed.max()} ${Constants.DOLLAR}"
+            setOldPrice()
+        }
     }
 
     private fun setOptions() {
@@ -358,18 +452,63 @@ constructor(
                     if (variant.image.isNullOrEmpty()){//variant without images
                         product.let {
                             val image= Constants.PRODUCT_IMAGE_URL +it.images.first().image
-                            setVariantDialog(
-                                "${variant.price}${Constants.DINAR_ALGERIAN}",
-                                variant.unit.toString(),
-                                image
-                            )
+                            if (variant.offer==null){
+                                setVariantDialog(
+                                    "${variant.price}${Constants.DOLLAR}",
+                                    variant.unit.toString(),
+                                    image
+                                )
+                            }else{
+
+                                val offer=variant.offer
+                                var price=0.0
+                                when(offer!!.type){
+                                    OfferType.FIXED ->{
+                                        price=variant.price-offer.newPrice!!
+                                    }
+
+                                    OfferType.PERCENTAGE ->{
+                                        price=variant.price-(variant.price*offer.percentage!!/100)
+                                    }
+                                }
+
+                                setVariantDialog(
+                                    "${price}${Constants.DOLLAR}",
+                                    variant.unit.toString(),
+                                    image
+                                )
+
+                            }
+
                         }
                     }else{
-                        setVariantDialog(
-                            "${variant.price}${Constants.DINAR_ALGERIAN}",
-                            variant.unit.toString(),
-                            Constants.PRODUCT_IMAGE_URL +variant.image!!
-                        )
+                        if (variant.offer==null){
+                            setVariantDialog(
+                                "${variant.price}${Constants.DOLLAR}",
+                                variant.unit.toString(),
+                                Constants.PRODUCT_IMAGE_URL +variant.image!!
+                            )
+                        }else{
+                            val offer=variant.offer
+                            var price=0.0
+                            when(offer!!.type){
+                                OfferType.FIXED ->{
+                                    price=variant.price-offer.newPrice!!
+                                }
+
+                                OfferType.PERCENTAGE ->{
+                                    price=variant.price-(variant.price*offer.percentage!!/100)
+                                }
+                            }
+
+                            setVariantDialog(
+                                "${price}${Constants.DOLLAR}",
+                                variant.unit.toString(),
+                                Constants.PRODUCT_IMAGE_URL +variant.image!!
+                            )
+                        }
+
+
                     }
 
                     return@let

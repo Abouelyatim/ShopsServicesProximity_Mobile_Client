@@ -10,6 +10,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.smartcity.client.R
 import com.smartcity.client.models.BlogPost
+import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.GenericViewHolder
@@ -170,16 +171,18 @@ class ProductListAdapter(
 
         @SuppressLint("SetTextI18n")
         fun bind(item: Product) = with(itemView) {
-            delete_product.visibility=View.GONE
             try {
                 val image= Constants.PRODUCT_IMAGE_URL +item.images.first().image
                 requestManager
                     .load(image)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(itemView.product_image)
+
                 itemView.setOnClickListener {
-                    interaction?.onItemSelected(bindingAdapterPosition, item)
+                    interaction?.onItemSelected(bindingAdapterPosition,item)
                 }
+
+
                 val name=item.name
                 name.replace("\n","").replace("\r","")
                 if(name.length>70){
@@ -187,8 +190,51 @@ class ProductListAdapter(
                 }else{
                     itemView.product_name.text=name
                 }
-                itemView.product_price.text=item.productVariants.first().price.toString()+ Constants.DINAR_ALGERIAN
+
+                val allPrices = mutableListOf<Double>()
+                item.productVariants.map {
+                    val offer=it.offer
+                    if (offer!=null){
+                        when(offer.type){
+                            OfferType.PERCENTAGE ->{
+                                allPrices.add(it.price-(it.price*offer.percentage!!/100))
+                            }
+
+                            OfferType.FIXED ->{
+                                allPrices.add(it.price-offer.newPrice!!)
+                            }
+                            null -> {}
+                        }
+                    }else{
+                        allPrices.add(it.price)
+                    }
+                }
+                itemView.product_price.text=allPrices.min().toString()+ Constants.DOLLAR
+
                 itemView.product_quantity.text=item.productVariants.first().unit.toString()+" sold"
+
+                val percentages= mutableListOf<Int>()
+                val fixed = mutableListOf<Double>()
+                item.productVariants.map {
+                    val offer=it.offer
+                    if(offer!=null){
+                        when(offer.type){
+                            OfferType.PERCENTAGE ->{
+                                percentages.add(offer.percentage!!)
+                            }
+
+                            OfferType.FIXED ->{
+                                fixed.add(offer.newPrice!!)
+                            }
+                        }
+                    }
+                }
+
+                sale_container.visibility=View.GONE
+
+                if(fixed.isNotEmpty() || percentages.isNotEmpty()){
+                    sale_container.visibility=View.VISIBLE
+                }
             }catch (e:Exception){
 
             }

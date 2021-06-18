@@ -3,7 +3,6 @@ package com.smartcity.client.api.main
 import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.responses.ListAddressResponse
-import com.smartcity.client.api.main.responses.ListCustomCategoryResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
@@ -18,16 +17,6 @@ import retrofit2.http.*
 
 @MainScope
 interface OpenApiMainService {
-
-    @GET("store/customCategory/all/{id}")
-    fun getAllcustomCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<ListCustomCategoryResponse>>
-
-    @GET("product/all/category/{id}")
-    fun getAllProductByCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<ListProductResponse>>
-
-    @GET("product/all/provider/{id}")
-    fun getAllProduct(@Path("id") id: Long?):LiveData<GenericApiResponse<ListProductResponse>>
-
 
     @GET("product")
     fun searchListProduct(

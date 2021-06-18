@@ -30,13 +30,18 @@ data class ProductVariants(
     var unit: Int,
 
     @Transient
-    var  imageUri: Uri?
+    var  imageUri: Uri?,
+
+    @SerializedName("offer")
+    @Expose
+    var offer: Offer?
 ) : Parcelable {
     override fun toString(): String {
         return "ProductVariants(" +
                 "productVariantAttributeValuesProductVariant='$productVariantAttributeValuesProductVariant', " +
                 "image='$image', " +
                 "price='$price', " +
+                "offer='$offer', " +
                 "unit='$unit')"
     }
 }

@@ -17,6 +17,8 @@ import com.bumptech.glide.RequestManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.smartcity.client.R
 import com.smartcity.client.models.*
+import com.smartcity.client.models.product.OfferType
+import com.smartcity.client.models.product.ProductVariants
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
@@ -147,11 +149,33 @@ constructor(
     private fun getTotal():Double {
         var total=0.0
         viewModel.getSelectedCartProduct()!!.cartProductVariants.map {
-            total=it.productVariant.price*it.unit+total
+            total += getPrice(it.productVariant) * it.unit
         }
         return total
     }
 
+    private fun getPrice(productVariants: ProductVariants):Double {
+        var prices = 0.0
+        productVariants.let {
+            val offer=it.offer
+            if (offer!=null){
+                when(offer.type){
+                    OfferType.PERCENTAGE ->{
+                        prices=it.price-(it.price*offer.percentage!!/100)
+                    }
+
+                    OfferType.FIXED ->{
+                        prices=it.price-offer.newPrice!!
+                    }
+                    null -> {}
+                }
+            }else{
+                prices=it.price
+            }
+        }
+
+        return prices
+    }
 
     private fun setUpUi() {
         viewModel.getStorePolicy()?.let {policy->
@@ -304,8 +328,11 @@ constructor(
                     handelDeliveryAddressList(this)
                 }
 
-                viewModel.getUserInformation()?.let {
-                    setUserInformation(it)
+                viewModel.getUserInformation()?.let {userInformation ->
+                    userInformation.birthDay?.plus(userInformation.firstName?.plus(userInformation.lastName?.let {
+                        setUserInformation(userInformation)
+                    }))
+
                 }
             })
 
@@ -449,13 +476,13 @@ constructor(
 
     @SuppressLint("SetTextI18n")
     private fun setTotal() {
-        order_product_total_price.text=getTotal().toString()+ Constants.DINAR_ALGERIAN
+        order_product_total_price.text=getTotal().toString()+ Constants.DOLLAR
     }
 
     @SuppressLint("SetTextI18n")
     private fun setTotalToPay(total:Double) {
-        order_product_total_to_pay_price.text=total.toString()+ Constants.DINAR_ALGERIAN
-        order_total_price_.text=total.toString()+ Constants.DINAR_ALGERIAN
+        order_product_total_to_pay_price.text=total.toString()+ Constants.DOLLAR
+        order_total_price_.text=total.toString()+ Constants.DOLLAR
     }
 
     @SuppressLint("SetTextI18n")

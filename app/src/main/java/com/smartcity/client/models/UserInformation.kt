@@ -12,15 +12,15 @@ data class UserInformation (
     var userId:Long?,
     @SerializedName("firstName")
     @Expose
-    var firstName:String,
+    var firstName:String?,
 
     @SerializedName("lastName")
     @Expose
-    var lastName:String,
+    var lastName:String?,
 
     @SerializedName("birthDay")
     @Expose
-    var birthDay:String
+    var birthDay:String?
 ) : Parcelable {
 
     override fun toString(): String {
@@ -46,9 +46,9 @@ data class UserInformation (
     }
 
     fun isValidForCreation(): String{
-        if(firstName.isEmpty()
-            || lastName.isEmpty()
-            || birthDay.isEmpty()){
+        if(firstName.isNullOrEmpty()
+            || lastName.isNullOrEmpty()
+            || birthDay.isNullOrEmpty()){
             return CreateUserInformationError.mustFillAllFields()
         }
         return CreateUserInformationError.none()

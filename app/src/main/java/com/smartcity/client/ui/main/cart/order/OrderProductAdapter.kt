@@ -9,6 +9,8 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.smartcity.client.R
 import com.smartcity.client.models.product.CartProductVariant
+import com.smartcity.client.models.product.OfferType
+import com.smartcity.client.models.product.ProductVariants
 import com.smartcity.client.util.Constants
 import kotlinx.android.synthetic.main.layout_product_order_list_item.view.*
 
@@ -101,7 +103,7 @@ class OrderProductAdapter (
             }else{
                 itemView.order_product_name.text=name
             }
-            itemView.order_product_price.text=item.productVariant.price.toString()+ Constants.DINAR_ALGERIAN
+            itemView.order_product_price.text=getPrice(item.productVariant)
 
             itemView.order_product_quantity.text=item.unit.toString()
 
@@ -121,6 +123,29 @@ class OrderProductAdapter (
                 options=options+" , "+it.attributeValue.value+" "+it.attributeValue.attribute
             }
             itemView.order_product_variant.text=options.drop(2)
+        }
+
+        private fun getPrice(productVariants: ProductVariants):String {
+            var prices = 0.0
+            productVariants.let {
+                val offer=it.offer
+                if (offer!=null){
+                    when(offer.type){
+                        OfferType.PERCENTAGE ->{
+                            prices=it.price-(it.price*offer.percentage!!/100)
+                        }
+
+                        OfferType.FIXED ->{
+                            prices=it.price-offer.newPrice!!
+                        }
+                        null -> {}
+                    }
+                }else{
+                    prices=it.price
+                }
+            }
+
+            return "${prices}${Constants.DOLLAR}"
         }
     }
 }

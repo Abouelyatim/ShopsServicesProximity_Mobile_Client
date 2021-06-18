@@ -8,6 +8,10 @@ import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Cart
+import com.smartcity.client.models.product.CartProductVariant
+import com.smartcity.client.models.product.OfferType
+import com.smartcity.client.models.product.ProductVariants
+import com.smartcity.client.ui.main.cart.viewmodel.getSelectedCartProduct
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.layout_cart_item_header.view.*
@@ -126,11 +130,7 @@ class CartAdapter (
             itemView.store_name_cart.text=item.storeName
 
 
-            var total=0.0
-            item.cartProductVariants.map {
-                total=it.productVariant.price*it.unit+total
-            }
-            itemView.cart_product_total_price.text=total.toString()+ Constants.DINAR_ALGERIAN
+            itemView.cart_product_total_price.text=getTotal(item).toString()+ Constants.DOLLAR
 
 
             initProductsRecyclerView(itemView.products_cart_recycler_view)
@@ -145,6 +145,36 @@ class CartAdapter (
             }
         }
 
+        private fun getTotal(cart:Cart):Double {
+            var total=0.0
+            cart.cartProductVariants.map {
+                total += getPrice(it.productVariant) * it.unit
+            }
+            return total
+        }
+
+        private fun getPrice(productVariants: ProductVariants):Double {
+            var prices = 0.0
+            productVariants.let {
+                val offer=it.offer
+                if (offer!=null){
+                    when(offer.type){
+                        OfferType.PERCENTAGE ->{
+                            prices=it.price-(it.price*offer.percentage!!/100)
+                        }
+
+                        OfferType.FIXED ->{
+                            prices=it.price-offer.newPrice!!
+                        }
+                        null -> {}
+                    }
+                }else{
+                    prices=it.price
+                }
+            }
+
+            return prices
+        }
 
         override fun addQuantity(variantId: Long, quantity: Int) {
             interaction?.addQuantity(variantId,quantity)

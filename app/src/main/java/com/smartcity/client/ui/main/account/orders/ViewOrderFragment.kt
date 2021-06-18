@@ -21,7 +21,6 @@ import com.smartcity.client.util.Constants
 import com.smartcity.client.util.DateUtils.Companion.convertStringToStringDate
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_order.*
-import kotlinx.android.synthetic.main.layout_order_store_list_item.view.*
 import javax.inject.Inject
 
 
@@ -123,9 +122,9 @@ constructor(
 
     @SuppressLint("SetTextI18n")
     private fun setBillOrder(order:Order){
-        order_total.text=order.bill!!.total.toString()+ Constants.DINAR_ALGERIAN
-        order_paid.text=order.bill!!.alreadyPaid.toString()+ Constants.DINAR_ALGERIAN
-        order_rest.text=(order.bill!!.total-order.bill!!.alreadyPaid).toString()+ Constants.DINAR_ALGERIAN
+        order_total.text=order.bill!!.total.toString()+ Constants.DOLLAR
+        order_paid.text=order.bill!!.alreadyPaid.toString()+ Constants.DOLLAR
+        order_rest.text=(order.bill!!.total-order.bill!!.alreadyPaid).toString()+ Constants.DOLLAR
     }
 
     fun initProductsRecyclerView(){

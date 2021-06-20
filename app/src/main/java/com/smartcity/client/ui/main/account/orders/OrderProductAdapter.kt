@@ -103,7 +103,7 @@ class OrderProductAdapter (
                 itemView.order_product_name.text=name
             }
 
-            itemView.order_product_price.text=getPrice( item.productVariant)
+            itemView.order_product_price.text=getPrice(item)
 
             itemView.order_product_quantity.text=item.quantity.toString()
 
@@ -125,23 +125,23 @@ class OrderProductAdapter (
             itemView.order_product_variant.text=options.drop(2)
         }
 
-        private fun getPrice(productVariants: ProductVariants):String {
+        private fun getPrice(orderProductVariant: OrderProductVariant):String {
             var prices = 0.0
-            productVariants.let {
+            orderProductVariant.let {
                 val offer=it.offer
                 if (offer!=null){
                     when(offer.type){
                         OfferType.PERCENTAGE ->{
-                            prices=it.price-(it.price*offer.percentage!!/100)
+                            prices=it.productVariant.price-(it.productVariant.price*offer.percentage!!/100)
                         }
 
                         OfferType.FIXED ->{
-                            prices=it.price-offer.newPrice!!
+                            prices=it.productVariant.price-offer.newPrice!!
                         }
                         null -> {}
                     }
                 }else{
-                    prices=it.price
+                    prices=it.productVariant.price
                 }
             }
             return "${prices}${Constants.DOLLAR}"

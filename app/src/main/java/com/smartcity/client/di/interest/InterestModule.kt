@@ -1,5 +1,6 @@
 package com.smartcity.client.di.interest
 
+import android.content.SharedPreferences
 import com.smartcity.client.api.interest.OpenApiInterestService
 import com.smartcity.client.persistence.AuthTokenDao
 import com.smartcity.client.repository.interest.InterestRepository
@@ -26,12 +27,16 @@ object InterestModule{
     fun provideInterestRepository(
         authTokenDao: AuthTokenDao,
         sessionManager: SessionManager,
-        openApiInterestService: OpenApiInterestService
+        openApiInterestService: OpenApiInterestService,
+        preferences: SharedPreferences,
+        editor: SharedPreferences.Editor
     ): InterestRepository {
         return InterestRepository(
             authTokenDao,
             openApiInterestService,
-            sessionManager
+            sessionManager,
+            preferences,
+            editor
         )
     }
 

@@ -112,7 +112,7 @@ class CartProductAdapter (
 
 
 
-            itemView.cart_product_price.text=getPrice(item.productVariant)
+            itemView.cart_product_price.text=getPrice(item.productVariant,itemView)
 
 
 
@@ -146,23 +146,29 @@ class CartProductAdapter (
 
         }
 
-        private fun getPrice(productVariants: ProductVariants):String {
+        @SuppressLint("SetTextI18n")
+        private fun getPrice(productVariants: ProductVariants, itemView: View):String {
             var prices = 0.0
             productVariants.let {
                 val offer=it.offer
                 if (offer!=null){
+                    itemView.cart_discount_container.visibility=View.VISIBLE
+                    itemView.cart_product_old_price.text="${productVariants.price}${Constants.DOLLAR}"
                     when(offer.type){
                         OfferType.PERCENTAGE ->{
                             prices=it.price-(it.price*offer.percentage!!/100)
+                            itemView.cart_discount_value.text="-${offer.percentage}%"
                         }
 
                         OfferType.FIXED ->{
                             prices=it.price-offer.newPrice!!
+                            itemView.cart_discount_value.text="-${offer.newPrice} ${Constants.DOLLAR}"
                         }
                         null -> {}
                     }
                 }else{
                     prices=it.price
+                    itemView.cart_discount_container.visibility=View.GONE
                 }
             }
             return "${prices}${Constants.DOLLAR}"

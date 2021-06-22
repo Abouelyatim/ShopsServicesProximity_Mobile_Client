@@ -1,5 +1,6 @@
 package com.smartcity.client.repository.interest
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
@@ -29,7 +30,9 @@ class InterestRepository
 constructor(
     val authTokenDao: AuthTokenDao,
     val openApiInterestService: OpenApiInterestService,
-    val sessionManager: SessionManager
+    val sessionManager: SessionManager,
+    val sharedPreferences: SharedPreferences,
+    val sharedPrefsEditor: SharedPreferences.Editor
 ): JobManager("InterestRepository")
 {
     private val TAG: String = "AppDebug"
@@ -126,6 +129,9 @@ constructor(
                             Response(ErrorHandling.ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog()))
                         )
                     }
+
+                    sharedPrefsEditor.putStringSet(PreferenceKeys.USER_INTEREST_CENTER,interest.toMutableSet())
+                    sharedPrefsEditor.apply()
 
                     onCompleteJob(
                         DataState.data(

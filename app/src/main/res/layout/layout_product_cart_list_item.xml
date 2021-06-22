@@ -60,16 +60,66 @@
                     android:padding="3dp"
                     />
 
-            <TextView
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/cart_product_price"
-                    android:text="2000.0"
-                    android:textSize="18sp"
-                    android:padding="3dp"
-                    android:textColor="#000"
-                    android:textStyle="bold"
-                    />
+                    android:orientation="vertical"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    >
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/cart_product_price"
+                            android:text="2000.0"
+                            android:textSize="18sp"
+                            android:textColor="#000"
+                            android:textStyle="bold"
+                            android:paddingStart="3dp"
+                            android:paddingEnd="3dp"
+                            />
+
+                </LinearLayout>
+
+                <LinearLayout
+                        android:id="@+id/cart_discount_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="3dp"
+                        >
+                    <TextView
+
+                            android:id="@+id/cart_product_old_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$ 300.00"
+                            android:textSize="14sp"
+                            android:background="@drawable/strike"
+                            android:paddingStart="3dp"
+                            android:paddingEnd="3dp"
+                            />
+
+                    <TextView
+
+                            android:id="@+id/cart_discount_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/red_sale"
+                            android:text="-20%"
+                            android:textSize="12sp"
+                            android:paddingStart="3dp"
+                            android:textStyle="bold"
+                            />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
 
             <TextView
                     android:layout_width="match_parent"

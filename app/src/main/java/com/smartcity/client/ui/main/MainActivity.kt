@@ -166,6 +166,13 @@ class MainActivity : BaseActivity(),
                         Log.e(TAG, "Email topic subscription failed. Error: " + task.exception?.localizedMessage)
                 }
         }
+
+        val interestCenter=sharedPreferences.getStringSet(PreferenceKeys.USER_INTEREST_CENTER, null)
+        interestCenter?.let {
+            it.map {topic ->
+                FirebaseMessaging.getInstance().subscribeToTopic(topic)
+            }
+        }
     }
 
     override fun displayRetryView() {

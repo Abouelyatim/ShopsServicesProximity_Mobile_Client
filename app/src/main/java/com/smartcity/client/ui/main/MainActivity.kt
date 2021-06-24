@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.smartcity.client.BaseApplication
@@ -26,7 +27,9 @@ import com.smartcity.client.util.setUpNavigation
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
+import com.smartcity.client.ui.main.account.orders.notification.MyFirebaseMessagingService
 import com.smartcity.client.ui.main.cart.BaseCartFragment
+import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFragment
 import com.smartcity.client.util.PreferenceKeys
 
 import kotlinx.android.synthetic.main.activity_main.*
@@ -50,6 +53,10 @@ class MainActivity : BaseActivity(),
     @Inject
     @Named("CartFragmentFactory")
     lateinit var cartFragmentFactory: FragmentFactory
+
+    @Inject
+    @Named("FlashFragmentFactory")
+    lateinit var flashFragmentFactory: FragmentFactory
 
     @Inject
     @Named("GetSharedPreferences")
@@ -84,6 +91,9 @@ class MainActivity : BaseActivity(),
                     fragment.cancelActiveJobs()
                 }
                 if(fragment is BaseCartFragment){
+                    fragment.cancelActiveJobs()
+                }
+                if(fragment is BaseFlashNotificationFragment){
                     fragment.cancelActiveJobs()
                 }
             }
@@ -151,6 +161,15 @@ class MainActivity : BaseActivity(),
              val token = task.result
              Log.d("tokenid", "${token}")
          })*/
+
+        setFlashBadge(sharedPreferences)
+    }
+
+    private fun setFlashBadge(sharedPreferences: SharedPreferences) {
+        MyFirebaseMessagingService.Events.flashBadgeEvent.observe(this, Observer<Boolean> { profile ->
+            val newFlashNotification = sharedPreferences.getBoolean(PreferenceKeys.NEW_FLASH_NOTIFICATION, false)
+            displayBadgeBottomNavigationFlash(newFlashNotification)
+        })
     }
 
     private fun subscribeNotificationTopic(sharedPreferences: SharedPreferences) {
@@ -227,6 +246,23 @@ class MainActivity : BaseActivity(),
 
     override fun expandAppBar() {
         findViewById<AppBarLayout>(R.id.app_bar).setExpanded(true)
+    }
+
+    override fun displayBadgeBottomNavigationFlash(bool: Boolean) {
+        if(bool){
+            val badge =bottom_navigation_view.getOrCreateBadge(R.id.menu_nav_flash_notification)
+            badge?.let {
+                badge.isVisible = true
+                //badge.number=99
+            }
+        }
+        else{
+            val badgeDrawable =bottom_navigation_view.getBadge(R.id.menu_nav_flash_notification)
+            badgeDrawable?.let {
+                badgeDrawable.isVisible = false
+                badgeDrawable.clearNumber()
+            }
+        }
     }
 
     override fun displayBottomNavigation(bool: Boolean) {

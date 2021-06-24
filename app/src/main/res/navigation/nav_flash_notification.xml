@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/nav_flash_notification"
+        app:startDestination="@id/flashFlashNotificationFragment">
+
+    <fragment
+            android:id="@+id/flashFlashNotificationFragment"
+            android:name="com.smartcity.client.ui.main.flash_notification.FlashFlashNotificationFragment"
+            android:label="fragment_flash_notification"
+            tools:layout="@layout/fragment_flash_notification" />
+</navigation>

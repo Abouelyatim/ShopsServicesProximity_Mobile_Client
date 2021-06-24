@@ -79,6 +79,7 @@
                 app:itemTextColor="@color/bottom_nav_selector"
                 app:itemIconTint="@color/bottom_nav_selector"
                 app:menu="@menu/main_bottom_navigation_menu"
+                app:labelVisibilityMode="labeled"
                 />
     </LinearLayout>
 

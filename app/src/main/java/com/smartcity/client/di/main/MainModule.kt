@@ -8,6 +8,7 @@ import com.smartcity.client.persistence.BlogPostDao
 import com.smartcity.client.repository.main.AccountRepository
 import com.smartcity.client.repository.main.BlogRepository
 import com.smartcity.client.repository.main.CartRepository
+import com.smartcity.client.repository.main.FlashRepository
 
 
 import com.smartcity.client.session.SessionManager
@@ -66,6 +67,16 @@ object MainModule {
         sessionManager: SessionManager
     ): CartRepository {
         return CartRepository(openApiMainService, blogPostDao, sessionManager)
+    }
+
+    @JvmStatic
+    @MainScope
+    @Provides
+    fun provideFlashRepository(
+        openApiMainService: OpenApiMainService,
+        sessionManager: SessionManager
+    ): FlashRepository {
+        return FlashRepository(openApiMainService, sessionManager)
     }
 
     @JvmStatic

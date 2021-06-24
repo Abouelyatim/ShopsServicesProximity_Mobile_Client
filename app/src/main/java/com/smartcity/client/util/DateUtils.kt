@@ -40,6 +40,19 @@ class DateUtils {
                 throw Exception(e)
             }
         }
+
+        fun convertStringToStringDateSimpleFormat(date: String): String{
+            val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH)
+            val test=parser.parse(date)
+            val formatter  = SimpleDateFormat("d MMM", Locale.ENGLISH)
+            val result= formatter.format(test)
+            try {
+
+                return result
+            } catch (e: Exception) {
+                throw Exception(e)
+            }
+        }
     }
 
 

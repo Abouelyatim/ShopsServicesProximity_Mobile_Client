@@ -6,6 +6,7 @@ import com.smartcity.client.di.auth.keys.MainViewModelKey
 import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
 import com.smartcity.client.ui.main.cart.viewmodel.CartViewModel
+import com.smartcity.client.ui.main.flash_notification.viewmodel.FlashViewModel
 
 import com.smartcity.client.viewmodels.MainViewModelFactory
 import dagger.Binds
@@ -32,6 +33,11 @@ abstract class MainViewModelModule {
     @IntoMap
     @MainViewModelKey(CartViewModel::class)
     abstract fun bindCreateBlogViewModel(cartViewModel: CartViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @MainViewModelKey(FlashViewModel::class)
+    abstract fun bindFlashViewModel(flashViewModel: FlashViewModel): ViewModel
 }
 
 

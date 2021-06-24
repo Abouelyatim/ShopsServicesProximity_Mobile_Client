@@ -3,13 +3,11 @@ package com.smartcity.client.api.main
 import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.responses.ListAddressResponse
+import com.smartcity.client.api.main.responses.ListGenericResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.BillTotal
-import com.smartcity.client.models.Order
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.util.GenericApiResponse
 import com.smartcity.provider.models.Policy
@@ -97,6 +95,11 @@ interface OpenApiMainService {
     fun confirmOrderReceived(
         @Path(value = "id") id:Long
     ): LiveData<GenericApiResponse<GenericResponse>>
+
+    @GET("user/flash/{id}")
+    fun getUserFlashDeals(
+        @Path(value = "id") id:Long
+    ): LiveData<GenericApiResponse<ListGenericResponse<FlashDeal>>>
 }
 
 

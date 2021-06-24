@@ -6,6 +6,7 @@ import com.bumptech.glide.RequestManager
 import com.smartcity.client.fragments.main.account.AccountFragmentFactory
 import com.smartcity.client.fragments.main.blog.BlogFragmentFactory
 import com.smartcity.client.fragments.main.cart.CartFragmentFactory
+import com.smartcity.client.fragments.main.flash_notification.FlashFragmentFactory
 
 
 import dagger.Module
@@ -51,6 +52,20 @@ object MainFragmentsModule {
         requestManager: RequestManager
     ): FragmentFactory {
         return CartFragmentFactory(
+            viewModelFactory,
+            requestManager
+        )
+    }
+
+    @JvmStatic
+    @MainScope
+    @Provides
+    @Named("FlashFragmentFactory")
+    fun provideFlashFragmentFactory(
+        viewModelFactory: ViewModelProvider.Factory,
+        requestManager: RequestManager
+    ): FragmentFactory {
+        return FlashFragmentFactory(
             viewModelFactory,
             requestManager
         )

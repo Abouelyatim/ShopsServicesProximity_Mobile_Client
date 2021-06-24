@@ -153,6 +153,10 @@ class InterestActivity : BaseActivity() {
         // ignore
     }
 
+    override fun displayBadgeBottomNavigationFlash(bool: Boolean) {
+
+    }
+
     override fun displayBottomNavigation(bool: Boolean) {
 
     }

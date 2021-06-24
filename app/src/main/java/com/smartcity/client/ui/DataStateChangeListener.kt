@@ -6,6 +6,8 @@ interface DataStateChangeListener{
 
     fun expandAppBar()
 
+    fun displayBadgeBottomNavigationFlash(bool: Boolean)
+
     fun displayBottomNavigation(bool: Boolean)
 
     fun hideSoftKeyboard()

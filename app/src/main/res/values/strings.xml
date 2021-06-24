@@ -27,6 +27,7 @@
     <string name="my_blogs">My Blogs</string>
     <string name="home">Home</string>
     <string name="create">Create</string>
+    <string name="flash">Flash</string>
 
     <string name="fragment_create_blog">Create</string>
     <string name="fragment_update_blog">Update</string>

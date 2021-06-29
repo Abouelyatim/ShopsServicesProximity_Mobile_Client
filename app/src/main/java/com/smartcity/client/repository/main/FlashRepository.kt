@@ -1,20 +1,31 @@
 package com.smartcity.client.repository.main
 
 import android.util.Log
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProvider
+import com.here.oksse.OkSse
+import com.here.oksse.ServerSentEvent
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.responses.ListGenericResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.FlashDeal
+import com.smartcity.client.repository.BaseRepository
 import com.smartcity.client.repository.JobManager
 import com.smartcity.client.repository.NetworkBoundResource
 import com.smartcity.client.session.SessionManager
+import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.DataState
+import com.smartcity.client.ui.Response
+import com.smartcity.client.ui.ResponseType
+import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
+import com.smartcity.client.ui.main.flash_notification.viewmodel.FlashViewModel
 import com.smartcity.client.util.AbsentLiveData
 import com.smartcity.client.util.ApiSuccessResponse
 import com.smartcity.client.util.GenericApiResponse
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
+import okhttp3.Request
 import javax.inject.Inject
 
 @MainScope
@@ -23,7 +34,7 @@ class FlashRepository
 constructor(
     val openApiMainService: OpenApiMainService,
     val sessionManager: SessionManager
-): JobManager("FlashRepository") {
+): JobManager("FlashRepository"){
     private val TAG: String = "AppDebug"
 
     fun attemptUserFlashDeals(
@@ -79,4 +90,5 @@ constructor(
 
         }.asLiveData()
     }
+
 }

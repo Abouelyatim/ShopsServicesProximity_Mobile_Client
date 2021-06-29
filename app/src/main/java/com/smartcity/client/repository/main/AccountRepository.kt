@@ -2,8 +2,10 @@ package com.smartcity.client.repository.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.here.oksse.ServerSentEvent
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
+import com.smartcity.client.api.main.ServerSentEventImpl
 import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.di.main.MainScope
@@ -11,15 +13,23 @@ import com.smartcity.client.models.Address
 import com.smartcity.client.models.Order
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.persistence.AccountPropertiesDao
-import com.smartcity.client.repository.JobManager
-import com.smartcity.client.repository.NetworkBoundResource
+import com.smartcity.client.repository.*
 import com.smartcity.client.session.SessionManager
+import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Response
 import com.smartcity.client.ui.ResponseType
+import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
+import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.client.util.*
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_ORDER_EVENT_CHANGE
+import com.smartcity.client.util.SuccessHandling.Companion.MUST_UPDATE_UI
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import okhttp3.Request
 import javax.inject.Inject
 
 @MainScope
@@ -29,8 +39,14 @@ constructor(
     val openApiMainService: OpenApiMainService,
     val accountPropertiesDao: AccountPropertiesDao,
     val sessionManager: SessionManager
-): JobManager("AccountRepository")
+): JobManager("AccountRepository"),
+    BaseRepository<AccountStateEvent, AccountViewState>
 {
+    lateinit var viewModel: AccountViewModel
+
+    override fun setCurrentViewModel(viewModel: BaseViewModel<AccountStateEvent, AccountViewState>) {
+        this.viewModel=viewModel as AccountViewModel
+    }
 
     private val TAG: String = "AppDebug"
 
@@ -509,6 +525,93 @@ constructor(
                         responseType
                     )
                 )
+            }
+        }
+    }
+
+
+
+
+
+    lateinit var sse: ServerSentEvent
+
+    fun attemptSubscribeOrderChangeEvent(
+    ): LiveData<DataState<AccountViewState>>{
+        Log.d(TAG, "attemptSubscribeOrderChangeEvent")
+        val listener= object: ServerSentEvent.Listener{
+            override fun onOpen(sse: ServerSentEvent?, response: okhttp3.Response?) {
+
+            }
+
+            override fun onRetryTime(sse: ServerSentEvent?, milliseconds: Long): Boolean {
+                return true
+            }
+
+            override fun onComment(sse: ServerSentEvent?, comment: String?) {
+
+            }
+
+            override fun onRetryError(
+                sse: ServerSentEvent?,
+                throwable: Throwable?,
+                response: okhttp3.Response?
+            ): Boolean {
+                return true
+            }
+
+            override fun onPreRetry(sse: ServerSentEvent?, originalRequest: Request?): Request {
+                return originalRequest!!
+            }
+
+            override fun onMessage(
+                sse: ServerSentEvent?,
+                id: String?,
+                event: String?,
+                message: String?
+            ) {
+                attemptRepositoryResponseOrderChangeEvent()
+            }
+
+            override fun onClosed(sse: ServerSentEvent?) {
+
+            }
+
+        }
+
+        sse= ServerSentEventImpl().getOrderChangeSSE(listener)
+
+        return returnSettingsDone(null, Response(DONE_ORDER_EVENT_CHANGE,ResponseType.None()))
+    }
+
+
+    fun attemptFinishOrderChangeEvent(
+    ): LiveData<DataState<AccountViewState>>{
+        Log.d(TAG, "attemptSubscribeOrderChangeEvent")
+        sse.close()
+        return returnSettingsDone(null,null)
+    }
+
+    fun attemptRepositoryResponseOrderChangeEvent(
+    ) {
+        Log.d(TAG, "attemptRepositoryResponseOrderChangeEvent")
+        GlobalScope.launch(Dispatchers.Main){
+            viewModel.setStateEvent(
+                AccountStateEvent.ResponseOrderChangeEvent()
+            )
+        }
+    }
+
+    fun attemptResponseOrderChangeEvent(
+    ): LiveData<DataState<AccountViewState>>{
+        Log.d(TAG, "attemptResponseOrderChangeEvent")
+        return returnSettingsDone(null,Response(MUST_UPDATE_UI,ResponseType.None()))
+    }
+
+    private fun returnSettingsDone(data:AccountViewState?,response: Response?): LiveData<DataState<AccountViewState>>{
+        return object: LiveData<DataState<AccountViewState>>(){
+            override fun onActive() {
+                super.onActive()
+                value = DataState.data(data, response)
             }
         }
     }

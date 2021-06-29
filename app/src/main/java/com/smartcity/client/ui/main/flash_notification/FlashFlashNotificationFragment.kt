@@ -1,6 +1,8 @@
 package com.smartcity.client.ui.main.flash_notification
 
+import android.R.attr.path
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
@@ -9,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.here.oksse.OkSse
+import com.here.oksse.ServerSentEvent
 import com.smartcity.client.R
 import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
@@ -18,6 +22,8 @@ import com.smartcity.client.ui.main.flash_notification.viewmodel.getFlashDealsLi
 import com.smartcity.client.ui.main.flash_notification.viewmodel.setFlashDealsList
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_flash_notification.*
+import okhttp3.Request
+import okhttp3.Response
 import javax.inject.Inject
 
 
@@ -68,10 +74,56 @@ constructor(
         setHasOptionsMenu(true)
         stateChangeListener.displayBadgeBottomNavigationFlash(false)
 
+      /*  val listener= object:ServerSentEvent.Listener{
+            override fun onOpen(sse: ServerSentEvent?, response: Response?) {
+
+            }
+
+            override fun onRetryTime(sse: ServerSentEvent?, milliseconds: Long): Boolean {
+                return true
+            }
+
+            override fun onComment(sse: ServerSentEvent?, comment: String?) {
+
+            }
+
+            override fun onRetryError(
+                sse: ServerSentEvent?,
+                throwable: Throwable?,
+                response: Response?
+            ): Boolean {
+                return true
+            }
+
+            override fun onPreRetry(sse: ServerSentEvent?, originalRequest: Request?): Request {
+                return originalRequest!!
+            }
+
+            override fun onMessage(
+                sse: ServerSentEvent?,
+                id: String?,
+                event: String?,
+                message: String?
+            ) {
+                Log.d("ii",message)
+            }
+
+            override fun onClosed(sse: ServerSentEvent?) {
+
+            }
+
+        }
+
+        val request: Request = Request.Builder().url("http://192.168.42.196:8085/sse/flux/order-change-event").build()
+        val okSse = OkSse()
+         sse = okSse.newServerSentEvent(request, listener)*/
+
         getFlashDeals()
         initRecyclerView()
         subscribeObservers()
+
     }
+    //lateinit var sse:ServerSentEvent
 
     private fun getFlashDeals() {
         viewModel.setStateEvent(
@@ -124,4 +176,10 @@ constructor(
         }
     }
 
+
+    override fun onPause() {
+        super.onPause()
+       // Log.d("ii","sse.close()")
+       // sse.close()
+    }
 }

@@ -26,6 +26,7 @@ constructor(
 
     init {
         saveFlashBadge()
+        initRepositoryViewModel()
     }
 
     private fun saveFlashBadge(){
@@ -43,6 +44,7 @@ constructor(
                     )
                 }?: AbsentLiveData.create()
             }
+
 
             is FlashStateEvent.None -> {
                 return liveData {
@@ -74,5 +76,9 @@ constructor(
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
+    }
+
+    override fun initRepositoryViewModel() {
+
     }
 }

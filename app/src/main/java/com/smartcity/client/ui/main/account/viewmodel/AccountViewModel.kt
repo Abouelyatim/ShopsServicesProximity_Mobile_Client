@@ -13,6 +13,7 @@ import com.smartcity.client.ui.Loading
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountStateEvent.*
 import com.smartcity.client.ui.main.account.state.AccountViewState
+import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.util.AbsentLiveData
 import javax.inject.Inject
 
@@ -25,6 +26,10 @@ constructor(
 )
     : BaseViewModel<AccountStateEvent, AccountViewState>()
 {
+    init {
+        initRepositoryViewModel()
+    }
+
     override fun handleStateEvent(stateEvent: AccountStateEvent): LiveData<DataState<AccountViewState>> {
         when(stateEvent){
 
@@ -91,6 +96,16 @@ constructor(
                 )
             }
 
+            is SubscribeOrderChangeEvent ->{
+                return accountRepository.attemptSubscribeOrderChangeEvent()
+            }
+            is ResponseOrderChangeEvent ->{
+                return accountRepository.attemptResponseOrderChangeEvent()
+            }
+            is FinishOrderChangeEvent ->{
+                return accountRepository.attemptFinishOrderChangeEvent()
+            }
+
             is None ->{
                 return liveData {
                     emit(
@@ -121,6 +136,10 @@ constructor(
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
+    }
+
+    override fun initRepositoryViewModel() {
+        accountRepository.setCurrentViewModel(this)
     }
 }
 

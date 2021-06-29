@@ -4,7 +4,9 @@ class Constants {
 
     companion object{
 
-        const val BASE_URL = "http://192.168.42.110:8085/api/"
+        const val BASE="http://192.168.42.196:8085"
+        const val BASE_URL = "$BASE/api/"
+        const val BASE_SSE_URL = "$BASE/sse/flux"
         const val PRODUCT_IMAGE_URL=BASE_URL+"product/image/"
 
         const val PASSWORD_RESET_URL: String = "https://open-api.xyz/password_reset/"

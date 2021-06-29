@@ -109,6 +109,9 @@ constructor(
         Log.d(TAG, "CLEARED...")
     }
 
+    override fun initRepositoryViewModel() {
+
+    }
 
 
 }

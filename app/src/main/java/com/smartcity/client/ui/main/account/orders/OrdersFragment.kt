@@ -88,15 +88,34 @@ constructor(
         stateChangeListener.hideSoftKeyboard()
         stateChangeListener.displayBottomNavigation(false)
 
+        subscribeOrderChangeEvent()
+
         initOrderActionRecyclerView()
         initRecyclerView()
         subscribeObservers()
 
 
         setOrderAction()
-        initData(viewModel.getOrderActionRecyclerPosition())
+
 
         setEmptyListUi(viewModel.getOrdersList().isEmpty())
+    }
+
+    private fun subscribeOrderChangeEvent(){
+        viewModel.setStateEvent(
+            AccountStateEvent.SubscribeOrderChangeEvent()
+        )
+    }
+
+    private fun finishOrderChangeEvent(){
+        viewModel.setStateEvent(
+            AccountStateEvent.FinishOrderChangeEvent()
+        )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        finishOrderChangeEvent()
     }
 
     private fun initData(actionPosition: Int) {
@@ -167,6 +186,14 @@ constructor(
                 dataState.data?.let { data ->
                     data.response?.peekContent()?.let{ response ->
                         if(response.message==SuccessHandling.CUSTOM_CATEGORY_UPDATE_DONE){
+                            initData(viewModel.getOrderActionRecyclerPosition())
+                        }
+
+                        if(response.message.equals(SuccessHandling.DONE_ORDER_EVENT_CHANGE)){
+                            initData(viewModel.getOrderActionRecyclerPosition())
+                        }
+
+                        if(response.message.equals(SuccessHandling.MUST_UPDATE_UI)){
                             initData(viewModel.getOrderActionRecyclerPosition())
                         }
                     }
@@ -259,7 +286,6 @@ constructor(
         super.onDestroy()
         viewModel.setOrderActionRecyclerPosition(getSelectedActionPositions())
         recyclerOrderActionAdapter.resetSelectedActionPosition()
-
         //orders_recyclerview.adapter=null
         //order_action_recyclerview.adapter=null
     }

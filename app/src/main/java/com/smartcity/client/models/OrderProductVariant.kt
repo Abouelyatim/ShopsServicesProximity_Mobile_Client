@@ -17,23 +17,23 @@ data class OrderProductVariant(
 
     @SerializedName("productVariant")
     @Expose
-    var productVariant: ProductVariants,
+    var productVariant: ProductVariants?,
 
     @SerializedName("quantity")
     @Expose
-    var quantity: Int,
+    var quantity: Int?,
 
     @SerializedName("productImage")
     @Expose
-    var productImage: Image,
+    var productImage: Image?,
 
     @SerializedName("productName")
     @Expose
-    var productName: String,
+    var productName: String?,
 
     @SerializedName("offer")
     @Expose
-    var offer: Offer
+    var offer: Offer?
 
 ) : Parcelable {
     override fun toString(): String {

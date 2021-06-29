@@ -96,8 +96,8 @@ class OrderProductAdapter (
         fun bind(item: OrderProductVariant) = with(itemView) {
 
             val name=item.productName
-            name.replace("\n","").replace("\r","")
-            if(name.length>70){
+            name!!.replace("\n","").replace("\r","")
+            if(name!!.length>70){
                 itemView.order_product_name.text=name.subSequence(0,70).padEnd(73,'.')
             }else{
                 itemView.order_product_name.text=name
@@ -107,8 +107,8 @@ class OrderProductAdapter (
 
             itemView.order_product_quantity.text=item.quantity.toString()
 
-            var image=item.productImage.image
-            item.productVariant.image?.let {
+            var image=item.productImage!!.image
+            item.productVariant!!.image?.let {
                 image=it
             }
 
@@ -119,7 +119,7 @@ class OrderProductAdapter (
 
 
             var options=""
-            item.productVariant.productVariantAttributeValuesProductVariant.map {
+            item.productVariant!!.productVariantAttributeValuesProductVariant.map {
                 options=options+" , "+it.attributeValue.value+" "+it.attributeValue.attribute
             }
             itemView.order_product_variant.text=options.drop(2)
@@ -132,16 +132,16 @@ class OrderProductAdapter (
                 if (offer!=null){
                     when(offer.type){
                         OfferType.PERCENTAGE ->{
-                            prices=it.productVariant.price-(it.productVariant.price*offer.percentage!!/100)
+                            prices=it.productVariant!!.price-(it.productVariant!!.price*offer.percentage!!/100)
                         }
 
                         OfferType.FIXED ->{
-                            prices=it.productVariant.price-offer.newPrice!!
+                            prices=it.productVariant!!.price-offer.newPrice!!
                         }
                         null -> {}
                     }
                 }else{
-                    prices=it.productVariant.price
+                    prices=it.productVariant!!.price
                 }
             }
             return "${prices}${Constants.DOLLAR}"

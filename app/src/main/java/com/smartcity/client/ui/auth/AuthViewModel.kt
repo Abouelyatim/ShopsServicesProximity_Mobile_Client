@@ -120,6 +120,10 @@ constructor(
         super.onCleared()
         cancelActiveJobs()
     }
+
+    override fun initRepositoryViewModel() {
+
+    }
 }
 
 

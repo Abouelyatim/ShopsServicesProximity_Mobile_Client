@@ -63,50 +63,7 @@
             android:layout_gravity="center"
             />
 
-    <TextView
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CONTENT OF THE ORDER"
-            android:textSize="14sp"
-            android:padding="5dp"
-            android:textColor="@color/dark"
-            android:textStyle="bold"
-            />
-
-
-
-        <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_above="@+id/next_container"
-                android:background="@color/default_background_color" />
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-            android:orientation="horizontal">
-            <TextView
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Total to pay"
-                    android:textSize="13sp"
-                    android:padding="5dp"
-                    android:layout_weight="1"
-                    />
-
-            <TextView
-                    android:id="@+id/order_total"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0.0"
-                    android:textSize="13sp"
-                    android:padding="5dp"
-                    android:textColor="#000"
-                    />
-        </LinearLayout>
 
         <Button
                 android:id="@+id/confirm_order_button"

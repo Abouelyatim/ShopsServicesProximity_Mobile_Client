@@ -534,11 +534,10 @@ constructor(
 
 
     lateinit var sse: ServerSentEvent
-
     fun attemptSubscribeOrderChangeEvent(
     ): LiveData<DataState<AccountViewState>>{
         Log.d(TAG, "attemptSubscribeOrderChangeEvent")
-        val listener= object: ServerSentEvent.Listener{
+       /* val listener= object: ServerSentEvent.Listener{
             override fun onOpen(sse: ServerSentEvent?, response: okhttp3.Response?) {
 
             }
@@ -578,7 +577,7 @@ constructor(
 
         }
 
-        sse= ServerSentEventImpl().getOrderChangeSSE(listener)
+        sse= ServerSentEventImpl().getOrderChangeSSE(listener)*/
 
         return returnSettingsDone(null, Response(DONE_ORDER_EVENT_CHANGE,ResponseType.None()))
     }
@@ -587,7 +586,7 @@ constructor(
     fun attemptFinishOrderChangeEvent(
     ): LiveData<DataState<AccountViewState>>{
         Log.d(TAG, "attemptSubscribeOrderChangeEvent")
-        sse.close()
+       // sse.close()
         return returnSettingsDone(null,null)
     }
 

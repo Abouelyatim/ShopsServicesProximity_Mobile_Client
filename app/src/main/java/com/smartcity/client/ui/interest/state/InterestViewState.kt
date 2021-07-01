@@ -32,12 +32,12 @@ data class CategoryFields(
 
         }
     }
+
     fun isValid(): String{
-        if(selectedCategories.size<3){
+        if(selectedCategories.size<0){
             return SelectedCategoriesError.mustChoose()
         }
         return SelectedCategoriesError.none()
     }
-
 }
 

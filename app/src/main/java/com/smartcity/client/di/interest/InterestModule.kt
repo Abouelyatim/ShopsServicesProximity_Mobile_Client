@@ -2,12 +2,14 @@ package com.smartcity.client.di.interest
 
 import android.content.SharedPreferences
 import com.smartcity.client.api.interest.OpenApiInterestService
+import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.persistence.AuthTokenDao
 import com.smartcity.client.repository.interest.InterestRepository
 import com.smartcity.client.session.SessionManager
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
+import javax.inject.Named
 
 @Module
 object InterestModule{
@@ -40,5 +42,13 @@ object InterestModule{
         )
     }
 
-
+    @JvmStatic
+    @InterestScope
+    @Provides
+    @Named("GetSharedPreferences")
+    fun provideSharedPreferences(
+        sharedPreferences: SharedPreferences
+    ): SharedPreferences {
+        return sharedPreferences
+    }
 }

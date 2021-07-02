@@ -1,6 +1,8 @@
 package com.smartcity.client.ui.interest
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -11,11 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.smartcity.client.BaseApplication
 import com.smartcity.client.R
 import com.smartcity.client.fragments.interest.InterestNavHostFragment
+import com.smartcity.client.models.product.Category
 import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.main.MainActivity
-import com.smartcity.client.util.ErrorHandling
+import com.smartcity.client.util.PreferenceKeys
 import com.smartcity.client.util.SuccessHandling
-import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.activity_auth.fragment_container
 import kotlinx.android.synthetic.main.activity_auth.progress_bar
 import kotlinx.android.synthetic.main.activity_interest.*
@@ -29,6 +31,10 @@ class InterestActivity : BaseActivity() {
 
     @Inject
     lateinit var providerFactory: ViewModelProvider.Factory
+
+    @Inject
+    @Named("GetSharedPreferences")
+    lateinit var sharedPreferences: SharedPreferences
 
     val viewModel: InterestViewModel by viewModels {
         providerFactory
@@ -54,8 +60,9 @@ class InterestActivity : BaseActivity() {
         onFinishCheckPreviousAuthUser()
     }
 
-
     private fun subscribeObservers() {
+        val interestCenter=sharedPreferences.getStringSet(PreferenceKeys.USER_INTEREST_CENTER, null)
+
         viewModel.dataState.observe(this, Observer { dataState ->
             onDataStateChange(dataState)
 
@@ -76,6 +83,7 @@ class InterestActivity : BaseActivity() {
                             if(message.equals(SuccessHandling.DONE_User_Interest_Center)){
                                 data.data?.let {
                                     if(it.peekContent().categoryFields.categoryList.isNotEmpty()){
+                                        saveInterestCenter(sharedPreferences,it.peekContent().categoryFields.categoryList)
                                         navMainActivity()
                                     }else{
                                         onFinishCheckPreviousAuthUser()
@@ -95,7 +103,9 @@ class InterestActivity : BaseActivity() {
                 authToken?.let {
                     it.interest?.let {interest->
                         if(interest){
-                            navMainActivity()
+                            if(!interestCenter.isNullOrEmpty()){
+                                navMainActivity()
+                            }
                         }
                     }
                 }
@@ -103,6 +113,14 @@ class InterestActivity : BaseActivity() {
             }
         })
     }
+
+    @SuppressLint("CommitPrefEdits")
+    private fun saveInterestCenter(sharedPreferences: SharedPreferences, list: List<Category>) {
+        val editor=sharedPreferences.edit()
+        editor.putStringSet(PreferenceKeys.USER_INTEREST_CENTER,list.map { it.name }.toMutableSet())
+        editor.apply()
+    }
+
     private fun onFinishCheckPreviousAuthUser(){
         fragment_container.visibility = View.VISIBLE
     }

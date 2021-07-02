@@ -60,8 +60,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     @SuppressLint("CommitPrefEdits")
     private fun handleCustomDataMessage(title: String, message: String, type: NotificationType) {
+        Log.d(TAG,"handleCustomDataMessage")
         when(type){
-            NotificationType.FLASH ->{
+            NotificationType.FLASH ,NotificationType.DISCOUNT->{
 
                 val preferences = baseContext.getSharedPreferences(
                     PreferenceKeys.APP_PREFERENCES,

@@ -187,9 +187,16 @@ class MainActivity : BaseActivity(),
         }
 
         val interestCenter=sharedPreferences.getStringSet(PreferenceKeys.USER_INTEREST_CENTER, null)
+        Log.d(TAG, interestCenter.toString())
         interestCenter?.let {
             it.map {topic ->
-                FirebaseMessaging.getInstance().subscribeToTopic(topic)
+
+                FirebaseMessaging.getInstance().subscribeToTopic(topic).addOnCompleteListener { task ->
+                    if (task.isSuccessful)
+                        Log.d(TAG, "Subscription successful to "+topic)
+                    else
+                        Log.e(TAG, "Subscription failed. Error: " + task.exception?.localizedMessage)
+                }
             }
         }
     }

@@ -190,9 +190,9 @@ constructor(
         sessionManager.cachedToken.value?.let {
             it.interest
         }
-
+        val interestCenter=sharedPreferences.getStringSet(PreferenceKeys.USER_INTEREST_CENTER, null)
         Log.d("ii",sessionManager.cachedToken.value!!.interest!!.toString())
-        if(sessionManager.cachedToken.value!!.interest!!){//if interest is set so do not do request
+        if(sessionManager.cachedToken.value!!.interest!! && !interestCenter.isNullOrEmpty()){//if interest is set so do not do request
             return returnErrorResponse("", ResponseType.None())
         }
 

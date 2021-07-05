@@ -15,6 +15,8 @@ import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.ProductVariants
 import com.smartcity.client.util.Constants
 import kotlinx.android.synthetic.main.layout_product_cart_list_item.view.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class CartProductAdapter (
     private val requestManager: RequestManager,
@@ -156,7 +158,7 @@ class CartProductAdapter (
                     itemView.cart_product_old_price.text="${productVariants.price}${Constants.DOLLAR}"
                     when(offer.type){
                         OfferType.PERCENTAGE ->{
-                            prices=it.price-(it.price*offer.percentage!!/100)
+                            prices= BigDecimal(it.price-(it.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
                             itemView.cart_discount_value.text="-${offer.percentage}%"
                         }
 

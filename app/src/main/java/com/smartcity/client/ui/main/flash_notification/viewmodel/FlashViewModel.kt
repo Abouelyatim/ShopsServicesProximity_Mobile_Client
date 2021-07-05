@@ -9,6 +9,7 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Loading
+import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.AbsentLiveData
@@ -45,6 +46,23 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
+            is FlashStateEvent.GetUserDiscountProductEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    flashRepository.attemptUserDiscountProduct(
+                        authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is FlashStateEvent.AddProductCartEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    flashRepository.attemptAddProductCart(
+                        authToken.account_pk!!.toLong(),
+                        stateEvent.variantId,
+                        stateEvent.quantity
+                    )
+                }?: AbsentLiveData.create()
+            }
 
             is FlashStateEvent.None -> {
                 return liveData {

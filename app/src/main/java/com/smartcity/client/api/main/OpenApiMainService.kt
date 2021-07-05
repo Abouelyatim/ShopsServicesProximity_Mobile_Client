@@ -9,6 +9,7 @@ import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
+import com.smartcity.client.models.product.Product
 import com.smartcity.client.util.GenericApiResponse
 import com.smartcity.provider.models.Policy
 import retrofit2.http.*
@@ -100,6 +101,11 @@ interface OpenApiMainService {
     fun getUserFlashDeals(
         @Path(value = "id") id:Long
     ): LiveData<GenericApiResponse<ListGenericResponse<FlashDeal>>>
+
+    @GET("user/offer/{id}")
+    fun getUserDiscountProduct(
+        @Path(value = "id") id:Long
+    ): LiveData<GenericApiResponse<ListGenericResponse<Product>>>
 }
 
 

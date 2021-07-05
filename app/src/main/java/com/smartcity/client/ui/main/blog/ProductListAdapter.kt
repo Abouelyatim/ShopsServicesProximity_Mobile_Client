@@ -16,6 +16,8 @@ import com.smartcity.client.util.Constants
 import com.smartcity.client.util.GenericViewHolder
 import kotlinx.android.synthetic.main.layout_product_list_item.view.*
 import java.lang.Exception
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class ProductListAdapter(
     private val requestManager: RequestManager,
@@ -197,7 +199,7 @@ class ProductListAdapter(
                     if (offer!=null){
                         when(offer.type){
                             OfferType.PERCENTAGE ->{
-                                allPrices.add(it.price-(it.price*offer.percentage!!/100))
+                                allPrices.add(BigDecimal(it.price-(it.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble())
                             }
 
                             OfferType.FIXED ->{

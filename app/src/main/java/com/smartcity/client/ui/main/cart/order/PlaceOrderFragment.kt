@@ -29,6 +29,8 @@ import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import com.smartcity.provider.models.SelfPickUpOptions
 import kotlinx.android.synthetic.main.fragment_place_order.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 
@@ -161,7 +163,7 @@ constructor(
             if (offer!=null){
                 when(offer.type){
                     OfferType.PERCENTAGE ->{
-                        prices=it.price-(it.price*offer.percentage!!/100)
+                        prices= BigDecimal(it.price-(it.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
                     }
 
                     OfferType.FIXED ->{

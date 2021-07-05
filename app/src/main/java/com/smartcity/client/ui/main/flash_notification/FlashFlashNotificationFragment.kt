@@ -1,29 +1,30 @@
 package com.smartcity.client.ui.main.flash_notification
 
-import android.R.attr.path
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.here.oksse.OkSse
-import com.here.oksse.ServerSentEvent
 import com.smartcity.client.R
+import com.smartcity.client.models.product.Product
+import com.smartcity.client.ui.main.account.orders.OrdersFragment
+import com.smartcity.client.ui.main.blog.ProductListAdapter
+import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.getSelectedActionPositions
+import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.setSelectedActionPositions
 import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
-import com.smartcity.client.ui.main.flash_notification.viewmodel.FlashViewModel
-import com.smartcity.client.ui.main.flash_notification.viewmodel.getFlashDealsList
-import com.smartcity.client.ui.main.flash_notification.viewmodel.setFlashDealsList
+import com.smartcity.client.ui.main.flash_notification.viewmodel.*
+import com.smartcity.client.util.RightSpacingItemDecoration
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_flash_notification.*
-import okhttp3.Request
-import okhttp3.Response
+import kotlinx.android.synthetic.main.fragment_orders.focusable_view
 import javax.inject.Inject
 
 
@@ -32,10 +33,19 @@ class FlashFlashNotificationFragment
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseFlashNotificationFragment(R.layout.fragment_flash_notification)
+): BaseFlashNotificationFragment(R.layout.fragment_flash_notification),
+    ProductListAdapter.Interaction,
+    OfferActionAdapter.Interaction
 {
 
+    private lateinit var recyclerOfferActionAdapter: OfferActionAdapter
     private lateinit var flashRecyclerAdapter: FlashDealsAdapter
+    private lateinit var productRecyclerAdapter: ProductListAdapter
+
+    object ActionOffer {
+        val FLASH = Pair<String,Int>("Flash",0)
+        val DISCOUNT = Pair<String,Int>("Discount",1)
+    }
 
     val viewModel: FlashViewModel by viewModels{
         viewModelFactory
@@ -74,60 +84,93 @@ constructor(
         setHasOptionsMenu(true)
         stateChangeListener.displayBadgeBottomNavigationFlash(false)
 
-      /*  val listener= object:ServerSentEvent.Listener{
-            override fun onOpen(sse: ServerSentEvent?, response: Response?) {
-
-            }
-
-            override fun onRetryTime(sse: ServerSentEvent?, milliseconds: Long): Boolean {
-                return true
-            }
-
-            override fun onComment(sse: ServerSentEvent?, comment: String?) {
-
-            }
-
-            override fun onRetryError(
-                sse: ServerSentEvent?,
-                throwable: Throwable?,
-                response: Response?
-            ): Boolean {
-                return true
-            }
-
-            override fun onPreRetry(sse: ServerSentEvent?, originalRequest: Request?): Request {
-                return originalRequest!!
-            }
-
-            override fun onMessage(
-                sse: ServerSentEvent?,
-                id: String?,
-                event: String?,
-                message: String?
-            ) {
-                Log.d("ii",message)
-            }
-
-            override fun onClosed(sse: ServerSentEvent?) {
-
-            }
-
-        }
-
-        val request: Request = Request.Builder().url("http://192.168.42.196:8085/sse/flux/order-change-event").build()
-        val okSse = OkSse()
-         sse = okSse.newServerSentEvent(request, listener)*/
-
-        getFlashDeals()
         initRecyclerView()
+        initProductRecyclerView()
+        initOfferActionRecyclerView()
         subscribeObservers()
-
+        setOfferAction()
+        initData(viewModel.getOfferActionRecyclerPosition())
     }
-    //lateinit var sse:ServerSentEvent
+
+    private fun initData(actionPosition: Int) {
+        when(actionPosition){
+            ActionOffer.FLASH.second ->{
+                viewModel.clearProductList()
+                getFlashDeals()
+            }
+            ActionOffer.DISCOUNT.second ->{
+                viewModel.clearFlashList()
+                getDiscountOrders()
+            }
+        }
+    }
+
+    private fun setOfferAction() {
+        val list= mutableListOf<Triple<String,Int,Int>>()
+        list.add(ActionOffer.FLASH.second,Triple(ActionOffer.FLASH.first, R.drawable.ic_outline_local_offer_white, R.drawable.ic_outline_local_offer_black))
+        list.add(ActionOffer.DISCOUNT.second,Triple(ActionOffer.DISCOUNT.first,R.drawable.ic_outline_local_play_white, R.drawable.ic_outline_local_play_black))
+        viewModel.setOfferActionList(
+            list
+        )
+    }
+
+    private fun initProductRecyclerView(){
+        discount_recyclerview.apply {
+            layoutManager = LinearLayoutManager(this@FlashFlashNotificationFragment.context)
+            val topSpacingDecorator = TopSpacingItemDecoration(0)
+            removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
+            addItemDecoration(topSpacingDecorator)
+
+            productRecyclerAdapter = ProductListAdapter(
+                requestManager,
+                this@FlashFlashNotificationFragment
+            )
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+
+                }
+            })
+            adapter = productRecyclerAdapter
+        }
+    }
+
+    private fun initOfferActionRecyclerView() {
+        offer_action_recyclerview.apply {
+            layoutManager = GridLayoutManager(this@FlashFlashNotificationFragment.context, 2, GridLayoutManager.VERTICAL, false)
+
+            val rightSpacingDecorator = RightSpacingItemDecoration(0)
+            removeItemDecoration(rightSpacingDecorator) // does nothing if not applied already
+            addItemDecoration(rightSpacingDecorator)
+
+            recyclerOfferActionAdapter =
+                OfferActionAdapter(
+                    this@FlashFlashNotificationFragment
+                )
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val lastPosition = layoutManager.findLastVisibleItemPosition()
+
+                }
+            })
+            recyclerOfferActionAdapter.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            adapter = recyclerOfferActionAdapter
+        }
+    }
 
     private fun getFlashDeals() {
         viewModel.setStateEvent(
             FlashStateEvent.GetUserFlashDealsEvent()
+        )
+    }
+
+    private fun getDiscountOrders() {
+        viewModel.setStateEvent(
+            FlashStateEvent.GetUserDiscountProductEvent()
         )
     }
 
@@ -141,6 +184,10 @@ constructor(
                         it.flashFields.flashDealsList.let {
                             viewModel.setFlashDealsList(it)
                         }
+
+                        it.flashFields.productDiscountList.let {
+                            viewModel.setDiscountProductList(it)
+                        }
                     }
 
                 }
@@ -151,6 +198,13 @@ constructor(
         //submit list to recycler view
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             flashRecyclerAdapter.submitList(viewModel.getFlashDealsList())
+            productRecyclerAdapter.submitList(viewModel.getDiscountProductList(),false)
+
+            recyclerOfferActionAdapter.apply {
+                submitList(
+                    viewModel.getOfferAction()
+                )
+            }
         })
     }
 
@@ -176,10 +230,44 @@ constructor(
         }
     }
 
+    override fun onActionItemSelected(position: Int, item: String) {
+        offer_action_recyclerview.adapter!!.notifyDataSetChanged()
+        resetUI()
+        viewModel.setOfferActionRecyclerPosition(position)
 
-    override fun onPause() {
-        super.onPause()
-       // Log.d("ii","sse.close()")
-       // sse.close()
+        when(item){
+            ActionOffer.FLASH.first ->{
+                viewModel.clearProductList()
+                getFlashDeals()
+            }
+            ActionOffer.DISCOUNT.first ->{
+                viewModel.clearFlashList()
+                getDiscountOrders()
+            }
+        }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.setOfferActionRecyclerPosition(getSelectedActionPositions())
+        recyclerOfferActionAdapter.resetSelectedActionPosition()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setSelectedActionPositions(viewModel.getOfferActionRecyclerPosition())
+    }
+
+    private  fun resetUI(){
+        flash_recyclerview.smoothScrollToPosition(0)
+        discount_recyclerview.smoothScrollToPosition(0)
+        stateChangeListener.hideSoftKeyboard()
+    }
+
+    override fun onItemSelected(position: Int, item: Product) {
+        viewModel.setSelectedProduct(item)
+        findNavController().navigate(R.id.action_flashFlashNotificationFragment_to_viewProductFlashFragment)
+    }
+
+    override fun restoreListPosition() {}
 }

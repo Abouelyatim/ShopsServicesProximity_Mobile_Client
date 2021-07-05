@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.ui.main.flash_notification.FlashFlashNotificationFragment
+import com.smartcity.client.ui.main.flash_notification.ViewProductFlashFragment
 import javax.inject.Inject
 
 @MainScope
@@ -27,6 +28,12 @@ constructor(
                 )
             }
 
+            ViewProductFlashFragment::class.java.name -> {
+                ViewProductFlashFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
 
             else -> {
                 FlashFlashNotificationFragment(

@@ -13,6 +13,8 @@ import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.ProductVariants
 import com.smartcity.client.util.Constants
 import kotlinx.android.synthetic.main.layout_product_order_list_item.view.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class OrderProductAdapter (
     private val requestManager: RequestManager
@@ -132,7 +134,7 @@ class OrderProductAdapter (
                 if (offer!=null){
                     when(offer.type){
                         OfferType.PERCENTAGE ->{
-                            prices=it.price-(it.price*offer.percentage!!/100)
+                            prices= BigDecimal(it.price-(it.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
                         }
 
                         OfferType.FIXED ->{

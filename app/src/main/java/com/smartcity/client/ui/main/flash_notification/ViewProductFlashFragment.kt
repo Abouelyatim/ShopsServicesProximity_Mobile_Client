@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.blog.viewProduct
+package com.smartcity.client.ui.main.flash_notification
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -12,6 +12,7 @@ import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -26,32 +27,32 @@ import com.smartcity.client.models.product.AttributeValue
 import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.models.product.ProductVariants
-import com.smartcity.client.ui.main.blog.BaseBlogFragment
-import com.smartcity.client.ui.main.blog.state.ProductStateEvent
-import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.OptionsAdapter
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.ValuesAdapter
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.VariantImageAdapter
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.ViewPagerAdapter
-import com.smartcity.client.ui.main.blog.viewmodel.*
-import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
+import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
+import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
+import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
+import com.smartcity.client.ui.main.flash_notification.viewmodel.*
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_product.*
 import java.math.BigDecimal
 import java.math.RoundingMode
-
 import javax.inject.Inject
 
-class ViewProductFragment
+
+class ViewProductFlashFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseBlogFragment(R.layout.fragment_view_product),
+): BaseFlashNotificationFragment(R.layout.fragment_view_product),
     OptionsAdapter.Interaction,
     VariantImageAdapter.Interaction
 {
+
     private lateinit var dialogView: View
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager
@@ -60,7 +61,7 @@ constructor(
     private lateinit var  optionsRecyclerAdapter: OptionsAdapter
     private lateinit var optionsRecyclerview: RecyclerView
 
-    val viewModel: ProductViewModel by viewModels{
+    val viewModel: FlashViewModel by viewModels{
         viewModelFactory
     }
 
@@ -69,28 +70,35 @@ constructor(
         cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
-            (inState[CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY] as ProductViewState?)?.let { viewState ->
+            (inState[CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY] as FlashViewState?)?.let { viewState ->
                 viewModel.setViewState(viewState)
             }
         }
     }
+
+    /**
+     * !IMPORTANT!
+     * Must save ViewState b/c in event of process death the LiveData in ViewModel will be lost
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
-            CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY,
+            CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY,
             viewModel.viewState.value
         )
         super.onSaveInstanceState(outState)
     }
+
     override fun cancelActiveJobs(){
         viewModel.cancelActiveJobs()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.expandAppBar()
+        stateChangeListener.displayBadgeBottomNavigationFlash(false)
 
-        viewModel.getViewProductFields()?.let {
+        viewModel.getSelectedProduct()?.let {
             product=it
         }
 
@@ -104,7 +112,6 @@ constructor(
         variantsDialog()
         subscribeObservers()
     }
-
     private fun initViewPager() {
         viewPager = activity!!.findViewById(R.id.view_pager)
         viewPagerAdapter =
@@ -287,7 +294,7 @@ constructor(
             stateChangeListener.onDataStateChange(dataState)
         })
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            val map=viewModel.getChoisesMap()
+            val map=viewModel.getChoicesMap()
             val sortedOption= mutableListOf<String>()
             product.attributes.map {
                 sortedOption.add(it.name)
@@ -342,7 +349,7 @@ constructor(
         showDefaultProduct()
 
         dialog.setOnDismissListener {
-            viewModel.clearChoisesMap()
+            viewModel.clearChoicesMap()
         }
 
         val btn1 =dialogView.findViewById<ElegantNumberButton>(R.id.number_button)
@@ -356,16 +363,17 @@ constructor(
 
         val addToCart=dialogView.findViewById<Button>(R.id.add_to_cart)
         addToCart.setOnClickListener {
-            val map=viewModel.getChoisesMap()
+            val map=viewModel.getChoicesMap()
             if(map.size==product.attributes.size){
                 val variantId=getVariantId(map)
                 if(variantId!=-1L){
                     viewModel.setStateEvent(
-                        ProductStateEvent.AddProductCartEvent(
+                        FlashStateEvent.AddProductCartEvent(
                             variantId,
                             btn1.number.toInt()
                         )
                     )
+
                 }
             }
         }
@@ -470,7 +478,8 @@ constructor(
                                     }
 
                                     OfferType.PERCENTAGE ->{
-                                        price=BigDecimal(variant.price-(variant.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                                        price=
+                                            BigDecimal(variant.price-(variant.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
                                     }
                                 }
 
@@ -499,7 +508,8 @@ constructor(
                                 }
 
                                 OfferType.PERCENTAGE ->{
-                                    price=BigDecimal(variant.price-(variant.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                                    price=
+                                        BigDecimal(variant.price-(variant.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
                                 }
                             }
 
@@ -544,14 +554,14 @@ constructor(
 
     fun initOptionsRecyclerView(recyclerview:RecyclerView){
         recyclerview.apply {
-            layoutManager = LinearLayoutManager(this@ViewProductFragment.context,
+            layoutManager = LinearLayoutManager(this@ViewProductFlashFragment.context,
                 LinearLayoutManager.VERTICAL, false)
             val topSpacingDecorator = TopSpacingItemDecoration(0)
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
             optionsRecyclerAdapter =
                 OptionsAdapter(
-                    this@ViewProductFragment
+                    this@ViewProductFlashFragment
                 )
             addOnScrollListener(object: RecyclerView.OnScrollListener(){
 
@@ -577,7 +587,8 @@ constructor(
 
     fun initVariantImageRecyclerView(){
         product_recyclerview_variant_image.apply {
-            layoutManager = LinearLayoutManager(this@ViewProductFragment.context,LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(this@ViewProductFlashFragment.context,
+                LinearLayoutManager.HORIZONTAL, false)
             val topSpacingDecorator = TopSpacingItemDecoration(0)
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
@@ -585,7 +596,7 @@ constructor(
             variantImageRecyclerAdapter =
                 VariantImageAdapter(
                     requestManager,
-                    this@ViewProductFragment
+                    this@ViewProductFlashFragment
                 )
             addOnScrollListener(object: RecyclerView.OnScrollListener(){
 
@@ -606,12 +617,13 @@ constructor(
 
     override fun onItemSelected(option: String, value: String) {
         optionsRecyclerview.adapter!!.notifyDataSetChanged()
-        val map=viewModel.getChoisesMap()
+        val map=viewModel.getChoicesMap()
         if(map[option]==value){
             map.remove(option)
         }else{
             map.put(option,value)
         }
-        viewModel.setChoisesMap(map)
+        viewModel.setChoicesMap(map)
     }
+
 }

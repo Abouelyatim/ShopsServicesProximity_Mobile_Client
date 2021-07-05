@@ -15,6 +15,8 @@ import com.smartcity.client.ui.main.cart.viewmodel.getSelectedCartProduct
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.layout_cart_item_header.view.*
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class CartAdapter (
     private val requestManager: RequestManager,
@@ -160,7 +162,7 @@ class CartAdapter (
                 if (offer!=null){
                     when(offer.type){
                         OfferType.PERCENTAGE ->{
-                            prices=it.price-(it.price*offer.percentage!!/100)
+                            prices= BigDecimal(it.price-(it.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
                         }
 
                         OfferType.FIXED ->{

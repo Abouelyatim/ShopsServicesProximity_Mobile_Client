@@ -29,6 +29,8 @@
 
     <color name="white">#ffffff</color>
 
+    <color name="transparent">#00000000</color>
+
     <color name="bleu">#2979ff</color>
     <color name="bleu_light">#75a7ff</color>
     <color name="bleu_light_light">#1A75A7FF</color>

@@ -60,6 +60,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
 
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    
     implementation 'com.github.heremaps:oksse:0.9.0'
 
     implementation platform('com.google.firebase:firebase-bom:26.8.0')

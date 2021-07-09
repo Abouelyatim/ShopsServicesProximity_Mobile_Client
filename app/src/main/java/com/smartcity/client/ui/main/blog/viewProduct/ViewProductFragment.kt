@@ -2,16 +2,20 @@ package com.smartcity.client.ui.main.blog.viewProduct
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +25,13 @@ import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.smartcity.client.R
 import com.smartcity.client.models.product.AttributeValue
 import com.smartcity.client.models.product.OfferType
@@ -40,7 +51,6 @@ import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_product.*
 import java.math.BigDecimal
 import java.math.RoundingMode
-
 import javax.inject.Inject
 
 class ViewProductFragment
@@ -50,8 +60,10 @@ constructor(
     private val requestManager: RequestManager
 ): BaseBlogFragment(R.layout.fragment_view_product),
     OptionsAdapter.Interaction,
-    VariantImageAdapter.Interaction
+    VariantImageAdapter.Interaction,
+    OnMapReadyCallback
 {
+    private lateinit var mMapView:MapView
     private lateinit var dialogView: View
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager
@@ -94,7 +106,7 @@ constructor(
             product=it
         }
 
-
+        setStoreAddressMap(savedInstanceState)
         initViewPager()
         setNewPrice(product_new_price)
         setDiscountValue()
@@ -102,7 +114,90 @@ constructor(
         setOptions()
         setDescription()
         variantsDialog()
+        setStoreAddress()
+        SetOpenGoogleMap()
+        SetStoreName()
+        setNavViewStore()
         subscribeObservers()
+    }
+
+    private fun setNavViewStore() {
+        product_view_store_button.setOnClickListener {  }
+        product_store_container.setOnClickListener {  }
+    }
+
+    private fun SetStoreName() {
+        product_store_name.text=product.storeName
+    }
+
+    private fun SetOpenGoogleMap() {
+        product_store_address_open_google_map.setOnClickListener {
+            product.storeAddress?.let {
+                if (it.latitude != 0.0 && it.longitude != 0.0) {
+                    val gmmIntentUri = Uri.parse("geo:0,0?q=${it.latitude},${it.longitude}(Google)")
+                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                    startActivity(mapIntent)
+                }
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setStoreAddressMap(savedInstanceState: Bundle?) {
+        val mainScrollView: NestedScrollView = activity!!.findViewById(R.id.scrollView) as NestedScrollView
+        val transparentImageView = activity!!.findViewById(R.id.transparent_image) as ImageView
+        transparentImageView.setOnTouchListener { v, event ->
+            val action = event.action
+            when (action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Disallow ScrollView to intercept touch events.
+                    mainScrollView.requestDisallowInterceptTouchEvent(true)
+                    // Disable touch on transparent view
+                    false
+                }
+                MotionEvent.ACTION_UP -> {
+                    // Allow ScrollView to intercept touch events.
+                    mainScrollView.requestDisallowInterceptTouchEvent(false)
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    mainScrollView.requestDisallowInterceptTouchEvent(true)
+                    false
+                }
+                else -> true
+            }
+        }
+        mMapView = activity!!.findViewById(R.id.product_store_address_map) as MapView
+        mMapView.onCreate(savedInstanceState)
+        mMapView.onResume() // needed to get the map to display immediately
+        mMapView.getMapAsync(this)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        googleMap!!.setMapStyle(
+            MapStyleOptions.loadRawResourceStyle(context,R.raw.store_view_map_style)
+        )
+
+        product.storeAddress?.let {
+            if(it.latitude!=0.0 && it.longitude!=0.0){
+                val marker=googleMap!!.addMarker(
+                    MarkerOptions()
+                        .draggable(false)
+                        .position(LatLng(it.latitude, it.longitude))
+                        .title(product.storeName)
+                )
+                marker.showInfoWindow()
+                val zoomLevel = 14.0f
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), zoomLevel))
+                googleMap.setMinZoomPreference(16.0f)
+            }
+        }
+    }
+
+    private fun setStoreAddress() {
+        product.storeAddress?.let {
+            product_store_address.text= it.fullAddress
+        }
     }
 
     private fun initViewPager() {
@@ -602,10 +697,11 @@ constructor(
     override fun onDestroy() {
         super.onDestroy()
         viewPager.adapter=null
+        mMapView.onDestroy()
     }
 
     override fun onItemSelected(option: String, value: String) {
-        optionsRecyclerview.adapter!!.notifyDataSetChanged()
+        optionsRecyclerview.adapter?.notifyDataSetChanged()
         val map=viewModel.getChoisesMap()
         if(map[option]==value){
             map.remove(option)
@@ -613,5 +709,19 @@ constructor(
             map.put(option,value)
         }
         viewModel.setChoisesMap(map)
+    }
+    override fun onResume() {
+        super.onResume()
+        mMapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mMapView.onPause()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mMapView.onLowMemory()
     }
 }

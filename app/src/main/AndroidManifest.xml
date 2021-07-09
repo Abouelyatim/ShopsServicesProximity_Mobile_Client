@@ -21,6 +21,10 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyBNUYxdpTI2uq_h44OI32ZWM-W2BfwPuCI"/>
+
         <activity android:name="com.smartcity.client.ui.interest.InterestActivity"
                 android:windowSoftInputMode="adjustResize"
                 >

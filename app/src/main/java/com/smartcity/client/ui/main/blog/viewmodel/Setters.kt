@@ -2,6 +2,7 @@ package com.smartcity.client.ui.main.blog.viewmodel
 
 import android.os.Parcelable
 import com.smartcity.client.models.BlogPost
+import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 
@@ -77,8 +78,35 @@ fun ProductViewModel.setViewProductFields(product: Product){
     setViewState(update)
 }
 
+fun ProductViewModel.setStoreCustomCategoryLists(list:List<CustomCategory>){
+    val update = getCurrentViewStateOrNew()
+    update.viewProductFields.storeCustomCategoryList = list
+    setViewState(update)
+}
 
+fun ProductViewModel.setStoreProductLists(list:List<Product>){
+    val update = getCurrentViewStateOrNew()
+    update.viewProductFields.storeProductList = list
+    setViewState(update)
+}
 
+fun ProductViewModel.clearStoreProductLists(){
+    val update = getCurrentViewStateOrNew()
+    update.viewProductFields.storeProductList = listOf()
+    setViewState(update)
+}
 
+fun ProductViewModel.clearStoreInformation(){
+    val update = getCurrentViewStateOrNew()
+    update.viewProductFields.storeCustomCategoryList = listOf()
+    update.viewProductFields.customCategoryRecyclerPosition = 0
+    update.viewProductFields.storeProductList = listOf()
+    setViewState(update)
+}
 
+fun ProductViewModel.setCustomCategoryRecyclerPosition(position:Int){
+    val update = getCurrentViewStateOrNew()
+    update.viewProductFields.customCategoryRecyclerPosition = position
+    setViewState(update)
+}
 

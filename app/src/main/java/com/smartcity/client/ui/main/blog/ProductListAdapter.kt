@@ -37,7 +37,9 @@ class ProductListAdapter(
         setOf(),
         NO_MORE_RESULTS,
         null,
-        ""
+        "",
+        -1,
+        0
     )
 
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Product>() {

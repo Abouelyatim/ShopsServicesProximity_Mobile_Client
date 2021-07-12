@@ -35,11 +35,15 @@ class SuccessHandling {
 
         const val DONE_User_Interest_Center="Done UserInterestCenter"
 
-
+        const val is_Following="isFollowing"
+        const val not_Following="notFollowing"
         //network call
-        const val DONE_Custom_Category_Main = "Done CustomCategoryMain"
-        const val DONE_Product_Main ="Done ProductMain"
-        const val DONE_All_Product ="Done AllProduct"
+        const val DONE_Follow_Store = "Done FollowStore"
+        const val DONE_Stop_Following_Store = "Done StopFollowingStore"
+        const val DONE_Is_Following_Store = "Done IsFollowingStore"
+        const val DONE_Get_Store_Custom_Category = "Done GetStoreCustomCategory"
+        const val DONE_Get_Products_By_Custom_Category ="Done GetProductsByCustomCategory"
+        const val DONE_Get_All_Products_By_Store ="Done GetAllProductsByStore"
         const val DONE_USER_INFORMATION ="Done userInformation"
         const val DONE_USER_ORDERS ="Done userOrders"
         const val DONE_ORDER_EVENT_CHANGE ="Done OrderEventChange"

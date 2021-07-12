@@ -1,11 +1,9 @@
 package com.smartcity.client.ui.main.blog.viewmodel
 
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.persistence.BlogQueryUtils
 import com.smartcity.client.repository.main.BlogRepository
 import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
@@ -15,10 +13,6 @@ import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent.*
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.util.AbsentLiveData
-import com.smartcity.client.util.PreferenceKeys.Companion.BLOG_FILTER
-import com.smartcity.client.util.PreferenceKeys.Companion.BLOG_ORDER
-import okhttp3.MediaType
-import okhttp3.RequestBody
 import javax.inject.Inject
 
 @MainScope
@@ -32,17 +26,6 @@ constructor(
 
     override fun handleStateEvent(stateEvent: ProductStateEvent): LiveData<DataState<ProductViewState>> {
         when(stateEvent){
-
-           /* is ProductSearchEvent -> {
-                clearLayoutManagerState()
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    Log.d(TAG, "Blog Search Event: got auth token.")
-                    blogRepository.searchBlogPosts(
-                        query = getSearchQuery(),
-                        page = getPage()
-                    )
-                }?: AbsentLiveData.create()
-            }*/
 
             is AddProductCartEvent ->{
                 return sessionManager.cachedToken.value?.let { authToken ->
@@ -64,16 +47,50 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
-           /* is ProductSearchEvent ->{
-                clearLayoutManagerState()
-                return sessionManager.cachedToken.value?.let { authToken ->
+            is GetStoreCustomCategoryEvent ->{
+                return blogRepository.attemptGetStoreCustomCategory(
+                    stateEvent.storeId
+                )
+            }
 
-                    blogRepository.searchBlogPosts(
-                        query = getSearchQuery(),
-                        page = getPage()
+            is GetProductsByCustomCategoryEvent ->{
+                return blogRepository.attemptGetProductsByCustomCategory(
+                    stateEvent.customCategoryId
+                )
+            }
+
+            is GetAllStoreProductsEvent ->{
+                return blogRepository.attemptGetAllProductsByStore(
+                    stateEvent.storeId
+                )
+            }
+
+            is FollowStoreEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    blogRepository.attemptFollowStore(
+                        stateEvent.storeId,
+                        authToken.account_pk!!.toLong()
                     )
                 }?: AbsentLiveData.create()
-            }*/
+            }
+
+            is StopFollowingStoreEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    blogRepository.attemptStopFollowingStore(
+                        stateEvent.storeId,
+                        authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is IsFollowingStoreEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    blogRepository.attemptIsFollowingStore(
+                        stateEvent.storeId,
+                        authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
 
             is None ->{
                 return liveData {
@@ -112,8 +129,6 @@ constructor(
     override fun initRepositoryViewModel() {
 
     }
-
-
 }
 
 

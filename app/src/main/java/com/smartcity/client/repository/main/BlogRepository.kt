@@ -4,8 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
+import com.smartcity.client.api.main.responses.ListGenericResponse
 import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
+import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.persistence.BlogPostDao
 import com.smartcity.client.repository.JobManager
@@ -16,6 +18,8 @@ import com.smartcity.client.ui.Response
 import com.smartcity.client.ui.ResponseType
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.state.ProductViewState.ProductFields
+import com.smartcity.client.ui.main.blog.viewmodel.getStoreCustomCategoryLists
+import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.*
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -84,7 +88,6 @@ constructor(
 
         }.asLiveData()
     }
-
 
     fun attemptAddProductCart(
         userId: Long,
@@ -156,6 +159,304 @@ constructor(
         }.asLiveData()
     }
 
+    fun attemptGetStoreCustomCategory(
+        storeId:Long
+    ): LiveData<DataState<ProductViewState>> {
+        return object: NetworkBoundResource<ListGenericResponse<CustomCategory>, List<CustomCategory>, ProductViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+
+            override suspend fun handleApiSuccessResponse(
+                response: ApiSuccessResponse<ListGenericResponse<CustomCategory>>
+            ) {
+                onCompleteJob(
+                    DataState.data(
+                        data = ProductViewState(
+                            viewProductFields = ProductViewState.ViewProductFields(
+                                storeCustomCategoryList = response.body.results
+                            )
+                        ),
+                        response = Response(SuccessHandling.DONE_Get_Store_Custom_Category,ResponseType.None())
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<ListGenericResponse<CustomCategory>>> {
+                return openApiMainService.getStoreCustomCategory(
+                    storeId
+                )
+            }
+
+            override fun loadFromCache(): LiveData<ProductViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updateLocalDb(cacheObject: List<CustomCategory>?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptGetStoreCustomCategory", job)
+            }
+
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptGetProductsByCustomCategory(
+        customCategoryId:Long
+    ): LiveData<DataState<ProductViewState>> {
+        return object: NetworkBoundResource<ListGenericResponse<Product>, List<Product>, ProductViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+
+            override suspend fun handleApiSuccessResponse(
+                response: ApiSuccessResponse<ListGenericResponse<Product>>
+            ) {
+
+                onCompleteJob(
+                    DataState.data(
+                        data = ProductViewState(
+                            viewProductFields = ProductViewState.ViewProductFields(
+                                storeProductList = response.body.results
+                            )
+                        ),
+                        response = Response(SuccessHandling.DONE_Get_Products_By_Custom_Category,ResponseType.None())
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<ListGenericResponse<Product>>> {
+                return openApiMainService.getProductsByCustomCategory(
+                    customCategoryId
+                )
+            }
+
+            override fun loadFromCache(): LiveData<ProductViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updateLocalDb(cacheObject: List<Product>?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptGetProductsByCustomCategory", job)
+            }
+
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptGetAllProductsByStore(
+        storeId:Long
+    ): LiveData<DataState<ProductViewState>> {
+        return object: NetworkBoundResource<ListGenericResponse<Product>, List<Product>, ProductViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+
+            override suspend fun handleApiSuccessResponse(
+                response: ApiSuccessResponse<ListGenericResponse<Product>>
+            ) {
+
+                onCompleteJob(
+                    DataState.data(
+                        data = ProductViewState(
+                            viewProductFields = ProductViewState.ViewProductFields(
+                                storeProductList = response.body.results
+                            )
+                        ),
+                        response = Response(SuccessHandling.DONE_Get_All_Products_By_Store,ResponseType.None())
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<ListGenericResponse<Product>>> {
+                return openApiMainService.getAllProductsByStore(
+                    storeId
+                )
+            }
+
+            override fun loadFromCache(): LiveData<ProductViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updateLocalDb(cacheObject: List<Product>?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptGetAllProductsByStore", job)
+            }
+
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptFollowStore(
+        id: Long,
+        idUser: Long
+    ): LiveData<DataState<ProductViewState>> {
+        return object: NetworkBoundResource<GenericResponse, Any, ProductViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+
+            override suspend fun handleApiSuccessResponse(
+                response: ApiSuccessResponse<GenericResponse>
+            ) {
+
+                onCompleteJob(
+                    DataState.data(
+                        data = null,
+                        response = Response(SuccessHandling.DONE_Follow_Store,ResponseType.None())
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+                return openApiMainService.followStore(
+                    id,
+                    idUser
+                )
+            }
+
+            override fun loadFromCache(): LiveData<ProductViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptFollowStore", job)
+            }
+
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptStopFollowingStore(
+        id: Long,
+        idUser: Long
+    ): LiveData<DataState<ProductViewState>> {
+        return object: NetworkBoundResource<GenericResponse, Any, ProductViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+
+            override suspend fun handleApiSuccessResponse(
+                response: ApiSuccessResponse<GenericResponse>
+            ) {
+
+                onCompleteJob(
+                    DataState.data(
+                        data = null,
+                        response = Response(SuccessHandling.DONE_Stop_Following_Store,ResponseType.None())
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+                return openApiMainService.stopFollowingStore(
+                    id,
+                    idUser
+                )
+            }
+
+            override fun loadFromCache(): LiveData<ProductViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptStopFollowingStore", job)
+            }
+
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+        }.asLiveData()
+    }
+
+    fun attemptIsFollowingStore(
+        id: Long,
+        idUser: Long
+    ): LiveData<DataState<ProductViewState>> {
+        return object: NetworkBoundResource<GenericResponse, Any, ProductViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+
+            override suspend fun handleApiSuccessResponse(
+                response: ApiSuccessResponse<GenericResponse>
+            ) {
+
+                onCompleteJob(
+                    DataState.data(
+                        data = null,
+                        response = Response(response.body.response,ResponseType.None())
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<GenericResponse>> {
+                return openApiMainService.isFollowingStore(
+                    id,
+                    idUser
+                )
+            }
+
+            override fun loadFromCache(): LiveData<ProductViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptIsFollowingStore", job)
+            }
+
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+        }.asLiveData()
+    }
 }
 
 

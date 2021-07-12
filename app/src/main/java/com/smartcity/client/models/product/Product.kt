@@ -43,7 +43,16 @@ data class Product (
 
     @SerializedName("storeName")
     @Expose
-    var storeName:String
+    var storeName:String,
+
+    @SerializedName("storeId")
+    @Expose
+    var storeId:Long,
+
+    @SerializedName("storeFollowers")
+    @Expose
+    var storeFollowers:Long
+
 
 ) : Parcelable {
     override fun toString(): String {
@@ -56,6 +65,8 @@ data class Product (
                 "customCategory='$customCategory'" +
                 "storeAddress='$storeAddress'" +
                 "storeName='$storeName'" +
+                "storeId='$storeId'" +
+                "storeFollowers='$storeFollowers'" +
                 ")"
     }
 }

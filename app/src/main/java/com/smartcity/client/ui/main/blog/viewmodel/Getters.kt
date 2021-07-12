@@ -1,6 +1,7 @@
 package com.smartcity.client.ui.main.blog.viewmodel
 
 import com.smartcity.client.models.BlogPost
+import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Product
 
 fun ProductViewModel.getPage(): Int{
@@ -48,7 +49,23 @@ fun ProductViewModel.getChoisesMap():MutableMap<String, String>{
     }
 }
 
+fun ProductViewModel.getStoreCustomCategoryLists():List<CustomCategory>{
+    getCurrentViewStateOrNew().let {
+        return it.viewProductFields.storeCustomCategoryList
+    }
+}
 
+fun ProductViewModel.getStoreProductLists():List<Product>{
+    getCurrentViewStateOrNew().let {
+        return it.viewProductFields.storeProductList
+    }
+}
+
+fun ProductViewModel.getCustomCategoryRecyclerPosition():Int{
+    getCurrentViewStateOrNew().let {
+        return it.viewProductFields.customCategoryRecyclerPosition
+    }
+}
 
 fun ProductViewModel.getDummyBlogPost(): BlogPost{
     return BlogPost(-1, "" , "", "", "", 1, "")

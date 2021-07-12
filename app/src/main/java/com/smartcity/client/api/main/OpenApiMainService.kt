@@ -106,6 +106,33 @@ interface OpenApiMainService {
     fun getUserDiscountProduct(
         @Path(value = "id") id:Long
     ): LiveData<GenericApiResponse<ListGenericResponse<Product>>>
+
+    @GET("store/customCategory/store/all/{id}")
+    fun getStoreCustomCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<ListGenericResponse<CustomCategory>>>
+
+    @GET("product/all/category/{id}")
+    fun getProductsByCustomCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<ListGenericResponse<Product>>>
+
+    @GET("product/all/store/{id}")
+    fun getAllProductsByStore(@Path("id") id: Long?):LiveData<GenericApiResponse<ListGenericResponse<Product>>>
+
+    @POST("user/follow/store/{id}/{idUser}")
+    fun followStore(
+        @Path(value = "id") id: Long,
+        @Path(value = "idUser") idUser: Long
+    ): LiveData<GenericApiResponse<GenericResponse>>
+
+    @POST("user/stop-follow/store/{id}/{idUser}")
+    fun stopFollowingStore(
+        @Path(value = "id") id: Long,
+        @Path(value = "idUser") idUser: Long
+    ): LiveData<GenericApiResponse<GenericResponse>>
+
+    @GET("user/is-follow/store/{id}/{idUser}")
+    fun isFollowingStore(
+        @Path(value = "id") id: Long,
+        @Path(value = "idUser") idUser: Long
+    ): LiveData<GenericApiResponse<GenericResponse>>
 }
 
 

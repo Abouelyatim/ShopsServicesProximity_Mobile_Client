@@ -1,6 +1,7 @@
 package com.smartcity.client.ui.main.blog.state
 
 import android.os.Parcelable
+import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Product
 import kotlinx.android.parcel.Parcelize
 
@@ -20,7 +21,10 @@ data class ProductViewState (
 
     @Parcelize
     data class ViewProductFields(
-        var product: Product? = null
+        var product: Product? = null,
+        var storeCustomCategoryList: List<CustomCategory> = ArrayList<CustomCategory>(),
+        var customCategoryRecyclerPosition:Int=0,
+        var storeProductList:List<Product> = ArrayList()
     ) : Parcelable
 
     @Parcelize

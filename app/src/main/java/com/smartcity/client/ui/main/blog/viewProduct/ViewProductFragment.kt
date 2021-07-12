@@ -19,6 +19,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
@@ -122,8 +123,12 @@ constructor(
     }
 
     private fun setNavViewStore() {
-        product_view_store_button.setOnClickListener {  }
-        product_store_container.setOnClickListener {  }
+        product_view_store_button.setOnClickListener { navStore() }
+        product_store_container.setOnClickListener { navStore() }
+    }
+
+    private fun navStore(){
+        findNavController().navigate(R.id.action_viewProductFragment_to_storeFragment)
     }
 
     private fun SetStoreName() {
@@ -696,7 +701,7 @@ constructor(
 
     override fun onDestroy() {
         super.onDestroy()
-        viewPager.adapter=null
+        viewPager?.adapter=null
         mMapView.onDestroy()
     }
 
@@ -713,6 +718,7 @@ constructor(
     override fun onResume() {
         super.onResume()
         mMapView.onResume()
+        viewModel.clearStoreInformation()
     }
 
     override fun onPause() {

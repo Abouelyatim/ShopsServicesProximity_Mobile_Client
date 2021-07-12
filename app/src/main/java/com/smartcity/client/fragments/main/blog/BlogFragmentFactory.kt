@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.ui.main.blog.BlogFragment
+import com.smartcity.client.ui.main.blog.store.StoreFragment
 import com.smartcity.client.ui.main.blog.viewProduct.ViewProductFragment
 
 import javax.inject.Inject
@@ -27,6 +28,13 @@ constructor(
 
             ViewProductFragment::class.java.name -> {
                 ViewProductFragment(viewModelFactory, requestManager)
+            }
+
+            StoreFragment::class.java.name -> {
+                StoreFragment(
+                    viewModelFactory,
+                    requestManager
+                )
             }
 
             else -> {

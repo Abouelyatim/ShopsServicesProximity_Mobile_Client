@@ -45,6 +45,7 @@ class SuccessHandling {
         const val DONE_Get_Products_By_Custom_Category ="Done GetProductsByCustomCategory"
         const val DONE_Get_All_Products_By_Store ="Done GetAllProductsByStore"
         const val DONE_USER_INFORMATION ="Done userInformation"
+        const val DONE_STORE_AROUND ="Done storeAround"
         const val DONE_USER_ORDERS ="Done userOrders"
         const val DONE_ORDER_EVENT_CHANGE ="Done OrderEventChange"
         const val MUST_UPDATE_UI ="must update ui"

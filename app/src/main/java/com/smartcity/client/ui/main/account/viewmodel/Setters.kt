@@ -2,6 +2,7 @@ package com.smartcity.client.ui.main.account.viewmodel
 
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Order
+import com.smartcity.client.models.Store
 
 fun AccountViewModel.setSelectedOrder(order: Order){
     val update = getCurrentViewStateOrNew()
@@ -38,5 +39,35 @@ fun AccountViewModel.setAddressList(addresses:List<Address>){
 fun AccountViewModel.clearOrderList(){
     val update = getCurrentViewStateOrNew()
     update.orderFields.ordersList= listOf()
+    setViewState(update)
+}
+
+fun AccountViewModel.setCenterLatitude(value: Double) {
+
+        val update = getCurrentViewStateOrNew()
+        update.aroundStoresFields.centerLatitude= value
+        setViewState(update)
+
+}
+
+fun AccountViewModel.setCenterLongitude(value: Double) {
+
+        val update = getCurrentViewStateOrNew()
+        update.aroundStoresFields.centerLongitude= value
+        setViewState(update)
+
+}
+
+fun AccountViewModel.setRadius(value: Double) {
+
+        val update = getCurrentViewStateOrNew()
+        update.aroundStoresFields.radius= value
+        setViewState(update)
+
+}
+
+fun AccountViewModel.setStoresAround(list: List<Store>) {
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.stores=list
     setViewState(update)
 }

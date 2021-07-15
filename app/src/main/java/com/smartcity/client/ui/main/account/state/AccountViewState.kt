@@ -14,9 +14,18 @@ class AccountViewState(
     var userInformation: UserInformation?=null,
     var addressList:List<Address> = listOf(),
     var orderFields:OrderFields=OrderFields(),
-    var viewOrderFields: ViewOrderFields =ViewOrderFields()
+    var viewOrderFields: ViewOrderFields =ViewOrderFields(),
+    var aroundStoresFields: AroundStoresFields= AroundStoresFields()
 
 ) : Parcelable{
+
+    @Parcelize
+    data class AroundStoresFields(
+        var centerLatitude:Double=0.0,
+        var centerLongitude:Double=0.0,
+        var radius:Double=20.0,
+        var stores:List<Store> = listOf()
+    ) : Parcelable
 
     @Parcelize
     data class OrderFields(

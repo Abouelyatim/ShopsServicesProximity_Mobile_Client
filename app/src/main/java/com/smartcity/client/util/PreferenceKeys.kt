@@ -12,6 +12,9 @@ class PreferenceKeys {
         const val USER_INTEREST_CENTER: String = "com.codingwithmitch.openapi.USER_INTEREST_CENTER"
         const val LAST_FLASH_NOTIFICATION :String ="com.codingwithmitch.openapi.LAST_FLASH_NOTIFICATION"
         const val NEW_FLASH_NOTIFICATION :String ="com.codingwithmitch.openapi.NEW_FLASH_NOTIFICATION"
+        const val LOCATION_STORE_AROUND_LATITUDE :String ="com.codingwithmitch.openapi.LOCATION_STORE_AROUND_LATITUDE"
+        const val LOCATION_STORE_AROUND_LONGITUDE :String ="com.codingwithmitch.openapi.LOCATION_STORE_AROUND_LONGITUDE"
+        const val LOCATION_STORE_AROUND_RADIUS :String ="com.codingwithmitch.openapi.LOCATION_STORE_AROUND_RADIUS"
         const val BLOG_FILTER: String = "com.codingwithmitch.openapi.BLOG_FILTER"
         const val BLOG_ORDER: String = "com.codingwithmitch.openapi.BLOG_ORDER"
 

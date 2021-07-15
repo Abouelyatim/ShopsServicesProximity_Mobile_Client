@@ -13,4 +13,6 @@ interface DataStateChangeListener{
     fun hideSoftKeyboard()
 
     fun isStoragePermissionGranted(): Boolean
+
+    fun isFineLocationPermissionGranted(): Boolean
 }

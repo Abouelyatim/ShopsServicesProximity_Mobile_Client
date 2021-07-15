@@ -2,6 +2,7 @@ package com.smartcity.client.ui.main.blog
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -19,6 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
+import com.map.locationpicker.Constants
+import com.map.locationpicker.LocationPicker
+import com.map.locationpicker.MapType
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.ui.DataState

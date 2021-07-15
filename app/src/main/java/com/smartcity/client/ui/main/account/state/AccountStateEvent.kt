@@ -36,5 +36,7 @@ sealed class AccountStateEvent{
 
     class ResponseOrderChangeEvent: AccountStateEvent()
 
+    class GetStoresAround: AccountStateEvent()
+
     class None: AccountStateEvent()
 }

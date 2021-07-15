@@ -1,10 +1,9 @@
 package com.smartcity.client.ui.main.account.viewmodel
 
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.Order
 import com.smartcity.client.repository.main.AccountRepository
 import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
@@ -13,8 +12,10 @@ import com.smartcity.client.ui.Loading
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountStateEvent.*
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.util.AbsentLiveData
+import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_LATITUDE
+import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_LONGITUDE
+import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_RADIUS
 import javax.inject.Inject
 
 @MainScope
@@ -22,12 +23,33 @@ class AccountViewModel
 @Inject
 constructor(
     val sessionManager: SessionManager,
-    val accountRepository: AccountRepository
+    val accountRepository: AccountRepository,
+    private val sharedPreferences: SharedPreferences,
+    private val editor: SharedPreferences.Editor
 )
     : BaseViewModel<AccountStateEvent, AccountViewState>()
 {
     init {
         initRepositoryViewModel()
+
+        setCenterLatitude(
+            sharedPreferences.getFloat(LOCATION_STORE_AROUND_LATITUDE,0.0F).toDouble()
+        )
+
+        setCenterLongitude(
+            sharedPreferences.getFloat(LOCATION_STORE_AROUND_LONGITUDE,0.0F).toDouble()
+        )
+
+        setRadius(
+            sharedPreferences.getFloat(LOCATION_STORE_AROUND_RADIUS,20.0F).toDouble()
+        )
+    }
+
+    fun saveLocationInformation(centerLatitude: Double, centerLongitude: Double,radius :Double){
+        editor.putFloat(LOCATION_STORE_AROUND_LATITUDE,centerLatitude.toFloat())
+        editor.putFloat(LOCATION_STORE_AROUND_LONGITUDE,centerLongitude.toFloat())
+        editor.putFloat(LOCATION_STORE_AROUND_RADIUS,radius.toFloat())
+        editor.apply()
     }
 
     override fun handleStateEvent(stateEvent: AccountStateEvent): LiveData<DataState<AccountViewState>> {
@@ -104,6 +126,14 @@ constructor(
             }
             is FinishOrderChangeEvent ->{
                 return accountRepository.attemptFinishOrderChangeEvent()
+            }
+
+            is GetStoresAround ->{
+                return accountRepository.attemptGetStoreAround(
+                    getCenterLatitude(),
+                    getCenterLongitude(),
+                    getRadius()
+                )
             }
 
             is None ->{

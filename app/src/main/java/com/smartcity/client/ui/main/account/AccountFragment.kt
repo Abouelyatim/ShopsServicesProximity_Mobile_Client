@@ -78,6 +78,12 @@ constructor(
         orders_settings.setOnClickListener {
             navOrders()
         }
+
+        around_stores_settings.setOnClickListener{
+            if(stateChangeListener.isFineLocationPermissionGranted()){
+                navAroundStore()
+            }
+        }
     }
 
     private fun subscribeObservers() {
@@ -99,5 +105,9 @@ constructor(
 
     private fun navInformation(){
         findNavController().navigate(R.id.action_accountFragment_to_informationFragment)
+    }
+
+    private fun navAroundStore(){
+        findNavController().navigate(R.id.action_accountFragment_to_aroundStoresFragment)
     }
 }

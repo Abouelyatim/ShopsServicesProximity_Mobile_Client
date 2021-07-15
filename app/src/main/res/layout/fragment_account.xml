@@ -113,7 +113,38 @@
             android:background="@color/default_background_color"/>
 
 
+    <LinearLayout
+            android:id="@+id/around_stores_settings"
+            android:background="@drawable/radius_button_white"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:gravity="center">
 
+        <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_outline_store_mall_directory_24"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stores"
+                android:textSize="16sp"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:textStyle="bold"/>
+
+        <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_baseline_keyboard_arrow_right_24"/>
+    </LinearLayout>
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_background_color"/>
 
 
 </LinearLayout>

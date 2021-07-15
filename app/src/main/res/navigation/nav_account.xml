@@ -19,6 +19,9 @@
         <action
                 android:id="@+id/action_accountFragment_to_ordersFragment"
                 app:destination="@id/ordersFragment" />
+        <action
+                android:id="@+id/action_accountFragment_to_aroundStoresFragment"
+                app:destination="@id/aroundStoresFragment" />
     </fragment>
     <fragment
             android:id="@+id/addressFragment"
@@ -53,6 +56,11 @@
             android:name="com.smartcity.client.ui.main.account.orders.ViewOrderFragment"
             android:label="fragment_view_order"
             tools:layout="@layout/fragment_view_order" />
+    <fragment
+            android:id="@+id/aroundStoresFragment"
+            android:name="com.smartcity.client.ui.main.account.stores.AroundStoresFragment"
+            android:label="fragment_around_stores"
+            tools:layout="@layout/fragment_around_stores" />
 
 
 </navigation>

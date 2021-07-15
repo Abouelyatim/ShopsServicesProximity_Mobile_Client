@@ -7,10 +7,12 @@ import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.ServerSentEventImpl
 import com.smartcity.client.api.main.responses.ListAddressResponse
+import com.smartcity.client.api.main.responses.ListGenericResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Order
+import com.smartcity.client.models.Store
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.persistence.AccountPropertiesDao
 import com.smartcity.client.repository.*
@@ -613,6 +615,67 @@ constructor(
                 value = DataState.data(data, response)
             }
         }
+    }
+
+    fun attemptGetStoreAround(
+        centerLatitude:Double,
+        centerLongitude:Double,
+        radius:Double
+    ): LiveData<DataState<AccountViewState>> {
+        return object :
+            NetworkBoundResource<ListGenericResponse<Store>, Any, AccountViewState>(
+                sessionManager.isConnectedToTheInternet(),
+                true,
+                true,
+                false
+            ) {
+            // Ignore
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+            override suspend fun handleApiSuccessResponse(response: ApiSuccessResponse<ListGenericResponse<Store>>) {
+                Log.d(TAG, "handleApiSuccessResponse: ${response}")
+
+                onCompleteJob(
+                    DataState.data(
+                        data = AccountViewState(
+                            aroundStoresFields = AccountViewState.AroundStoresFields(
+                                stores = response.body.results
+                            )
+                        )
+                        ,
+                        response = Response(
+                            SuccessHandling.DONE_STORE_AROUND,
+                            ResponseType.None()
+                        )
+                    )
+                )
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<ListGenericResponse<Store>>> {
+                return openApiMainService.getStoresAround(
+                    distance = radius,
+                    latitude = centerLatitude,
+                    longitude = centerLongitude
+                )
+            }
+
+            override fun loadFromCache(): LiveData<AccountViewState> {
+                return AbsentLiveData.create()
+            }
+
+
+
+            override fun setJob(job: Job) {
+                addJob("attemptGetStoreAround", job)
+            }
+
+            override suspend fun updateLocalDb(cacheObject: Any?) {
+
+            }
+
+        }.asLiveData()
     }
 }
 

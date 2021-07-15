@@ -133,6 +133,13 @@ interface OpenApiMainService {
         @Path(value = "id") id: Long,
         @Path(value = "idUser") idUser: Long
     ): LiveData<GenericApiResponse<GenericResponse>>
+
+    @GET("store/store-around")
+    fun getStoresAround(
+        @Query(value = "distance") distance: Double,
+        @Query(value = "longitude") longitude: Double,
+        @Query(value = "latitude") latitude: Double
+    ): LiveData<GenericApiResponse<ListGenericResponse<Store>>>
 }
 
 

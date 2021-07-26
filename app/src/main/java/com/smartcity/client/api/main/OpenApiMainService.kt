@@ -20,7 +20,8 @@ interface OpenApiMainService {
     @GET("product")
     fun searchListProduct(
         @Query("search") query: String,
-        @Query("page") page: Int
+        @Query("page") page: Int,
+        @Query("id") userId: Long,
     ): LiveData<GenericApiResponse<ListProductResponse>>
 
 

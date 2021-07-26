@@ -38,7 +38,8 @@ constructor(
 
     fun searchBlogPosts(
         query: String,
-        page: Int
+        page: Int,
+        userId: Long
     ): LiveData<DataState<ProductViewState>> {
         return object: NetworkBoundResource<ListProductResponse, List<Product>, ProductViewState>(
             sessionManager.isConnectedToTheInternet(),
@@ -66,7 +67,8 @@ constructor(
             override fun createCall(): LiveData<GenericApiResponse<ListProductResponse>> {
                 return openApiMainService.searchListProduct(
                     query = query,
-                    page = page
+                    page = page,
+                    userId =userId
                 )
             }
 

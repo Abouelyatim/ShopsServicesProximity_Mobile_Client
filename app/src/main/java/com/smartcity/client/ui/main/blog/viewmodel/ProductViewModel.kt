@@ -42,7 +42,8 @@ constructor(
 
                     blogRepository.searchBlogPosts(
                         query = getSearchQuery(),
-                        page = getPage()
+                        page = getPage(),
+                        userId = authToken.account_pk!!.toLong()
                     )
                 }?: AbsentLiveData.create()
             }

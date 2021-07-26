@@ -32,6 +32,10 @@
                 >
         </activity>
 
+        <activity
+                android:name="com.sucho.placepicker.PlacePickerActivity"
+                android:theme="@style/PlacePickerTheme"/>
+
         <activity android:name="com.smartcity.client.ui.main.MainActivity"
                 android:windowSoftInputMode="adjustResize"
                 >

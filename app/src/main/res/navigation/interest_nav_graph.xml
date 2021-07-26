@@ -4,11 +4,46 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/interest_nav_graph"
-        app:startDestination="@id/chooseInterestFragment">
+        app:startDestination="@id/selectCountryFragment">
 
     <fragment
             android:id="@+id/chooseInterestFragment"
             android:name="com.smartcity.client.ui.interest.ChooseInterestFragment"
             android:label="fragment_choose_interest"
             tools:layout="@layout/fragment_choose_interest" />
+    <fragment
+            android:id="@+id/configureAddressFragment"
+            android:name="com.smartcity.client.ui.interest.ConfigureAddressFragment"
+            android:label="fragment_configure_address"
+            tools:layout="@layout/fragment_configure_address" >
+        <action
+                android:id="@+id/action_configureAddressFragment_to_configureDeliveryAddressFragment"
+                app:destination="@id/configureDeliveryAddressFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/selectCountryFragment"
+            android:name="com.smartcity.client.ui.interest.SelectCountryFragment"
+            android:label="fragment_select_country"
+            tools:layout="@layout/fragment_select_country" >
+        <action
+                android:id="@+id/action_selectCountryFragment_to_configureAddressFragment"
+                app:destination="@id/configureAddressFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/configureDeliveryAddressFragment"
+            android:name="com.smartcity.client.ui.interest.ConfigureDeliveryAddressFragment"
+            android:label="fragment_configure_delivery_address"
+            tools:layout="@layout/fragment_configure_delivery_address" >
+        <action
+                android:id="@+id/action_configureDeliveryAddressFragment_to_setDeliveryAddressFragment"
+                app:destination="@id/setDeliveryAddressFragment" />
+        <action
+                android:id="@+id/action_configureDeliveryAddressFragment_to_chooseInterestFragment"
+                app:destination="@id/chooseInterestFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/setDeliveryAddressFragment"
+            android:name="com.smartcity.client.ui.interest.SetDeliveryAddressFragment"
+            android:label="fragment_set_delivery_address"
+            tools:layout="@layout/fragment_set_delivery_address" />
 </navigation>

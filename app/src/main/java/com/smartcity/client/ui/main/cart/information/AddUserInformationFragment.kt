@@ -89,10 +89,6 @@ constructor(
             input_birthday.text.toString()
         )
 
-        val createUserInformationError=userInformation.isValidForCreation()
-        if(!createUserInformationError.equals(Address.CreateAddressError.none())){
-            return showErrorDialog(createUserInformationError)
-        }
 
         viewModel.setUserInformation(
             userInformation

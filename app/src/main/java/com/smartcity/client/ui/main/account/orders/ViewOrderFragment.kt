@@ -106,7 +106,7 @@ constructor(
         order_id.text=order.id.toString()
         order_date.text=convertStringToStringDate(order.createAt!!)
         order.address?.let {item->
-            order_delivery_address.text="${item.city}, ${item.street}, ${item.houseNumber.toString()}, ${item.zipCode.toString()}"
+            order_delivery_address.text=item.fullAddress
         }
     }
 

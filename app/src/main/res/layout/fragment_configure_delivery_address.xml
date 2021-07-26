@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        tools:context=".ui.interest.ConfigureDeliveryAddressFragment">
+    <RelativeLayout
+            android:layout_margin="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+        <LinearLayout
+                android:id="@+id/text"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+            <TextView
+                    android:id="@+id/skip_button"
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Skip"
+                    android:textColor="@color/grey5"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    />
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Add delivery address"
+                    android:textColor="#000"
+                    android:textSize="26sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:background="@drawable/radius_button_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_above="@+id/container"
+                android:layout_below="@+id/text">
+
+            <LinearLayout
+                    android:id="@+id/home_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@color/grey0_light"
+                    android:padding="10dp"
+                    >
+                <ImageView
+                        android:layout_gravity="center"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_outline_home_24"/>
+
+                <LinearLayout
+                        android:layout_gravity="center"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Home"
+                            android:textSize="18sp"
+                            android:layout_weight="1"
+                            android:textColor="@color/dark"
+                            android:layout_marginStart="16dp"
+                            android:textStyle="bold"/>
+
+                    <TextView
+                            android:id="@+id/delivery_address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add address"
+                            android:textSize="14sp"
+                            android:layout_weight="1"
+                            android:textColor="@color/dark"
+                            android:layout_marginStart="16dp"
+                            android:maxLines="1"
+                            android:ellipsize="end"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center">
+            <Button
+                    android:id="@+id/delivery_address_next_button"
+                    android:layout_width="220dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/main_button_drawable"
+                    android:text="Next"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
+                    />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>

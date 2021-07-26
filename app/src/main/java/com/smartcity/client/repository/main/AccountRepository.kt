@@ -57,13 +57,6 @@ constructor(
         address: Address
     ): LiveData<DataState<AccountViewState>> {
 
-        val createAddressError=address.isValidForCreation()
-
-        if(!createAddressError.equals(Address.CreateAddressError.none())){
-            return returnErrorResponse(createAddressError, ResponseType.Dialog())
-
-        }
-
         return object :
             NetworkBoundResource<GenericResponse, Any, AccountViewState>(
                 sessionManager.isConnectedToTheInternet(),
@@ -239,7 +232,7 @@ constructor(
     ): LiveData<DataState<AccountViewState>> {
 
         val createUserInformationError=userInformation.isValidForCreation()
-        if(!createUserInformationError.equals(Address.CreateAddressError.none())){
+        if(!createUserInformationError.equals(UserInformation.CreateUserInformationError.none())){
             return returnErrorResponse(createUserInformationError, ResponseType.Dialog())
 
         }

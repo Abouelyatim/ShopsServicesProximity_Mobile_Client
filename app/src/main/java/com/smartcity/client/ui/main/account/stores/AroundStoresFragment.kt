@@ -15,10 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.map.locationpicker.CircleData
-import com.map.locationpicker.Constants
-import com.map.locationpicker.LocationPicker
-import com.map.locationpicker.MapType
+
 import com.smartcity.client.R
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
@@ -39,8 +36,8 @@ constructor(
     private val requestManager: RequestManager
 ): BaseAccountFragment(R.layout.fragment_around_stores){
 
-    private lateinit var gpsTracker:GpsTracker
-    private lateinit var  applicationInfo :ApplicationInfo
+   // private lateinit var gpsTracker:GpsTracker
+   // private lateinit var  applicationInfo :ApplicationInfo
 
     private lateinit var recyclerStoresAdapter: StoresAdapter
 
@@ -81,8 +78,8 @@ constructor(
         stateChangeListener.displayBottomNavigation(false)
 
 
-        gpsTracker = GpsTracker(context!!)
-        applicationInfo = activity!!.packageManager.getApplicationInfo(activity!!.packageName, PackageManager.GET_META_DATA)
+       // gpsTracker = GpsTracker(context!!)
+       // applicationInfo = activity!!.packageManager.getApplicationInfo(activity!!.packageName, PackageManager.GET_META_DATA)
 
         change_location.setOnClickListener {
             getLocation()
@@ -131,11 +128,11 @@ constructor(
     }
 
     private fun getCurrentLocation(){
-        gpsTracker.getCurrentLocation()
+       /* gpsTracker.getCurrentLocation()
         val latitude: Double = gpsTracker.getLatitude()
         val longitude: Double = gpsTracker.getLongitude()
         viewModel.setCenterLatitude(latitude)
-        viewModel.setCenterLongitude(longitude)
+        viewModel.setCenterLongitude(longitude)*/
     }
 
     private fun subscribeObservers() {
@@ -181,7 +178,7 @@ constructor(
     }
 
     private fun getLocation() {
-        val intent = LocationPicker.IntentBuilder()
+       /* val intent = LocationPicker.IntentBuilder()
             .setLatLong(viewModel.getCenterLatitude(), viewModel.getCenterLongitude())
             .setDefaultMapZoom(9.0f)
             .setMapRawResourceStyle(R.raw.store_view_map_style)
@@ -198,7 +195,7 @@ constructor(
             .setSliderValueTo(200.0F)
             .hideLocationButton(false)
             .build(activity!!)
-        startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST)
+        startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST)*/
     }
 
     override fun onActivityResult(
@@ -206,7 +203,7 @@ constructor(
         resultCode: Int,
         data: Intent?
     ) {
-        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
+       /* if (requestCode == Constants.PLACE_PICKER_REQUEST) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     val circleData = data?.getParcelableExtra<CircleData>(
@@ -227,6 +224,6 @@ constructor(
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
-        }
+        }*/
     }
 }

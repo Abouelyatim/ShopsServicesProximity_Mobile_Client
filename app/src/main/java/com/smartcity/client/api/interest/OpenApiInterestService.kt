@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.auth.network_responses.LoginResponse
 import com.smartcity.client.api.interest.response.ListCategoryResponse
+import com.smartcity.client.api.main.responses.ListGenericResponse
 import com.smartcity.client.di.interest.InterestScope
+import com.smartcity.client.models.Address
+import com.smartcity.client.models.City
 import com.smartcity.client.util.GenericApiResponse
 import retrofit2.http.*
 
@@ -23,4 +26,20 @@ interface OpenApiInterestService {
 
     @GET("user/interestCenter/{id}")
     fun getUserInterestCenter(@Path("id") id: Long?): LiveData<GenericApiResponse<ListCategoryResponse>>
+
+    @GET("nominatim/search")
+    fun resolveUserCity(
+        @Query(value = "country") country: String,
+        @Query(value = "city") city: String
+    ): LiveData<GenericApiResponse<ListGenericResponse<City>>>
+
+    @POST("address/create")
+    fun createAddress(
+        @Body address: Address
+    ):LiveData<GenericApiResponse<GenericResponse>>
+
+    @POST("user/default-city")
+    fun setUserDefaultCity(
+        @Body city: City
+    ):LiveData<GenericApiResponse<GenericResponse>>
 }

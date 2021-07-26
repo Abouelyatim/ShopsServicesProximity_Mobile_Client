@@ -3,7 +3,7 @@ package com.smartcity.client.di.interest
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.smartcity.client.di.interest.keys.InterestViewModelKey
-import com.smartcity.client.ui.interest.InterestViewModel
+import com.smartcity.client.ui.interest.viewmodel.InterestViewModel
 import com.smartcity.client.viewmodels.InterestViewModelFactory
 import dagger.Binds
 import dagger.Module

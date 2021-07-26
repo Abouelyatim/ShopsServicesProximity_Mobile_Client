@@ -187,7 +187,6 @@ class MainActivity : BaseActivity(),
         }
 
         val interestCenter=sharedPreferences.getStringSet(PreferenceKeys.USER_INTEREST_CENTER, null)
-        Log.d(TAG, interestCenter.toString())
         interestCenter?.let {
             it.map {topic ->
 

@@ -99,6 +99,7 @@ class CategoriesAdapter (
                 (layoutManager as FlexboxLayoutManager).justifyContent = JustifyContent.CENTER
                 (layoutManager as FlexboxLayoutManager).flexWrap= FlexWrap.WRAP
 
+
                 val topSpacingDecorator = TopSpacingItemDecoration(0)
                 removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
                 addItemDecoration(topSpacingDecorator)

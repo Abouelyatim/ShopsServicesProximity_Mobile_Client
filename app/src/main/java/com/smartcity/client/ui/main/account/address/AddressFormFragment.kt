@@ -98,7 +98,7 @@ constructor(
     }
 
     private fun saveAddress() {
-        save_address_button.setOnClickListener {
+       /* save_address_button.setOnClickListener {
             viewModel.setStateEvent(
                 AccountStateEvent.SaveAddress(
                     Address(
@@ -111,7 +111,7 @@ constructor(
                     )
                 )
             )
-        }
+        }*/
     }
 
     private fun updateAddressList(){

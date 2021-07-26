@@ -95,7 +95,7 @@ constructor(
             is None ->{
                 return liveData {
                     emit(
-                        DataState(
+                        DataState<ProductViewState>(
                             null,
                             Loading(false),
                             null

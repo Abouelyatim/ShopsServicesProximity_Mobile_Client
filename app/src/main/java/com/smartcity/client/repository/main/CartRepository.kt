@@ -240,11 +240,6 @@ constructor(
         order: Order
     ): LiveData<DataState<CartViewState>> {
 
-        val createOrderError=order.isValidForCreation()
-        if(!createOrderError.equals(Address.CreateAddressError.none())){
-            return returnErrorResponse(createOrderError, ResponseType.Dialog())
-
-        }
         return object :
             NetworkBoundResource<GenericResponse, Any, CartViewState>(
                 sessionManager.isConnectedToTheInternet(),
@@ -471,13 +466,6 @@ constructor(
     fun attemptCreateAddress(
         address: Address
     ): LiveData<DataState<CartViewState>> {
-
-        val createAddressError=address.isValidForCreation()
-
-        if(!createAddressError.equals(Address.CreateAddressError.none())){
-            return returnErrorResponse(createAddressError, ResponseType.Dialog())
-
-        }
 
         return object :
             NetworkBoundResource<GenericResponse, Any, CartViewState>(

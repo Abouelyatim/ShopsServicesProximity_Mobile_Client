@@ -88,7 +88,7 @@ class PickAddressAdapter (
 
         @SuppressLint("SetTextI18n")
         fun bind(item: Address) = with(itemView) {
-            itemView.address_.text="${item.city}, ${item.street}, ${item.houseNumber.toString()}, ${item.zipCode.toString()}"
+            itemView.address_.text=item.fullAddress
             itemView.delete_address.visibility=View.GONE
             address_container.setOnClickListener {
                 interaction?.selectedAddress(item)

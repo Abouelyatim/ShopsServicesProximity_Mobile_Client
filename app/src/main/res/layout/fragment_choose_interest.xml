@@ -49,7 +49,8 @@
                   android:layout_height="wrap_content"
                   android:layout_gravity="center"
                   android:layout_marginTop="5dp"
-                  android:text="Add to or edit categories you\nfollow. Choose three or more."
+                  android:gravity="center"
+                  android:text="Tap your interest to find products and offers\n Choose at least one."
                   android:textSize="18sp" />
         </LinearLayout>
 

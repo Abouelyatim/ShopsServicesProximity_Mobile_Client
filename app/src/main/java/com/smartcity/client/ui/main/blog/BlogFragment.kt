@@ -20,9 +20,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
-import com.map.locationpicker.Constants
-import com.map.locationpicker.LocationPicker
-import com.map.locationpicker.MapType
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.ui.DataState

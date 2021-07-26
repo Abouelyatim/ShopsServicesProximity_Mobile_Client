@@ -88,7 +88,7 @@ class AddressAdapter (
 
         @SuppressLint("SetTextI18n")
         fun bind(item: Address) = with(itemView) {
-            itemView.address_.text="${item.city}, ${item.street}, ${item.houseNumber.toString()}, ${item.zipCode.toString()}"
+            itemView.address_.text=item.fullAddress
             delete_address.setOnClickListener {
                 interaction?.deleteAddress(item.id!!)
             }

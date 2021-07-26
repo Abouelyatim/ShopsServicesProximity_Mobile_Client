@@ -139,7 +139,7 @@ constructor(
             is None ->{
                 return liveData {
                     emit(
-                        DataState(
+                        DataState<AccountViewState>(
                             null,
                             Loading(false),
                             null

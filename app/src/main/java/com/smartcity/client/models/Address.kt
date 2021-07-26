@@ -11,21 +11,61 @@ data class Address(
     @Expose
     var id:Long?,
 
-    @SerializedName("houseNumber")
+    @SerializedName("streetNumber")
     @Expose
-    var houseNumber:Int?,
+    var streetNumber:String,
 
-    @SerializedName("street")
+    @SerializedName("admin")
     @Expose
-    var street:String,
+    var admin:String,
 
-    @SerializedName("city")
+    @SerializedName("subAdmin")
     @Expose
-    var city:String,
+    var subAdmin:String,
 
-    @SerializedName("zipCode")
+    @SerializedName("locality")
     @Expose
-    var zipCode:Long?,
+    var locality:String,
+
+    @SerializedName("streetName")
+    @Expose
+    var streetName:String,
+
+    @SerializedName("postalCode")
+    @Expose
+    var postalCode:String,
+
+    @SerializedName("countryCode")
+    @Expose
+    var countryCode:String,
+
+    @SerializedName("countryName")
+    @Expose
+    var countryName:String,
+
+    @SerializedName("latitude")
+    @Expose
+    var latitude:Double,
+
+    @SerializedName("longitude")
+    @Expose
+    var longitude:Double,
+
+    @SerializedName("fullAddress")
+    @Expose
+    var fullAddress:String,
+
+    @SerializedName("apartmentNumber")
+    @Expose
+    var apartmentNumber:String,
+
+    @SerializedName("businessName")
+    @Expose
+    var businessName:String,
+
+    @SerializedName("doorCodeName")
+    @Expose
+    var doorCodeName:String,
 
     @SerializedName("userId")
     @Expose
@@ -34,35 +74,20 @@ data class Address(
 
     override fun toString(): String {
         return "Address(id=$id," +
-                "houseNumber=$houseNumber," +
-                "street=$street," +
-                "city=$city," +
-                "zipCode=$zipCode," +
+                "streetNumber=$streetNumber," +
+                "admin=$admin," +
+                "subAdmin=$subAdmin," +
+                "locality=$locality," +
+                "streetName=$streetName," +
+                "postalCode=$postalCode," +
+                "countryCode=$countryCode," +
+                "countryName=$countryName," +
+                "latitude=$latitude," +
+                "longitude=$longitude," +
+                "fullAddress=$fullAddress," +
+                "apartmentNumber=$apartmentNumber," +
+                "businessName=$businessName," +
+                "doorCodeName=$doorCodeName," +
                 "userId=$userId)"
-    }
-
-    class CreateAddressError {
-
-        companion object{
-
-            fun mustFillAllFields(): String{
-                return "You can't create address without fill all information."
-            }
-
-            fun none():String{
-                return "None"
-            }
-
-        }
-    }
-
-    fun isValidForCreation(): String{
-        if(street.isEmpty()
-            || city.isEmpty()
-            || houseNumber==null
-            || zipCode==null){
-            return CreateAddressError.mustFillAllFields()
-        }
-        return CreateAddressError.none()
     }
 }

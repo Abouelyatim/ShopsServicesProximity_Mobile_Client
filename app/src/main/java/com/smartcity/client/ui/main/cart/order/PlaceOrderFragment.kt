@@ -472,7 +472,7 @@ constructor(
     @SuppressLint("SetTextI18n")
     private fun setDeliveryAddressUi(address: Address?){
         address?.let {
-            address_.text="${it.city}, ${it.street}, ${it.houseNumber.toString()}, ${it.zipCode.toString()}"
+            address_.text=address.fullAddress
         }
     }
 

@@ -18,13 +18,15 @@
             android:layout_gravity="center"
             />
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/value_recyclerview_category"
-            android:scrollbars="none"
 
-            />
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/value_recyclerview_category"
+                android:scrollbars="none"
+
+                />
+
 
     <View
             android:layout_width="match_parent"

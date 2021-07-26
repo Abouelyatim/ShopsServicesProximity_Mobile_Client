@@ -49,7 +49,7 @@ constructor(
             is None ->{
                 return liveData {
                     emit(
-                        DataState(
+                        DataState<AuthViewState>(
                             null,
                             Loading(false),
                             null

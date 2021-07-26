@@ -67,7 +67,7 @@ constructor(
             is FlashStateEvent.None -> {
                 return liveData {
                     emit(
-                        DataState(
+                        DataState<FlashViewState>(
                             null,
                             Loading(false),
                             null

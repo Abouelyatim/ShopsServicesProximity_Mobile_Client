@@ -1,5 +1,6 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.smartcity.client.di.interest.InterestScope
@@ -9,7 +10,6 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.Loading
-import com.smartcity.client.ui.interest.state.CategoryFields
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.state.InterestViewState
 import com.smartcity.client.util.AbsentLiveData
@@ -46,10 +46,35 @@ constructor(
                 return interestRepository.attemptAllCategory()
             }
 
+            is InterestStateEvent.ResolveUserAddress ->{
+                return interestRepository.attemptResolveUserAddress(
+                    getCountry(),
+                    getCity()
+                )
+            }
+
+            is InterestStateEvent.SetUserDefaultCityEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    stateEvent.city.userId=authToken.account_pk!!.toLong()
+                    interestRepository.attemptSetUserDefaultCity(
+                        stateEvent.city
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is InterestStateEvent.CreateAddressEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    stateEvent.address.userId=authToken.account_pk!!.toLong()
+                    interestRepository.attemptCreateAddress(
+                        stateEvent.address
+                    )
+                }?: AbsentLiveData.create()
+            }
+
             is InterestStateEvent.None ->{
                 return liveData {
                     emit(
-                        DataState(
+                        DataState<InterestViewState>(
                             null,
                             Loading(false),
                             null
@@ -57,29 +82,6 @@ constructor(
                     )
                 }
             }
-        }
-    }
-
-    fun setCategoryList(categoryList:List<Category>){
-        val update = getCurrentViewStateOrNew()
-        update.categoryFields.categoryList = categoryList
-        setViewState(update)
-    }
-    fun getCategoryList():List<Category>{
-        getCurrentViewStateOrNew().let {
-            return it.categoryFields.categoryList
-        }
-    }
-
-    fun setSelectedCategoriesList(list: MutableList<String>){
-        val update = getCurrentViewStateOrNew()
-        update.categoryFields.selectedCategories = list
-        setViewState(update)
-    }
-
-    fun getSelectedCategoriesList():MutableList<String>{
-        getCurrentViewStateOrNew().let {
-            return it.categoryFields.selectedCategories
         }
     }
 

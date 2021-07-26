@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        >
+
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/container1"
+            android:padding="5dp"
+            >
+
+
+        <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_marker"
+                android:layout_marginEnd="10dp"
+                android:layout_gravity="center"
+                />
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/city_name"
+                android:text="The Title of a Blog"
+                android:textColor="@color/dark"
+                android:textSize="19sp"
+                android:layout_gravity="center"
+                />
+
+    </LinearLayout>
+
+    <View
+            android:layout_marginStart="61dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/default_background_color"/>
+
+
+</LinearLayout>

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.ui.interest.state.InterestStateEvent
+import com.smartcity.client.ui.interest.viewmodel.*
 import com.smartcity.client.util.RetryToHandelNetworkError
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration

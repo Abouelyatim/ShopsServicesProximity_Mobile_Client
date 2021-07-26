@@ -32,8 +32,11 @@ class SuccessHandling {
 
         const val CREATED_DONE="created."
 
+        const val DONE_User_Default_City="Done UserDefaultCity"
+        const val DONE_Create_Address="Done CreateAddress"
 
         const val DONE_User_Interest_Center="Done UserInterestCenter"
+        const val DONE_Resolve_User_Address="Done ResolveUserAddress"
 
         const val is_Following="isFollowing"
         const val not_Following="notFollowing"

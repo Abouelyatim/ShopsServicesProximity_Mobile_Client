@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.main.blog.store.StoreFragment"
-        android:background="@color/new_default_background_color">
+        android:background="@color/default_background_color">
 
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -134,19 +134,16 @@
 
             </LinearLayout>
 
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="3dp"
-                    android:background="@color/new_default_background_color"
-                    />
+
 
 
             <androidx.recyclerview.widget.RecyclerView
-                    android:background="@color/new_default_background_color"
+                    android:background="@color/default_background_color"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/view_product_recyclerview"
                     android:scrollbars="none"
+                    android:layout_margin="5dp"
                     />
         </LinearLayout>
 

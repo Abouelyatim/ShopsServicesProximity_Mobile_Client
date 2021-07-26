@@ -144,8 +144,6 @@ class ViewProductStoreAdapter (
             }
             itemView.product_price.text=allPrices.min().toString()+DOLLAR
 
-            itemView.product_quantity.text=item.productVariants.first().unit.toString()+" sold"
-
             val percentages= mutableListOf<Int>()
             val fixed = mutableListOf<Double>()
             item.productVariants.map {

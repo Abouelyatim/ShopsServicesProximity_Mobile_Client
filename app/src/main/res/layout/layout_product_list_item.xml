@@ -97,16 +97,6 @@
 
             </LinearLayout>
 
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/product_quantity"
-                    android:text="ble LED Ring"
-                    android:textSize="10sp"
-                    android:paddingStart="5dp"
-                    />
-
-
         </LinearLayout>
 
     </LinearLayout>

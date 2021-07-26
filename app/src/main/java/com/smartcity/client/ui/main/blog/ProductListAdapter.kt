@@ -217,7 +217,6 @@ class ProductListAdapter(
                 }
                 itemView.product_price.text=allPrices.min().toString()+ Constants.DOLLAR
 
-                itemView.product_quantity.text=item.productVariants.first().unit.toString()+" sold"
 
                 val percentages= mutableListOf<Int>()
                 val fixed = mutableListOf<Double>()

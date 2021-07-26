@@ -114,13 +114,22 @@
 
             </LinearLayout>
 
+<LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/view_custom_category_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="10dp"
+            android:scrollbars="none"
+            android:layout_weight="1"
+            android:layout_gravity="center"/>
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/view_custom_category_recyclerview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingStart="10dp"
-                        android:scrollbars="none" />
+
+</LinearLayout>
+
 
 
             </LinearLayout>

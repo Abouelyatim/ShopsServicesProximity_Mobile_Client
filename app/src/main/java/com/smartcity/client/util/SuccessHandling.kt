@@ -41,7 +41,7 @@ class SuccessHandling {
         const val is_Following="isFollowing"
         const val not_Following="notFollowing"
         //network call
-        const val DONE_Follow_Store = "Done FollowStore"
+        const val DONE_Follow_Store = "You will receive offers and news from this store"
         const val DONE_Stop_Following_Store = "Done StopFollowingStore"
         const val DONE_Is_Following_Store = "Done IsFollowingStore"
         const val DONE_Get_Store_Custom_Category = "Done GetStoreCustomCategory"

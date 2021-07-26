@@ -331,7 +331,7 @@ constructor(
                 onCompleteJob(
                     DataState.data(
                         data = null,
-                        response = Response(SuccessHandling.DONE_Follow_Store,ResponseType.None())
+                        response = Response(SuccessHandling.DONE_Follow_Store,ResponseType.Dialog())
                     )
                 )
             }

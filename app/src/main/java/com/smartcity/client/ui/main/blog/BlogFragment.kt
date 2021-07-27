@@ -2,7 +2,6 @@ package com.smartcity.client.ui.main.blog
 
 import android.app.SearchManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -16,6 +15,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -26,9 +26,11 @@ import com.smartcity.client.ui.DataState
 import com.smartcity.client.ui.main.blog.state.BLOG_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewmodel.*
+import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import handleIncomingBlogListData
 import kotlinx.android.synthetic.main.fragment_blog.*
+import kotlinx.android.synthetic.main.fragment_store.*
 import loadFirstPage
 import loadFirstSearchPage
 import loadProductMainList
@@ -42,6 +44,7 @@ constructor(
     private val requestManager: RequestManager
 ): BaseBlogFragment(R.layout.fragment_blog),
     ProductListAdapter.Interaction,
+    ProductGridAdapter.Interaction,
     SwipeRefreshLayout.OnRefreshListener
 {
 
@@ -50,7 +53,8 @@ constructor(
     }
 
     private lateinit var searchView: SearchView
-    private lateinit var recyclerAdapter: ProductListAdapter
+    private lateinit var productListRecyclerAdapter: ProductListAdapter
+    private lateinit var productGridRecyclerAdapter: ProductGridAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,8 +93,14 @@ constructor(
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
         swipe_refresh.setOnRefreshListener(this)
+        stateChangeListener.displayAppBar(true)
+        stateChangeListener.setAppBarLayout(ProductAppBarFragment(viewModelFactory))
+        stateChangeListener.updateStatusBarColor(R.color.white,false)
 
-        initRecyclerView()
+
+        setSelectedRecyclerView(viewModel.getGridOrListView())
+        initProductGridRecyclerView()
+        initProductListRecyclerView()
         subscribeObservers()
 
         if(viewModel.getProductList().isEmpty()){
@@ -98,15 +108,18 @@ constructor(
         }
     }
 
-    fun loadProductMainList(){
-        viewModel.loadProductMainList()
+    private fun setSelectedRecyclerView(boolean: Boolean){
+        if(boolean){
+            product_grid_recyclerview.visibility=View.GONE
+            product_list_recyclerview.visibility=View.VISIBLE
+        }else{
+            product_list_recyclerview.visibility=View.GONE
+            product_grid_recyclerview.visibility=View.VISIBLE
+        }
     }
 
-
-    private fun saveLayoutManagerState(){
-        product_recyclerview.layoutManager?.onSaveInstanceState()?.let { lmState ->
-            viewModel.setLayoutManagerState(lmState)
-        }
+    fun loadProductMainList(){
+        viewModel.loadProductMainList()
     }
 
     private fun subscribeObservers(){
@@ -114,28 +127,48 @@ constructor(
             stateChangeListener.onDataStateChange(dataState)
 
             if(dataState != null) {
-                //handlePagination(dataState)
                 handlePagination(dataState)
+            }
+
+            if(dataState != null){
+                dataState.data?.let { data ->
+                    data.response?.peekContent()?.let{ response ->
+                       if(!data.response.hasBeenHandled){
+                           when(response.message){
+                               SuccessHandling.DONE_Product_Layout_Change_Event ->{
+                                   resetUI()
+                                   setSelectedRecyclerView(viewModel.getGridOrListView())
+                               }
+                           }
+                       }
+                    }
+                }
             }
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer{ viewState ->
             Log.d(TAG, "BlogFragment, ViewState: ${viewState}")
             if(viewState != null){
-                recyclerAdapter.apply {
+                productGridRecyclerAdapter.apply {
                     submitList(
                         productList = viewState.productFields.productList.distinct(),
                         isQueryExhausted = viewState.productFields.isQueryExhausted
                     )
                 }
 
+                productListRecyclerAdapter.apply {
+                    submitList(
+                        productList = viewState.productFields.productList.distinct(),
+                        isQueryExhausted = viewState.productFields.isQueryExhausted
+                    )
+                }
             }
         })
     }
 
-
     private  fun resetUI(){
-        product_recyclerview.smoothScrollToPosition(0)
+        product_list_recyclerview.smoothScrollToPosition(0)
+        product_grid_recyclerview.smoothScrollToPosition(0)
         stateChangeListener.hideSoftKeyboard()
         focusable_view.requestFocus()
     }
@@ -152,15 +185,48 @@ constructor(
         }
     }
 
-    private fun initRecyclerView(){
+    private fun initProductGridRecyclerView(){
+        product_grid_recyclerview.apply {
+            layoutManager = GridLayoutManager(this@BlogFragment.context, 2, GridLayoutManager.VERTICAL, false)
+            val topSpacingDecorator = TopSpacingItemDecoration(0)
+            removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
+            addItemDecoration(topSpacingDecorator)
 
-        product_recyclerview.apply {
+            productGridRecyclerAdapter =
+                ProductGridAdapter(
+                    requestManager,
+                    this@BlogFragment
+                )
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+
+                }
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val lastPosition = layoutManager.findLastVisibleItemPosition()
+                    if (lastPosition == productGridRecyclerAdapter.itemCount.minus(1)) {
+                        Log.d(TAG, "BlogFragment: attempting to load next page...")
+                        viewModel.nextPage()
+                    }
+                }
+            })
+            productGridRecyclerAdapter.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            adapter = productGridRecyclerAdapter
+
+        }
+    }
+
+    private fun initProductListRecyclerView(){
+        product_list_recyclerview.apply {
             layoutManager = LinearLayoutManager(this@BlogFragment.context)
             val topSpacingDecorator = TopSpacingItemDecoration(0)
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
 
-            recyclerAdapter = ProductListAdapter(
+            productListRecyclerAdapter = ProductListAdapter(
                 requestManager,
                 this@BlogFragment
             )
@@ -170,13 +236,14 @@ constructor(
                     super.onScrollStateChanged(recyclerView, newState)
                     val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                     val lastPosition = layoutManager.findLastVisibleItemPosition()
-                    if (lastPosition == recyclerAdapter.itemCount.minus(1)) {
+                    if (lastPosition == productListRecyclerAdapter.itemCount.minus(1)) {
                         Log.d(TAG, "BlogFragment: attempting to load next page...")
                         viewModel.nextPage()
                     }
                 }
             })
-            adapter = recyclerAdapter
+            productListRecyclerAdapter.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            adapter = productListRecyclerAdapter
         }
     }
 
@@ -236,15 +303,23 @@ constructor(
     }
 
     override fun restoreListPosition() {
-        viewModel.viewState.value?.productFields?.layoutManagerState?.let { lmState ->
-            product_recyclerview?.layoutManager?.onRestoreInstanceState(lmState)
-        }
+       
+    }
+
+    override fun onGridItemSelected(position: Int, item: Product) {
+        viewModel.setViewProductFields(item)
+        findNavController().navigate(R.id.action_blogFragment_to_viewProductFragment)
+    }
+
+    override fun restoreGridListPosition() {
+       
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         // clear references (can leak memory)
-        product_recyclerview.adapter = null
+        product_list_recyclerview.adapter = null
+        product_grid_recyclerview.adapter = null
        // viewModel.clearProductListData()
     }
 
@@ -267,7 +342,7 @@ constructor(
 
     override fun onPause() {
         super.onPause()
-        saveLayoutManagerState()
+        
     }
 
 

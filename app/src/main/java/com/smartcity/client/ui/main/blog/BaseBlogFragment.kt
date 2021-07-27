@@ -16,8 +16,7 @@ import com.smartcity.client.ui.UICommunicationListener
 
 abstract class BaseBlogFragment
 constructor(
-    @LayoutRes
-    private val layoutRes: Int
+    @LayoutRes private val layoutRes: Int
 ): Fragment(layoutRes)
 {
 

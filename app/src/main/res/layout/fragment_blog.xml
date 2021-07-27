@@ -5,8 +5,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
         tools:context=".ui.main.blog.BlogFragment"
-
+        android:background="@color/grey0_light_light"
         >
 
     <View android:layout_width="0.5dp"
@@ -21,12 +22,23 @@
             android:id="@+id/swipe_refresh"
             >
 
-        <androidx.recyclerview.widget.RecyclerView
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/product_recyclerview"
+                android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_list_recyclerview"
+                    />
 
-                />
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/product_grid_recyclerview"
+                    />
+        </LinearLayout>
+
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

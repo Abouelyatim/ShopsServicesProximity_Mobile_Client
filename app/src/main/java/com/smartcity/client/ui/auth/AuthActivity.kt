@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -160,6 +161,18 @@ class AuthActivity : BaseActivity()
 
     override fun displayBottomNavigation(bool: Boolean) {
 
+    }
+
+    override fun displayAppBar(bool: Boolean) {
+        TODO("Not yet implemented")
+    }
+
+    override fun setAppBarLayout(fragment: Fragment) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateStatusBarColor(statusBarColor: Int,statusBarTextColor:Boolean) {
+        TODO("Not yet implemented")
     }
 
 

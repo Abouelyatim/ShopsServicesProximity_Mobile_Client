@@ -2,15 +2,23 @@ package com.smartcity.client.ui.main
 
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import com.smartcity.client.BaseApplication
 import com.smartcity.client.R
 import com.smartcity.client.models.AUTH_TOKEN_BUNDLE_KEY
@@ -18,24 +26,19 @@ import com.smartcity.client.models.AuthToken
 import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.auth.AuthActivity
 import com.smartcity.client.ui.main.account.BaseAccountFragment
-import com.smartcity.client.ui.main.blog.*
-
+import com.smartcity.client.ui.main.account.orders.notification.MyFirebaseMessagingService
+import com.smartcity.client.ui.main.blog.BaseBlogFragment
+import com.smartcity.client.ui.main.cart.BaseCartFragment
+import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFragment
 import com.smartcity.client.util.BOTTOM_NAV_BACKSTACK_KEY
 import com.smartcity.client.util.BottomNavController
 import com.smartcity.client.util.BottomNavController.*
-import com.smartcity.client.util.setUpNavigation
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.messaging.FirebaseMessaging
-import com.smartcity.client.ui.main.account.orders.notification.MyFirebaseMessagingService
-import com.smartcity.client.ui.main.cart.BaseCartFragment
-import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFragment
 import com.smartcity.client.util.PreferenceKeys
-
+import com.smartcity.client.util.setUpNavigation
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_main.progress_bar
 import javax.inject.Inject
 import javax.inject.Named
+
 
 class MainActivity : BaseActivity(),
     OnNavigationGraphChanged,
@@ -277,6 +280,37 @@ class MainActivity : BaseActivity(),
         }
         else{
             bottom_navigation_view.visibility = View.GONE
+        }
+    }
+
+    override fun displayAppBar(bool: Boolean) {
+
+        if(bool){
+            tool_bar_fragment.visibility = View.VISIBLE
+        }
+        else{
+            tool_bar_fragment.visibility = View.GONE
+        }
+    }
+
+    override fun setAppBarLayout(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.tool_bar_fragment, fragment)
+            .commitAllowingStateLoss()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun updateStatusBarColor(statusBarColor: Int,statusBarTextColor:Boolean) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val window: Window = window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            ContextCompat.getColor(this, statusBarColor)
+            window.statusBarColor = ContextCompat.getColor(this, statusBarColor)
+            if(statusBarTextColor){
+                window.decorView.systemUiVisibility = window.decorView.systemUiVisibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
+            }else{
+                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            }
         }
     }
 

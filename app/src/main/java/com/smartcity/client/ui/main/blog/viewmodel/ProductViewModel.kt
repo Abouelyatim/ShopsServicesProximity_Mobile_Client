@@ -6,13 +6,12 @@ import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.repository.main.BlogRepository
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.BaseViewModel
-import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.Loading
+import com.smartcity.client.ui.*
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent.*
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.util.AbsentLiveData
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_Product_Layout_Change_Event
 import javax.inject.Inject
 
 @MainScope
@@ -37,7 +36,7 @@ constructor(
                 }?: AbsentLiveData.create()
             }
             is ProductMainEvent ->{
-                clearLayoutManagerState()
+                //clearLayoutManagerState()
                 return sessionManager.cachedToken.value?.let { authToken ->
 
                     blogRepository.searchBlogPosts(
@@ -93,6 +92,10 @@ constructor(
                 }?: AbsentLiveData.create()
             }
 
+            is ProductLayoutChangeEvent ->{
+                return returnResponse(DONE_Product_Layout_Change_Event,ResponseType.None())
+            }
+
             is None ->{
                 return liveData {
                     emit(
@@ -103,6 +106,22 @@ constructor(
                         )
                     )
                 }
+            }
+        }
+    }
+
+    private fun returnResponse(message: String, responseType: ResponseType): LiveData<DataState<ProductViewState>>{
+        Log.d(TAG, "returnErrorResponse: ${message}")
+
+        return object: LiveData<DataState<ProductViewState>>(){
+            override fun onActive() {
+                super.onActive()
+                value = DataState.data(null,
+                    Response(
+                        message,
+                        responseType
+                    )
+                )
             }
         }
     }

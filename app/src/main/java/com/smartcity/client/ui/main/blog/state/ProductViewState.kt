@@ -40,7 +40,7 @@ data class ProductViewState (
         var page: Int = 1,
         var isQueryInProgress: Boolean = false,
         var isQueryExhausted: Boolean = false,
-        var layoutManagerState: Parcelable? = null
+        var gridOrListView:Boolean =false
     ) : Parcelable
 
 

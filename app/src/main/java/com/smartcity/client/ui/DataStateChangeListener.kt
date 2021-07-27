@@ -1,5 +1,9 @@
 package com.smartcity.client.ui
 
+import androidx.annotation.ColorRes
+import androidx.annotation.LayoutRes
+import androidx.fragment.app.Fragment
+
 interface DataStateChangeListener{
 
     fun onDataStateChange(dataState: DataState<*>?)
@@ -15,4 +19,10 @@ interface DataStateChangeListener{
     fun isStoragePermissionGranted(): Boolean
 
     fun isFineLocationPermissionGranted(): Boolean
+
+    fun displayAppBar(bool: Boolean)
+
+    fun setAppBarLayout(fragment: Fragment)
+
+    fun updateStatusBarColor(@ColorRes statusBarColor: Int, statusBarTextColor:Boolean)
 }

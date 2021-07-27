@@ -67,6 +67,12 @@ fun ProductViewModel.getCustomCategoryRecyclerPosition():Int{
     }
 }
 
+fun ProductViewModel.getGridOrListView():Boolean{
+    getCurrentViewStateOrNew().let {
+        return it.productFields.gridOrListView
+    }
+}
+
 fun ProductViewModel.getDummyBlogPost(): BlogPost{
     return BlogPost(-1, "" , "", "", "", 1, "")
 }

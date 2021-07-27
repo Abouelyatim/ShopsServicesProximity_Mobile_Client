@@ -33,5 +33,7 @@ sealed class ProductStateEvent {
         val storeId: Long
     ): ProductStateEvent()
 
+    class ProductLayoutChangeEvent(): ProductStateEvent()
+
     class None: ProductStateEvent()
 }

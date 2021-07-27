@@ -62,4 +62,9 @@ constructor(
         }
 
     }
+
+    fun setAppBarLayout(fragment: Fragment){
+        stateChangeListener.displayAppBar(false)
+        stateChangeListener.setAppBarLayout(fragment)
+    }
 }

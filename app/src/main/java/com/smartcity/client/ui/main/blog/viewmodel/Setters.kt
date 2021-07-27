@@ -18,18 +18,6 @@ fun ProductViewModel.setQueryInProgress(isInProgress: Boolean){
     setViewState(update)
 }
 
-fun ProductViewModel.clearLayoutManagerState(){
-    val update = getCurrentViewStateOrNew()
-    update.productFields.layoutManagerState = null
-    setViewState(update)
-
-}
-fun ProductViewModel.setLayoutManagerState(layoutManagerState: Parcelable){
-    val update = getCurrentViewStateOrNew()
-    update.productFields.layoutManagerState = layoutManagerState
-    setViewState(update)
-}
-
 fun ProductViewModel.setProductListData(productList: List<Product>){
     val update = getCurrentViewStateOrNew()
     update.productFields.productList = productList
@@ -110,3 +98,8 @@ fun ProductViewModel.setCustomCategoryRecyclerPosition(position:Int){
     setViewState(update)
 }
 
+fun ProductViewModel.setGridOrListView(bool:Boolean){
+    val update = getCurrentViewStateOrNew()
+    update.productFields.gridOrListView = bool
+    setViewState(update)
+}

@@ -31,7 +31,7 @@ class SuccessHandling {
 
 
         const val CREATED_DONE="created."
-
+        const val DONE_Product_Layout_Change_Event="Done ProductLayoutChangeEvent"
         const val DONE_User_Default_City="Done UserDefaultCity"
         const val DONE_Create_Address="Done CreateAddress"
 

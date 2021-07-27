@@ -22,7 +22,9 @@ import com.smartcity.client.models.product.CartProductVariant
 import com.smartcity.client.ui.AreYouSureCallback
 import com.smartcity.client.ui.UIMessage
 import com.smartcity.client.ui.UIMessageType
+import com.smartcity.client.ui.main.blog.ProductAppBarFragment
 import com.smartcity.client.ui.main.cart.BaseCartFragment
+import com.smartcity.client.ui.main.cart.CartAppBarFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartViewState
@@ -82,6 +84,7 @@ constructor(
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
         swipe_refresh.setOnRefreshListener(this)
+        setAppBarLayout(CartAppBarFragment())
        // stateChangeListener.expandAppBar()
 
 

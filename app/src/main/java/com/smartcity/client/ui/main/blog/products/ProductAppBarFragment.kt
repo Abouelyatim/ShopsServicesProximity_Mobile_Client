@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.blog
+package com.smartcity.client.ui.main.blog.products
 
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +15,7 @@ import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
 import com.smartcity.client.ui.main.blog.viewmodel.getDummyBlogPost
 import com.smartcity.client.ui.main.blog.viewmodel.getGridOrListView
 import com.smartcity.client.ui.main.blog.viewmodel.setGridOrListView
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_search_Product_Event
 import kotlinx.android.synthetic.main.fragment_product_app_bar.*
 import javax.inject.Inject
 
@@ -41,6 +42,21 @@ constructor(
 
         setGridListViewBehavior()
         initGridListViewBehavior(viewModel.getGridOrListView())
+        searchProduct()
+    }
+
+    private fun searchProduct() {
+        search_product.setOnClickListener {
+            searchProductEvent()
+        }
+    }
+
+    private fun searchProductEvent(){
+        viewModel.setStateEvent(
+            ProductStateEvent.SearchEvent(
+                DONE_search_Product_Event
+            )
+        )
     }
 
     private fun initGridListViewBehavior(boolean: Boolean) {

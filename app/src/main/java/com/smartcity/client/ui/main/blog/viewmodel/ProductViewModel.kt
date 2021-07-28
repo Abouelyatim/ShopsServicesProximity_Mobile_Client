@@ -40,8 +40,19 @@ constructor(
                 return sessionManager.cachedToken.value?.let { authToken ->
 
                     blogRepository.searchBlogPosts(
-                        query = getSearchQuery(),
+                        query = "",
                         page = getPage(),
+                        userId = authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is ProductSearchEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+
+                    blogRepository.searchBlogPosts(
+                        query = getSearchQuerySearch(),
+                        page = getPageSearch(),
                         userId = authToken.account_pk!!.toLong()
                     )
                 }?: AbsentLiveData.create()
@@ -97,6 +108,10 @@ constructor(
             }
 
             is BackClickedEvent ->{
+                return returnResponse(stateEvent.tag,ResponseType.None())
+            }
+
+            is SearchEvent ->{
                 return returnResponse(stateEvent.tag,ResponseType.None())
             }
 

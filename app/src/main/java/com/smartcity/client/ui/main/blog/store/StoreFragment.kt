@@ -1,7 +1,6 @@
 package com.smartcity.client.ui.main.blog.store
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -17,12 +16,11 @@ import com.google.android.flexbox.JustifyContent
 import com.smartcity.client.R
 import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.ui.main.blog.BaseBlogFragment
+import com.smartcity.client.ui.main.blog.products.BaseBlogFragment
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.store.ViewCustomCategoryAdapter.Companion.getSelectedPositions
 import com.smartcity.client.ui.main.blog.store.ViewCustomCategoryAdapter.Companion.setSelectedPositions
-import com.smartcity.client.ui.main.blog.viewProduct.ViewProductAppBarFragment
 import com.smartcity.client.ui.main.blog.viewmodel.*
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.util.RightSpacingItemDecoration

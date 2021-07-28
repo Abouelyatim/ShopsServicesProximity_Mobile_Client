@@ -9,7 +9,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
@@ -39,7 +38,7 @@ import com.smartcity.client.models.product.AttributeValue
 import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.models.product.ProductVariants
-import com.smartcity.client.ui.main.blog.BaseBlogFragment
+import com.smartcity.client.ui.main.blog.products.BaseBlogFragment
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewProduct.adapters.OptionsAdapter
@@ -50,7 +49,6 @@ import com.smartcity.client.ui.main.blog.viewmodel.*
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.SuccessHandling
-import com.smartcity.client.util.SuccessHandling.Companion.DONE_ADD_TO_CART
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_product.*
 import java.math.BigDecimal

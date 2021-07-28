@@ -11,7 +11,7 @@ import com.smartcity.client.R
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_Back_Clicked_Store_Event
-import kotlinx.android.synthetic.main.fragment_view_product_app_bar.*
+import kotlinx.android.synthetic.main.fragment_store_app_bar.*
 
 
 class StoreAppBarFragment

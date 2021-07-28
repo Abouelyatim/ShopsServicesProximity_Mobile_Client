@@ -2,7 +2,6 @@ package com.smartcity.client.ui.main
 
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -27,7 +26,7 @@ import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.auth.AuthActivity
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.orders.notification.MyFirebaseMessagingService
-import com.smartcity.client.ui.main.blog.BaseBlogFragment
+import com.smartcity.client.ui.main.blog.products.BaseBlogFragment
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFragment
 import com.smartcity.client.util.BOTTOM_NAV_BACKSTACK_KEY

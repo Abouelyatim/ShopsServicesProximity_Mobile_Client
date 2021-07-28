@@ -1,6 +1,6 @@
 import android.util.Log
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent
-import com.smartcity.client.ui.main.blog.state.ProductStateEvent.*
+import com.smartcity.client.ui.main.blog.state.ProductStateEvent.ProductMainEvent
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewmodel.*
 
@@ -9,7 +9,6 @@ fun ProductViewModel.loadProductMainList(){
     setQueryExhausted(false)
     setStateEvent(ProductMainEvent())
 }
-
 
 fun ProductViewModel.handleIncomingBlogListData(viewState: ProductViewState){
     Log.d(TAG, "BlogViewModel, DataState: ${viewState}")
@@ -32,10 +31,39 @@ fun ProductViewModel.handleIncomingBlogListData(viewState: ProductViewState){
     setProductListData(listDistinct)
 }
 
+fun ProductViewModel.handleIncomingProductSearchListData(viewState: ProductViewState){
+    Log.d(TAG, "BlogViewModel, DataState: ${viewState}")
+    Log.d(TAG, "BlogViewModel, DataState: isQueryInProgress?: " +
+            "${viewState.productFields.isQueryInProgress}")
+    Log.d(TAG, "BlogViewModel, DataState: isQueryExhausted?: " +
+            "${viewState.productFields.isQueryExhausted}")
+    setQueryInProgressSearch(viewState.productFields.isQueryInProgress)
+    setQueryExhaustedSearch(viewState.productFields.isQueryExhausted)
+
+
+    val list=getProductListSearch().toMutableList()
+    viewState.productFields.newProductList.map {
+        list.add(it)
+    }
+    if(viewState.productFields.newProductList.isEmpty()){
+        setQueryExhaustedSearch(true)
+    }
+    val listDistinct= list.distinct()
+    setProductListDataSearch(listDistinct)
+}
+
 fun ProductViewModel.nextPage(){
     if(!getIsQueryExhausted() && !getIsQueryInProgress()){
        incrementPageNumber()
         setQueryInProgress(true)
+        setStateEvent(ProductMainEvent())
+    }
+}
+
+fun ProductViewModel.nextPageSearch(){
+    if(!getIsQueryExhaustedSearch() && !getIsQueryInProgressSearch()){
+        incrementPageNumberSearch()
+        setQueryInProgressSearch(true)
         setStateEvent(ProductMainEvent())
     }
 }
@@ -47,6 +75,12 @@ fun ProductViewModel.nextPage(){
     setViewState(update)
 }
 
+fun ProductViewModel.incrementPageNumberSearch(){
+    val update = getCurrentViewStateOrNew()
+    val page = update.copy().searchProductFields.pageSearch // get current page
+    update.searchProductFields.pageSearch = page + 1
+    setViewState(update)
+}
 
 fun ProductViewModel.resetPage(){
     val update = getCurrentViewStateOrNew()
@@ -54,28 +88,29 @@ fun ProductViewModel.resetPage(){
     setViewState(update)
 }
 
-
+fun ProductViewModel.resetPageSearch(){
+    val update = getCurrentViewStateOrNew()
+    update.searchProductFields.pageSearch = 1
+    setViewState(update)
+}
 
 fun ProductViewModel.loadFirstPage() {
     setQueryInProgress(true)
     setQueryExhausted(false)
     resetPage()
-    if(getSearchQuery()!=""){
-        clearQuery()
-    }
+
     clearProductListData()
     setStateEvent(ProductMainEvent())
-    Log.e(TAG, "BlogViewModel: loadFirstPage: ${viewState.value!!.productFields.searchQuery}")
 }
 
-fun ProductViewModel.loadFirstSearchPage() {
-    setQueryInProgress(true)
-    setQueryExhausted(false)
-    resetPage()
-    clearProductListData()
-    setStateEvent(ProductMainEvent())
-    Log.e(TAG, "BlogViewModel: loadFirstPage: ${viewState.value!!.productFields.searchQuery}")
+fun ProductViewModel.loadFirstSearchPageSearch() {
+        setQueryInProgressSearch(true)
+        setQueryExhaustedSearch(false)
+        resetPageSearch()
+        clearProductListDataSearch()
+        setStateEvent(ProductStateEvent.ProductSearchEvent())
 }
+
 
 
 

@@ -1,11 +1,8 @@
 package com.smartcity.client.ui.main.cart.cart
 
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -15,24 +12,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.models.product.CartProductVariant
 import com.smartcity.client.ui.AreYouSureCallback
 import com.smartcity.client.ui.UIMessage
 import com.smartcity.client.ui.UIMessageType
-import com.smartcity.client.ui.main.blog.ProductAppBarFragment
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.CartAppBarFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.ui.main.cart.viewmodel.*
-import com.smartcity.client.util.Constants
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
-import kotlinx.android.synthetic.main.fragment_address.*
 import kotlinx.android.synthetic.main.fragment_cart.*
 import kotlinx.android.synthetic.main.fragment_cart.empty_list
 import javax.inject.Inject

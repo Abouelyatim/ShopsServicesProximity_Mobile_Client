@@ -10,7 +10,6 @@ fun ProductViewModel.getPage(): Int{
     }
 }
 
-
 fun ProductViewModel.getIsQueryExhausted(): Boolean{
     getCurrentViewStateOrNew().let {
         return it.productFields.isQueryExhausted
@@ -26,14 +25,6 @@ fun ProductViewModel.getIsQueryInProgress(): Boolean{
 fun ProductViewModel.getProductList(): List<Product>{
     getCurrentViewStateOrNew().let {
         return it.productFields.productList
-    }
-}
-
-
-
-fun ProductViewModel.getSearchQuery(): String {
-    getCurrentViewStateOrNew().let {
-        return it.productFields.searchQuery
     }
 }
 
@@ -70,6 +61,42 @@ fun ProductViewModel.getCustomCategoryRecyclerPosition():Int{
 fun ProductViewModel.getGridOrListView():Boolean{
     getCurrentViewStateOrNew().let {
         return it.productFields.gridOrListView
+    }
+}
+
+fun ProductViewModel.getPageSearch(): Int{
+    getCurrentViewStateOrNew().let {
+        return it.searchProductFields.pageSearch
+    }
+}
+
+fun ProductViewModel.getIsQueryExhaustedSearch(): Boolean{
+    getCurrentViewStateOrNew().let {
+        return it.searchProductFields.isQuerySearchExhausted
+    }
+}
+
+fun ProductViewModel.getIsQueryInProgressSearch(): Boolean{
+    getCurrentViewStateOrNew().let {
+        return it.searchProductFields.isQuerySearchInProgress
+    }
+}
+
+fun ProductViewModel.getProductListSearch(): List<Product>{
+    getCurrentViewStateOrNew().let {
+        return it.searchProductFields.productSearchList
+    }
+}
+
+fun ProductViewModel.getSearchQuerySearch(): String {
+    getCurrentViewStateOrNew().let {
+        return it.searchProductFields.searchQuery
+    }
+}
+
+fun ProductViewModel.getGridOrListViewSearch():Boolean{
+    getCurrentViewStateOrNew().let {
+        return it.searchProductFields.gridOrListSearchView
     }
 }
 

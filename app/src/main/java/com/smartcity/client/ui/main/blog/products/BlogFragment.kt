@@ -1,16 +1,9 @@
-package com.smartcity.client.ui.main.blog
+package com.smartcity.client.ui.main.blog.products
 
-import android.app.SearchManager
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuInflater
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -23,6 +16,7 @@ import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.ui.DataState
+import com.smartcity.client.ui.main.blog.ProductListAdapter
 import com.smartcity.client.ui.main.blog.state.BLOG_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewmodel.*
@@ -30,9 +24,7 @@ import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import handleIncomingBlogListData
 import kotlinx.android.synthetic.main.fragment_blog.*
-import kotlinx.android.synthetic.main.fragment_store.*
 import loadFirstPage
-import loadFirstSearchPage
 import loadProductMainList
 import nextPage
 import javax.inject.Inject
@@ -47,12 +39,10 @@ constructor(
     ProductGridAdapter.Interaction,
     SwipeRefreshLayout.OnRefreshListener
 {
-
     val viewModel: ProductViewModel by viewModels{
         viewModelFactory
     }
 
-    private lateinit var searchView: SearchView
     private lateinit var productListRecyclerAdapter: ProductListAdapter
     private lateinit var productGridRecyclerAdapter: ProductGridAdapter
 
@@ -95,7 +85,11 @@ constructor(
         swipe_refresh.setOnRefreshListener(this)
         stateChangeListener.displayBottomNavigation(true)
         stateChangeListener.displayAppBar(true)
-        stateChangeListener.setAppBarLayout(ProductAppBarFragment(viewModelFactory))
+        stateChangeListener.setAppBarLayout(
+            ProductAppBarFragment(
+                viewModelFactory
+            )
+        )
         stateChangeListener.updateStatusBarColor(R.color.white,false)
 
 
@@ -139,6 +133,10 @@ constructor(
                                SuccessHandling.DONE_Product_Layout_Change_Event ->{
                                    resetUI()
                                    setSelectedRecyclerView(viewModel.getGridOrListView())
+                               }
+
+                               SuccessHandling.DONE_search_Product_Event ->{
+                                   navSearch()
                                }
                            }
                        }
@@ -227,10 +225,11 @@ constructor(
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
 
-            productListRecyclerAdapter = ProductListAdapter(
-                requestManager,
-                this@BlogFragment
-            )
+            productListRecyclerAdapter =
+                ProductListAdapter(
+                    requestManager,
+                    this@BlogFragment
+                )
             addOnScrollListener(object: RecyclerView.OnScrollListener(){
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -247,56 +246,6 @@ constructor(
             adapter = productListRecyclerAdapter
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.search_menu, menu)
-        initSearchView(menu)
-    }
-
-    private fun initSearchView(menu: Menu){
-        activity?.apply {
-            val searchManager: SearchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            searchView = menu.findItem(R.id.action_search).actionView as SearchView
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-            searchView.maxWidth = Integer.MAX_VALUE
-            searchView.setIconifiedByDefault(true)
-            searchView.isSubmitButtonEnabled = true
-        }
-
-        // ENTER ON COMPUTER KEYBOARD OR ARROW ON VIRTUAL KEYBOARD
-        val searchPlate = searchView.findViewById(R.id.search_src_text) as EditText
-        searchPlate.setOnEditorActionListener { v, actionId, event ->
-
-            if (actionId == EditorInfo.IME_ACTION_UNSPECIFIED
-                || actionId == EditorInfo.IME_ACTION_SEARCH ) {
-                val searchQuery = v.text.toString()
-                Log.e(TAG, "SearchView: (keyboard or arrow) executing search...: ${searchQuery}")
-                viewModel.setQuery(searchQuery).let{
-                    onProductSearch()
-                }
-            }
-            true
-        }
-
-        // SEARCH BUTTON CLICKED (in toolbar)
-        val searchButton = searchView.findViewById(R.id.search_go_btn) as View
-        searchButton.setOnClickListener {
-            val searchQuery = searchPlate.text.toString()
-            Log.e(TAG, "SearchView: (button) executing search...: ${searchQuery}")
-            viewModel.setQuery(searchQuery).let {
-                onProductSearch()
-            }
-
-        }
-
-        val closeButton = searchView.findViewById(R.id.search_close_btn) as View
-        closeButton.setOnClickListener {
-            searchView.isIconified=true
-            onProductMain()
-        }
-    }
-
 
     override fun onItemSelected(position: Int, item: Product) {
         viewModel.setViewProductFields(item)
@@ -324,12 +273,6 @@ constructor(
        // viewModel.clearProductListData()
     }
 
-    fun onProductSearch(){
-        viewModel.loadFirstSearchPage().let {
-            resetUI()
-        }
-    }
-
     fun onProductMain(){
         viewModel.loadFirstPage().let {
             resetUI()
@@ -349,6 +292,11 @@ constructor(
     override fun onResume() {
         super.onResume()
         viewModel.clearStoreInformation()
+        viewModel.clearProductSearchListData()
+    }
+
+    private fun navSearch(){
+        findNavController().navigate(R.id.action_blogFragment_to_searchProductFragment)
     }
 }
 

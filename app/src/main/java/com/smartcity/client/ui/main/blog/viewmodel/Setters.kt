@@ -1,7 +1,5 @@
 package com.smartcity.client.ui.main.blog.viewmodel
 
-import android.os.Parcelable
-import com.smartcity.client.models.BlogPost
 import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.ui.main.blog.state.ProductViewState
@@ -30,21 +28,9 @@ fun ProductViewModel.clearProductListData(){
     setViewState(update)
 }
 
-fun ProductViewModel.clearQuery(){
+fun ProductViewModel.clearProductSearchListData(){
     val update = getCurrentViewStateOrNew()
-    update.productFields.searchQuery = ""
-    setViewState(update)
-}
-
-fun ProductViewModel.clearNewProductListData(){
-    val update = getCurrentViewStateOrNew()
-    update.productFields.newProductList = listOf()
-    setViewState(update)
-}
-
-fun ProductViewModel.setQuery(query: String){
-    val update = getCurrentViewStateOrNew()
-    update.productFields.searchQuery = query
+    update.searchProductFields.productSearchList = listOf()
     setViewState(update)
 }
 
@@ -101,5 +87,41 @@ fun ProductViewModel.setCustomCategoryRecyclerPosition(position:Int){
 fun ProductViewModel.setGridOrListView(bool:Boolean){
     val update = getCurrentViewStateOrNew()
     update.productFields.gridOrListView = bool
+    setViewState(update)
+}
+
+fun ProductViewModel.setQueryExhaustedSearch(isExhausted: Boolean){
+    val update = getCurrentViewStateOrNew()
+    update.searchProductFields.isQuerySearchExhausted = isExhausted
+    setViewState(update)
+}
+
+fun ProductViewModel.setQueryInProgressSearch(isInProgress: Boolean){
+    val update = getCurrentViewStateOrNew()
+    update.searchProductFields.isQuerySearchInProgress = isInProgress
+    setViewState(update)
+}
+
+fun ProductViewModel.setProductListDataSearch(productList: List<Product>){
+    val update = getCurrentViewStateOrNew()
+    update.searchProductFields.productSearchList = productList
+    setViewState(update)
+}
+
+fun ProductViewModel.clearProductListDataSearch(){
+    val update = getCurrentViewStateOrNew()
+    update.searchProductFields.productSearchList = listOf()
+    setViewState(update)
+}
+
+fun ProductViewModel.setQuerySearch(query: String){
+    val update = getCurrentViewStateOrNew()
+    update.searchProductFields.searchQuery = query
+    setViewState(update)
+}
+
+fun ProductViewModel.setGridOrListViewSearch(bool:Boolean){
+    val update = getCurrentViewStateOrNew()
+    update.searchProductFields.gridOrListSearchView = bool
     setViewState(update)
 }

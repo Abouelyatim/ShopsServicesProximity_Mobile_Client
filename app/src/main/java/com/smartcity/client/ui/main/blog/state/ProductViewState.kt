@@ -13,6 +13,8 @@ data class ProductViewState (
     // BlogFragment vars
     var productFields: ProductFields = ProductFields(),
 
+    var searchProductFields: SearchProductFields = SearchProductFields(),
+
     var viewProductFields: ViewProductFields = ViewProductFields(),
 
     var choisesMap: ChoisesMap = ChoisesMap()
@@ -36,14 +38,22 @@ data class ProductViewState (
     data class ProductFields(
         var newProductList: List<Product> = ArrayList<Product>(),
         var productList: List<Product> = ArrayList<Product>(),
-        var searchQuery: String = "",
         var page: Int = 1,
         var isQueryInProgress: Boolean = false,
         var isQueryExhausted: Boolean = false,
         var gridOrListView:Boolean =false
     ) : Parcelable
 
-
+    @Parcelize
+    data class SearchProductFields(
+        var newSearchProductList: List<Product> = ArrayList<Product>(),
+        var productSearchList: List<Product> = ArrayList<Product>(),
+        var searchQuery: String = "",
+        var pageSearch: Int = 1,
+        var isQuerySearchInProgress: Boolean = false,
+        var isQuerySearchExhausted: Boolean = false,
+        var gridOrListSearchView:Boolean =false
+    ) : Parcelable
 
 }
 

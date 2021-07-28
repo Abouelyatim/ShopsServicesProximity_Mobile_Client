@@ -1,7 +1,6 @@
 package com.smartcity.client.ui
 
 import androidx.annotation.ColorRes
-import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 
 interface DataStateChangeListener{

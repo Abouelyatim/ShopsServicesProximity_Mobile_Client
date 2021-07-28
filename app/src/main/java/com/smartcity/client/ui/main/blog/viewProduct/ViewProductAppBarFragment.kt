@@ -1,16 +1,15 @@
 package com.smartcity.client.ui.main.blog.viewProduct
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.smartcity.client.R
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
-import com.smartcity.client.ui.main.blog.viewmodel.getGridOrListView
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_Back_Clicked_View_product_Event
 import kotlinx.android.synthetic.main.fragment_view_product_app_bar.*
 

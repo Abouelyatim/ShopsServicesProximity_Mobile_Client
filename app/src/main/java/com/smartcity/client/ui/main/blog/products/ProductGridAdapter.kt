@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.blog
+package com.smartcity.client.ui.main.blog.products
 
 import android.annotation.SuppressLint
 import android.util.Log

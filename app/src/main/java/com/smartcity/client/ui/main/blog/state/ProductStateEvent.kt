@@ -4,6 +4,8 @@ sealed class ProductStateEvent {
 
     class ProductMainEvent : ProductStateEvent()
 
+    class ProductSearchEvent : ProductStateEvent()
+
     class AddProductCartEvent(
         val variantId: Long,
         val quantity: Int
@@ -36,6 +38,10 @@ sealed class ProductStateEvent {
     class ProductLayoutChangeEvent(): ProductStateEvent()
 
     class BackClickedEvent(
+        val tag:String
+    ): ProductStateEvent()
+
+    class SearchEvent(
         val tag:String
     ): ProductStateEvent()
 

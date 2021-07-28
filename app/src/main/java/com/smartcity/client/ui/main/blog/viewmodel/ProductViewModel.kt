@@ -96,6 +96,10 @@ constructor(
                 return returnResponse(DONE_Product_Layout_Change_Event,ResponseType.None())
             }
 
+            is BackClickedEvent ->{
+                return returnResponse(stateEvent.tag,ResponseType.None())
+            }
+
             is None ->{
                 return liveData {
                     emit(

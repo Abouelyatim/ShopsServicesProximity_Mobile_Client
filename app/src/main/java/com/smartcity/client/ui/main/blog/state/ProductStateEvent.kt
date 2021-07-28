@@ -35,5 +35,9 @@ sealed class ProductStateEvent {
 
     class ProductLayoutChangeEvent(): ProductStateEvent()
 
+    class BackClickedEvent(
+        val tag:String
+    ): ProductStateEvent()
+
     class None: ProductStateEvent()
 }

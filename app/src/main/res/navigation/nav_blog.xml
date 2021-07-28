@@ -28,6 +28,10 @@
             android:id="@+id/storeFragment"
             android:name="com.smartcity.client.ui.main.blog.store.StoreFragment"
             android:label="fragment_store"
-            tools:layout="@layout/fragment_store" />
+            tools:layout="@layout/fragment_store" >
+        <action
+                android:id="@+id/action_storeFragment_to_viewProductFragment"
+                app:destination="@id/viewProductFragment" />
+    </fragment>
 
 </navigation>

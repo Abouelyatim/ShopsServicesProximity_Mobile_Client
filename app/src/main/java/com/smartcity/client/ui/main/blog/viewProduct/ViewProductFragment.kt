@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
@@ -48,6 +49,8 @@ import com.smartcity.client.ui.main.blog.viewProduct.adapters.ViewPagerAdapter
 import com.smartcity.client.ui.main.blog.viewmodel.*
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.util.Constants
+import com.smartcity.client.util.SuccessHandling
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_ADD_TO_CART
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_product.*
 import java.math.BigDecimal
@@ -101,7 +104,16 @@ constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+
         stateChangeListener.expandAppBar()
+        stateChangeListener.displayAppBar(true)
+        stateChangeListener.displayBottomNavigation(false)
+        stateChangeListener.setAppBarLayout(
+            ViewProductAppBarFragment(
+                viewModelFactory
+            )
+        )
+        stateChangeListener.updateStatusBarColor(R.color.dark,true)
 
         viewModel.getViewProductFields()?.let {
             product=it
@@ -385,7 +397,32 @@ constructor(
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             stateChangeListener.onDataStateChange(dataState)
+
+            if(dataState != null){
+                dataState.data?.let { data ->
+                    data.response?.peekContent()?.let{ response ->
+
+                        if(!data.response.hasBeenHandled){
+                            if (response.message== SuccessHandling.DONE_Back_Clicked_View_product_Event){
+                                findNavController().popBackStack()
+                            }
+                        }
+
+                        if(!data.response.hasBeenHandled){
+                            if (response.message==SuccessHandling.DONE_ADD_TO_CART){
+                                data.data?.let{
+                                    it.peekContent()?.let{
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
         })
+
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             val map=viewModel.getChoisesMap()
             val sortedOption= mutableListOf<String>()
@@ -718,7 +755,6 @@ constructor(
     override fun onResume() {
         super.onResume()
         mMapView.onResume()
-        viewModel.clearStoreInformation()
     }
 
     override fun onPause() {

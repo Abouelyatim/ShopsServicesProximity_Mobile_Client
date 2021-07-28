@@ -1,10 +1,12 @@
 package com.smartcity.client.ui.main.blog.store
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +22,7 @@ import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.store.ViewCustomCategoryAdapter.Companion.getSelectedPositions
 import com.smartcity.client.ui.main.blog.store.ViewCustomCategoryAdapter.Companion.setSelectedPositions
+import com.smartcity.client.ui.main.blog.viewProduct.ViewProductAppBarFragment
 import com.smartcity.client.ui.main.blog.viewmodel.*
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.util.RightSpacingItemDecoration
@@ -71,6 +74,14 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         stateChangeListener.expandAppBar()
+        stateChangeListener.displayAppBar(true)
+        stateChangeListener.displayBottomNavigation(false)
+        stateChangeListener.setAppBarLayout(
+            StoreAppBarFragment(
+                viewModelFactory
+            )
+        )
+        stateChangeListener.updateStatusBarColor(R.color.white,false)
 
         initCustomCategoryRecyclerView()
         initProductRecyclerView()
@@ -116,6 +127,20 @@ constructor(
     private fun subscribeObservers() {
         viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
             stateChangeListener.onDataStateChange(dataState)
+
+            if(dataState != null){
+                dataState.data?.let { data ->
+                    data.response?.peekContent()?.let{ response ->
+                        if(!data.response.hasBeenHandled){
+                            when(data.response.getContentIfNotHandled()?.message){
+                                SuccessHandling.DONE_Back_Clicked_Store_Event ->{
+                                    findNavController().popBackStack()
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             if(dataState != null){
                 //set Product list get it from network
@@ -307,7 +332,8 @@ constructor(
     }
 
     override fun onItemSelected(item: Product) {
-        //view product
+        viewModel.setViewProductFields(item)
+        findNavController().navigate(R.id.action_storeFragment_to_viewProductFragment)
     }
 
     override fun onItemAllSelected() {

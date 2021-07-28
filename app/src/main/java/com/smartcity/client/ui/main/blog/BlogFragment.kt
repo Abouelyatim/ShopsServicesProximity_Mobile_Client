@@ -93,6 +93,7 @@ constructor(
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
         swipe_refresh.setOnRefreshListener(this)
+        stateChangeListener.displayBottomNavigation(true)
         stateChangeListener.displayAppBar(true)
         stateChangeListener.setAppBarLayout(ProductAppBarFragment(viewModelFactory))
         stateChangeListener.updateStatusBarColor(R.color.white,false)
@@ -345,7 +346,10 @@ constructor(
         
     }
 
-
+    override fun onResume() {
+        super.onResume()
+        viewModel.clearStoreInformation()
+    }
 }
 
 

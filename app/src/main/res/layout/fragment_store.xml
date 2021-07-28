@@ -5,8 +5,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.main.blog.store.StoreFragment"
-        android:background="@color/default_background_color">
+        android:background="@color/grey0_light_light"
+        tools:context=".ui.main.blog.store.StoreFragment">
 
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -24,14 +24,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@color/dim_foreground_disabled_material_light"
+                    android:background="@color/white"
                     >
 
 
 
 
             <LinearLayout
-                    android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="10dp"
@@ -39,6 +38,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
+                <LinearLayout
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/raduis_selector_selected_transparent"
+                        android:gravity="center"
+                        android:layout_marginEnd="5dp">
+
+                    <ImageView
+                            android:id="@+id/search_button"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/ic_marketplace"
+                            android:layout_gravity="center"
+
+                            />
+                </LinearLayout>
 
                 <LinearLayout
                         android:layout_width="0dp"
@@ -50,7 +65,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="NIMBAA Store"
-                            android:textColor="@color/white"
+                            android:textColor="@color/dark"
                             android:textSize="16sp"
                             android:ellipsize="end"
                             />
@@ -66,7 +81,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="3178"
-                                android:textColor="@color/white"
+                                android:textColor="@color/dark"
                                 android:textSize="12sp"
                                 />
 
@@ -74,7 +89,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="followers"
-                                android:textColor="@color/white"
+                                android:textColor="@color/dark"
                                 android:textSize="12sp"
                                 android:layout_marginStart="5dp"
                                 />
@@ -89,7 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="FOLLOWING"
-                        android:textColor="@color/white"
+                        android:textColor="@color/dark"
                         android:textSize="14sp"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
@@ -137,14 +152,15 @@
 
 
 
+
             <androidx.recyclerview.widget.RecyclerView
-                    android:background="@color/default_background_color"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/view_product_recyclerview"
                     android:scrollbars="none"
-                    android:layout_margin="5dp"
                     />
+
+
         </LinearLayout>
 
 

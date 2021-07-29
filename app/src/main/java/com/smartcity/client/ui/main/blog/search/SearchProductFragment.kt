@@ -15,14 +15,12 @@ import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.main.blog.ProductListAdapter
+import com.smartcity.client.ui.main.blog.products.ProductListAdapter
 import com.smartcity.client.ui.main.blog.products.BaseBlogFragment
 import com.smartcity.client.ui.main.blog.products.ProductGridAdapter
 import com.smartcity.client.ui.main.blog.state.BLOG_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
-import com.smartcity.client.ui.main.blog.viewmodel.clearProductSearchListData
-import com.smartcity.client.ui.main.blog.viewmodel.getGridOrListView
 import com.smartcity.client.ui.main.blog.viewmodel.getGridOrListViewSearch
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration

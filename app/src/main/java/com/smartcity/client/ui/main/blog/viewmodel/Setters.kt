@@ -125,3 +125,27 @@ fun ProductViewModel.setGridOrListViewSearch(bool:Boolean){
     update.searchProductFields.gridOrListSearchView = bool
     setViewState(update)
 }
+
+fun ProductViewModel.setQueryExhaustedInterest(isExhausted: Boolean){
+    val update = getCurrentViewStateOrNew()
+    update.productInterestFields.isQueryExhausted = isExhausted
+    setViewState(update)
+}
+
+fun ProductViewModel.setQueryInProgressInterest(isInProgress: Boolean){
+    val update = getCurrentViewStateOrNew()
+    update.productInterestFields.isQueryInProgress = isInProgress
+    setViewState(update)
+}
+
+fun ProductViewModel.setProductListDataInterest(productList: List<Product>){
+    val update = getCurrentViewStateOrNew()
+    update.productInterestFields.productList = productList
+    setViewState(update)
+}
+
+fun ProductViewModel.clearProductListDataInterest(){
+    val update = getCurrentViewStateOrNew()
+    update.productInterestFields.productList = listOf()
+    setViewState(update)
+}

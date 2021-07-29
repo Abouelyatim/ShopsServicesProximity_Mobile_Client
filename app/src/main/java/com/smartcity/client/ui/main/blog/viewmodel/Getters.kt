@@ -100,6 +100,30 @@ fun ProductViewModel.getGridOrListViewSearch():Boolean{
     }
 }
 
+fun ProductViewModel.getPageInterest(): Int{
+    getCurrentViewStateOrNew().let {
+        return it.productInterestFields.page
+    }
+}
+
+fun ProductViewModel.getIsQueryExhaustedInterest(): Boolean{
+    getCurrentViewStateOrNew().let {
+        return it.productInterestFields.isQueryExhausted
+    }
+}
+
+fun ProductViewModel.getIsQueryInProgressInterest(): Boolean{
+    getCurrentViewStateOrNew().let {
+        return it.productInterestFields.isQueryInProgress
+    }
+}
+
+fun ProductViewModel.getProductListInterest(): List<Product>{
+    getCurrentViewStateOrNew().let {
+        return it.productInterestFields.productList
+    }
+}
+
 fun ProductViewModel.getDummyBlogPost(): BlogPost{
     return BlogPost(-1, "" , "", "", "", 1, "")
 }

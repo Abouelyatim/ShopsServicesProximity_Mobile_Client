@@ -10,8 +10,9 @@ const val BLOG_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.blog
 @Parcelize
 data class ProductViewState (
 
-    // BlogFragment vars
     var productFields: ProductFields = ProductFields(),
+
+    var productInterestFields: ProductInterestFields = ProductInterestFields(),
 
     var searchProductFields: SearchProductFields = SearchProductFields(),
 
@@ -55,6 +56,14 @@ data class ProductViewState (
         var gridOrListSearchView:Boolean =false
     ) : Parcelable
 
+    @Parcelize
+    data class ProductInterestFields(
+        var newProductList: List<Product> = ArrayList<Product>(),
+        var productList: List<Product> = ArrayList<Product>(),
+        var page: Int = 1,
+        var isQueryInProgress: Boolean = false,
+        var isQueryExhausted: Boolean = false
+    ) : Parcelable
 }
 
 

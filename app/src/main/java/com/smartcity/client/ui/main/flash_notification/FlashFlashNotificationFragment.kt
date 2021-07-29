@@ -13,8 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.ui.main.account.orders.OrdersFragment
-import com.smartcity.client.ui.main.blog.ProductListAdapter
+import com.smartcity.client.ui.main.blog.products.ProductListAdapter
 import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.getSelectedActionPositions
 import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.setSelectedActionPositions
 import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
@@ -24,7 +23,6 @@ import com.smartcity.client.ui.main.flash_notification.viewmodel.*
 import com.smartcity.client.util.RightSpacingItemDecoration
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_flash_notification.*
-import kotlinx.android.synthetic.main.fragment_orders.focusable_view
 import javax.inject.Inject
 
 
@@ -121,10 +119,11 @@ constructor(
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
 
-            productRecyclerAdapter = ProductListAdapter(
-                requestManager,
-                this@FlashFlashNotificationFragment
-            )
+            productRecyclerAdapter =
+                ProductListAdapter(
+                    requestManager,
+                    this@FlashFlashNotificationFragment
+                )
             addOnScrollListener(object: RecyclerView.OnScrollListener(){
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

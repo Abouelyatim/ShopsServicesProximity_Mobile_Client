@@ -10,6 +10,12 @@ fun ProductViewModel.loadProductMainList(){
     setStateEvent(ProductMainEvent())
 }
 
+fun ProductViewModel.loadProductInterestList(){
+    setQueryInProgressInterest(true)
+    setQueryExhaustedInterest(false)
+    setStateEvent(ProductStateEvent.ProductInterestEvent())
+}
+
 fun ProductViewModel.handleIncomingBlogListData(viewState: ProductViewState){
     Log.d(TAG, "BlogViewModel, DataState: ${viewState}")
     Log.d(TAG, "BlogViewModel, DataState: isQueryInProgress?: " +
@@ -52,6 +58,27 @@ fun ProductViewModel.handleIncomingProductSearchListData(viewState: ProductViewS
     setProductListDataSearch(listDistinct)
 }
 
+fun ProductViewModel.handleIncomingProductInterestListData(viewState: ProductViewState){
+    Log.d(TAG, "BlogViewModel, DataState: ${viewState}")
+    Log.d(TAG, "BlogViewModel, DataState: isQueryInProgress?: " +
+            "${viewState.productInterestFields.isQueryInProgress}")
+    Log.d(TAG, "BlogViewModel, DataState: isQueryExhausted?: " +
+            "${viewState.productInterestFields.isQueryExhausted}")
+    setQueryInProgressInterest(viewState.productInterestFields.isQueryInProgress)
+    setQueryExhaustedInterest(viewState.productInterestFields.isQueryExhausted)
+
+
+    val list=getProductListInterest().toMutableList()
+    viewState.productInterestFields.newProductList.map {
+        list.add(it)
+    }
+    if(viewState.productInterestFields.newProductList.isEmpty()){
+        setQueryExhaustedInterest(true)
+    }
+    val listDistinct= list.distinct()
+    setProductListDataInterest(listDistinct)
+}
+
 fun ProductViewModel.nextPage(){
     if(!getIsQueryExhausted() && !getIsQueryInProgress()){
        incrementPageNumber()
@@ -65,6 +92,14 @@ fun ProductViewModel.nextPageSearch(){
         incrementPageNumberSearch()
         setQueryInProgressSearch(true)
         setStateEvent(ProductMainEvent())
+    }
+}
+
+fun ProductViewModel.nextPageInterest(){
+    if(!getIsQueryExhaustedInterest() && !getIsQueryInProgressInterest()){
+        incrementPageNumberInterest()
+        setQueryInProgressInterest(true)
+        setStateEvent(ProductStateEvent.ProductInterestEvent())
     }
 }
 
@@ -82,6 +117,13 @@ fun ProductViewModel.incrementPageNumberSearch(){
     setViewState(update)
 }
 
+fun ProductViewModel.incrementPageNumberInterest(){
+    val update = getCurrentViewStateOrNew()
+    val page = update.copy().productInterestFields.page // get current page
+    update.productInterestFields.page = page + 1
+    setViewState(update)
+}
+
 fun ProductViewModel.resetPage(){
     val update = getCurrentViewStateOrNew()
     update.productFields.page = 1
@@ -94,13 +136,26 @@ fun ProductViewModel.resetPageSearch(){
     setViewState(update)
 }
 
+fun ProductViewModel.resetPageInterest(){
+    val update = getCurrentViewStateOrNew()
+    update.productInterestFields.page = 1
+    setViewState(update)
+}
+
 fun ProductViewModel.loadFirstPage() {
     setQueryInProgress(true)
     setQueryExhausted(false)
     resetPage()
-
     clearProductListData()
     setStateEvent(ProductMainEvent())
+}
+
+fun ProductViewModel.loadFirstPageInterest() {
+    setQueryInProgressInterest(true)
+    setQueryExhaustedInterest(false)
+    resetPageInterest()
+    clearProductListDataInterest()
+    setStateEvent(ProductStateEvent.ProductInterestEvent())
 }
 
 fun ProductViewModel.loadFirstSearchPageSearch() {

@@ -459,6 +459,58 @@ constructor(
 
         }.asLiveData()
     }
+
+    fun attemptInterestProduct(
+        page: Int,
+        userId: Long
+    ): LiveData<DataState<ProductViewState>> {
+        return object: NetworkBoundResource<ListProductResponse, List<Product>, ProductViewState>(
+            sessionManager.isConnectedToTheInternet(),
+            true,
+            true,
+            false
+        ) {
+
+            override suspend fun handleApiSuccessResponse(
+                response: ApiSuccessResponse<ListProductResponse>
+            ) {
+                ProductViewState(
+                    productInterestFields = ProductViewState.ProductInterestFields(
+                        newProductList =  response.body.results,
+                        isQueryInProgress = false
+                    )
+
+                ).apply {
+                    onCompleteJob(DataState.data(this, null))
+                }
+
+            }
+
+            override fun createCall(): LiveData<GenericApiResponse<ListProductResponse>> {
+                return openApiMainService.getInterestProduct(
+                    page = page,
+                    userId =userId
+                )
+            }
+
+            override fun loadFromCache(): LiveData<ProductViewState> {
+                return AbsentLiveData.create()
+            }
+
+            override suspend fun updateLocalDb(cacheObject: List<Product>?) {
+
+            }
+
+            override fun setJob(job: Job) {
+                addJob("attemptInterestProduct", job)
+            }
+
+            override suspend fun createCacheRequestAndReturn() {
+
+            }
+
+        }.asLiveData()
+    }
 }
 
 

@@ -49,10 +49,18 @@ constructor(
 
             is ProductSearchEvent ->{
                 return sessionManager.cachedToken.value?.let { authToken ->
-
                     blogRepository.searchBlogPosts(
                         query = getSearchQuerySearch(),
                         page = getPageSearch(),
+                        userId = authToken.account_pk!!.toLong()
+                    )
+                }?: AbsentLiveData.create()
+            }
+
+            is ProductInterestEvent ->{
+                return sessionManager.cachedToken.value?.let { authToken ->
+                    blogRepository.attemptInterestProduct(
+                        page = getPageInterest(),
                         userId = authToken.account_pk!!.toLong()
                     )
                 }?: AbsentLiveData.create()

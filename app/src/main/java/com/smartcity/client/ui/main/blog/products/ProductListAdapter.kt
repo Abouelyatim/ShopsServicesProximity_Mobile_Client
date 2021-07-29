@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.blog
+package com.smartcity.client.ui.main.blog.products
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.smartcity.client.R
-import com.smartcity.client.models.BlogPost
 import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.util.Constants
@@ -78,7 +77,7 @@ class ProductListAdapter(
             PRODUCT_ITEM ->{
                 return ProductViewHolder(
                     LayoutInflater.from(parent.context).inflate(
-                            R.layout.layout_product_list_item,
+                        R.layout.layout_product_list_item,
                         parent,
                         false
                     ),

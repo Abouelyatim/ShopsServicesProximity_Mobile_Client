@@ -16,7 +16,6 @@ import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.main.blog.ProductListAdapter
 import com.smartcity.client.ui.main.blog.state.BLOG_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewmodel.*
@@ -101,6 +100,22 @@ constructor(
         if(viewModel.getProductList().isEmpty()){
             loadProductMainList()
         }
+
+        checkForYou()
+    }
+
+    private fun checkForYou() {
+        /*for_you_button.setOnClickListener {
+            navForYou()
+        }*/
+
+        for_you_container.setOnClickListener {
+            navForYou()
+        }
+    }
+
+    private fun navForYou(){
+        findNavController().navigate(R.id.action_blogFragment_to_forYouFragment)
     }
 
     private fun setSelectedRecyclerView(boolean: Boolean){
@@ -278,6 +293,7 @@ constructor(
             resetUI()
         }
     }
+
     override fun onRefresh() {
         onProductMain()
         swipe_refresh.isRefreshing = false
@@ -293,6 +309,7 @@ constructor(
         super.onResume()
         viewModel.clearStoreInformation()
         viewModel.clearProductSearchListData()
+        viewModel.clearProductListDataInterest()
     }
 
     private fun navSearch(){

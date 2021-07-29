@@ -141,6 +141,12 @@ interface OpenApiMainService {
         @Query(value = "longitude") longitude: Double,
         @Query(value = "latitude") latitude: Double
     ): LiveData<GenericApiResponse<ListGenericResponse<Store>>>
+
+    @GET("product/interest")
+    fun getInterestProduct(
+        @Query("page") page: Int,
+        @Query("id") userId: Long,
+    ): LiveData<GenericApiResponse<ListProductResponse>>
 }
 
 

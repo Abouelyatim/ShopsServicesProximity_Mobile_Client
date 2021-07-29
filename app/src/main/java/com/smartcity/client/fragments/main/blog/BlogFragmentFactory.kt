@@ -4,6 +4,7 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.di.main.MainScope
+import com.smartcity.client.ui.main.blog.foryou.ForYouFragment
 import com.smartcity.client.ui.main.blog.products.BlogFragment
 import com.smartcity.client.ui.main.blog.search.SearchProductFragment
 import com.smartcity.client.ui.main.blog.store.StoreFragment
@@ -43,6 +44,13 @@ constructor(
 
             SearchProductFragment::class.java.name -> {
                 SearchProductFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+            ForYouFragment::class.java.name -> {
+                ForYouFragment(
                     viewModelFactory,
                     requestManager
                 )

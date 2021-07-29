@@ -6,6 +6,8 @@ sealed class ProductStateEvent {
 
     class ProductSearchEvent : ProductStateEvent()
 
+    class ProductInterestEvent : ProductStateEvent()
+
     class AddProductCartEvent(
         val variantId: Long,
         val quantity: Int

@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,12 +14,16 @@ import com.smartcity.client.fragments.auth.AuthNavHostFragment
 import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.auth.state.AuthStateEvent
 import com.smartcity.client.ui.interest.InterestActivity
-import com.smartcity.client.ui.main.MainActivity
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.SuccessHandling.Companion.RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 import javax.inject.Named
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class AuthActivity : BaseActivity()
 {
 
@@ -41,14 +44,6 @@ class AuthActivity : BaseActivity()
         setContentView(R.layout.activity_auth)
         subscribeObservers()
         onRestoreInstanceState()
-    }
-
-    override fun displayRetryView() {
-        //TODO
-    }
-
-    override fun displayFragmentContainerView() {
-        //TODO
     }
 
     fun onRestoreInstanceState(){
@@ -78,43 +73,42 @@ class AuthActivity : BaseActivity()
     }
 
     private fun subscribeObservers(){
-        viewModel.dataState.observe(this, Observer { dataState ->
-            onDataStateChange(dataState)
-            dataState.data?.let { data ->
-                data.data?.let { event ->
-                    event.getContentIfNotHandled()?.let {
-                        it.authToken?.let {
-                            Log.d(TAG, "AuthActivity, DataState: ${it}")
-                            viewModel.setAuthToken(it)
+        viewModel.stateMessage.observe(this, Observer { stateMessage ->//must
+
+            stateMessage?.let {
+
+                if(stateMessage.response.message.equals(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)){
+                    onFinishCheckPreviousAuthUser()
+                }
+
+                onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
                         }
                     }
-                }
-                data.response?.let{event ->
-                    event.peekContent().let{ response ->
-                        response.message?.let{ message ->
-                            if(message.equals(RESPONSE_CHECK_PREVIOUS_AUTH_USER_DONE)){
-                                onFinishCheckPreviousAuthUser()
-                            }
-                        }
-                    }
-                }
+                )
             }
         })
 
-        viewModel.viewState.observe(this, Observer{
-            Log.d(TAG, "AuthActivity, subscribeObservers: AuthViewState: ${it}")
-            it.authToken?.let{
+        viewModel.numActiveJobs.observe(this, Observer { jobCounter ->//must
+            displayProgressBar(viewModel.areAnyJobsActive())
+        })
+
+        viewModel.viewState.observe(this, Observer{ viewState ->
+            Log.d(TAG, "AuthActivity, subscribeObservers: AuthViewState: ${viewState}")
+            viewState.authToken?.let{
                 sessionManager.login(it)
             }
         })
 
-        sessionManager.cachedToken.observe(this, Observer{ dataState ->
-            Log.d(TAG, "AuthActivity, subscribeObservers: AuthDataState: ${dataState}")
-            dataState.let{ authToken ->
+        sessionManager.cachedToken.observe(this, Observer{ token ->
+            Log.d(TAG, "AuthActivity, subscribeObservers: AuthToken: ${token}")
+            token.let{ authToken ->
                 if(authToken != null && authToken.account_pk != -1 && authToken.token != null){
                     navInterestActivity()
                 }
-
             }
         })
     }
@@ -155,7 +149,7 @@ class AuthActivity : BaseActivity()
         // ignore
     }
 
-    override fun displayBadgeBottomNavigationFlash(bool: Boolean) {
+   /* override fun displayBadgeBottomNavigationFlash(bool: Boolean) {
 
     }
 
@@ -164,18 +158,25 @@ class AuthActivity : BaseActivity()
     }
 
     override fun displayAppBar(bool: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setAppBarLayout(fragment: Fragment) {
-        TODO("Not yet implemented")
+
     }
 
     override fun updateStatusBarColor(statusBarColor: Int,statusBarTextColor:Boolean) {
-        TODO("Not yet implemented")
+
     }
 
+    override fun displayRetryView() {
 
+    }
+
+    override fun displayFragmentContainerView() {
+
+    }
+    */
 }
 
 

@@ -5,11 +5,14 @@ import com.smartcity.client.api.auth.OpenApiAuthService
 import com.smartcity.client.persistence.AccountPropertiesDao
 import com.smartcity.client.persistence.AuthTokenDao
 import com.smartcity.client.repository.auth.AuthRepository
+import com.smartcity.client.repository.auth.AuthRepositoryImpl
 import com.smartcity.client.session.SessionManager
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.FlowPreview
 import retrofit2.Retrofit
 
+@FlowPreview
 @Module
 object AuthModule{
 
@@ -33,7 +36,7 @@ object AuthModule{
         preferences: SharedPreferences,
         editor: SharedPreferences.Editor
         ): AuthRepository {
-        return AuthRepository(
+        return AuthRepositoryImpl(
             authTokenDao,
             accountPropertiesDao,
             openApiAuthService,

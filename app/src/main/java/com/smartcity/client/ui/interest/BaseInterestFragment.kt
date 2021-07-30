@@ -6,8 +6,8 @@ import android.util.Log
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import com.smartcity.client.ui.DataStateChangeListener
-import com.smartcity.client.ui.UICommunicationListener
+import com.smartcity.client.ui.deleted.DataStateChangeListener
+import com.smartcity.client.ui.deleted.UICommunicationListener
 
 abstract class BaseInterestFragment
 constructor(

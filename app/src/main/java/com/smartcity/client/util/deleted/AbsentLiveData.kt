@@ -1,4 +1,4 @@
-package com.smartcity.client.util
+package com.smartcity.client.util.deleted
 
 import androidx.lifecycle.LiveData
 

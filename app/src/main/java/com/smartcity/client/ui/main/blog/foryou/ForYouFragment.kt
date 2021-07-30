@@ -14,16 +14,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.ui.DataState
+import com.smartcity.client.ui.deleted.DataState
 import com.smartcity.client.ui.main.blog.products.BaseBlogFragment
 import com.smartcity.client.ui.main.blog.products.ProductGridAdapter
 import com.smartcity.client.ui.main.blog.state.BLOG_VIEW_STATE_BUNDLE_KEY
-import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
-import com.smartcity.client.ui.main.blog.viewmodel.getProductListInterest
-import com.smartcity.client.ui.main.blog.viewmodel.setQueryExhaustedInterest
-import com.smartcity.client.ui.main.blog.viewmodel.setQueryInProgressInterest
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import handleIncomingProductInterestListData

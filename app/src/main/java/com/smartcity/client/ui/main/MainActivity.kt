@@ -22,7 +22,7 @@ import com.smartcity.client.BaseApplication
 import com.smartcity.client.R
 import com.smartcity.client.models.AUTH_TOKEN_BUNDLE_KEY
 import com.smartcity.client.models.AuthToken
-import com.smartcity.client.ui.BaseActivity
+import com.smartcity.client.ui.deleted.BaseActivity
 import com.smartcity.client.ui.auth.AuthActivity
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.orders.notification.MyFirebaseMessagingService

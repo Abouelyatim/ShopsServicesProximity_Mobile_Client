@@ -10,7 +10,7 @@ import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.util.GenericApiResponse
+import com.smartcity.client.util.deleted.GenericApiResponse
 import com.smartcity.provider.models.Policy
 import retrofit2.http.*
 

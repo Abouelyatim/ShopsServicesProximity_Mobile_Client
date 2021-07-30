@@ -14,9 +14,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.Order
-import com.smartcity.client.ui.AreYouSureCallback
-import com.smartcity.client.ui.UIMessage
-import com.smartcity.client.ui.UIMessageType
+import com.smartcity.client.ui.deleted.AreYouSureCallback
+import com.smartcity.client.ui.deleted.UIMessage
+import com.smartcity.client.ui.deleted.UIMessageType
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.orders.OrderActionAdapter.Companion.getSelectedActionPositions
 import com.smartcity.client.ui.main.account.orders.OrderActionAdapter.Companion.setSelectedActionPositions
@@ -26,7 +26,6 @@ import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.account.viewmodel.*
-import com.smartcity.client.ui.main.cart.viewmodel.*
 import com.smartcity.client.util.RightSpacingItemDecoration
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
@@ -257,7 +256,8 @@ constructor(
 
 
     override fun confirmReceived(order: Order) {
-        val callback: AreYouSureCallback = object: AreYouSureCallback {
+        val callback: AreYouSureCallback = object:
+            AreYouSureCallback {
             override fun proceed() {
                 viewModel.setStateEvent(
                     AccountStateEvent.ConfirmOrderReceivedEvent(
@@ -272,7 +272,9 @@ constructor(
         uiCommunicationListener.onUIMessageReceived(
             UIMessage(
                 getString(R.string.are_you_sure_received_order),
-                UIMessageType.AreYouSureDialog(callback)
+                UIMessageType.AreYouSureDialog(
+                    callback
+                )
             )
         )
     }

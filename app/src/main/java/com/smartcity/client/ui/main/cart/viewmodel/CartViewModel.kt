@@ -3,18 +3,16 @@ package com.smartcity.client.ui.main.cart.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.models.product.Cart
 import com.smartcity.client.repository.main.CartRepository
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.BaseViewModel
-import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.Loading
-import com.smartcity.client.ui.main.account.state.AccountStateEvent
+import com.smartcity.client.ui.deleted.BaseViewModel
+import com.smartcity.client.ui.deleted.DataState
+import com.smartcity.client.ui.deleted.Loading
 
 import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartStateEvent.*
 import com.smartcity.client.ui.main.cart.state.CartViewState
-import com.smartcity.client.util.AbsentLiveData
+import com.smartcity.client.util.deleted.AbsentLiveData
 
 import javax.inject.Inject
 

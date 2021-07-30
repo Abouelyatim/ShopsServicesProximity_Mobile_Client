@@ -6,11 +6,11 @@ import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.repository.main.BlogRepository
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.*
+import com.smartcity.client.ui.deleted.*
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent
 import com.smartcity.client.ui.main.blog.state.ProductStateEvent.*
 import com.smartcity.client.ui.main.blog.state.ProductViewState
-import com.smartcity.client.util.AbsentLiveData
+import com.smartcity.client.util.deleted.AbsentLiveData
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_Product_Layout_Change_Event
 import javax.inject.Inject
 
@@ -112,15 +112,18 @@ constructor(
             }
 
             is ProductLayoutChangeEvent ->{
-                return returnResponse(DONE_Product_Layout_Change_Event,ResponseType.None())
+                return returnResponse(DONE_Product_Layout_Change_Event,
+                    ResponseType.None())
             }
 
             is BackClickedEvent ->{
-                return returnResponse(stateEvent.tag,ResponseType.None())
+                return returnResponse(stateEvent.tag,
+                    ResponseType.None())
             }
 
             is SearchEvent ->{
-                return returnResponse(stateEvent.tag,ResponseType.None())
+                return returnResponse(stateEvent.tag,
+                    ResponseType.None())
             }
 
             is None ->{

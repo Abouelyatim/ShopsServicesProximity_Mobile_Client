@@ -10,17 +10,18 @@ import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.CustomCategory
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.persistence.BlogPostDao
-import com.smartcity.client.repository.JobManager
-import com.smartcity.client.repository.NetworkBoundResource
+import com.smartcity.client.repository.deleted.JobManager
+import com.smartcity.client.repository.deleted.NetworkBoundResource
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.Response
-import com.smartcity.client.ui.ResponseType
+import com.smartcity.client.ui.deleted.DataState
+import com.smartcity.client.ui.deleted.Response
+import com.smartcity.client.ui.deleted.ResponseType
 import com.smartcity.client.ui.main.blog.state.ProductViewState
 import com.smartcity.client.ui.main.blog.state.ProductViewState.ProductFields
-import com.smartcity.client.ui.main.blog.viewmodel.getStoreCustomCategoryLists
-import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.*
+import com.smartcity.client.util.deleted.AbsentLiveData
+import com.smartcity.client.util.deleted.ApiSuccessResponse
+import com.smartcity.client.util.deleted.GenericApiResponse
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -181,7 +182,10 @@ constructor(
                                 storeCustomCategoryList = response.body.results
                             )
                         ),
-                        response = Response(SuccessHandling.DONE_Get_Store_Custom_Category,ResponseType.None())
+                        response = Response(
+                            SuccessHandling.DONE_Get_Store_Custom_Category,
+                            ResponseType.None()
+                        )
                     )
                 )
             }
@@ -232,7 +236,10 @@ constructor(
                                 storeProductList = response.body.results
                             )
                         ),
-                        response = Response(SuccessHandling.DONE_Get_Products_By_Custom_Category,ResponseType.None())
+                        response = Response(
+                            SuccessHandling.DONE_Get_Products_By_Custom_Category,
+                            ResponseType.None()
+                        )
                     )
                 )
             }
@@ -283,7 +290,10 @@ constructor(
                                 storeProductList = response.body.results
                             )
                         ),
-                        response = Response(SuccessHandling.DONE_Get_All_Products_By_Store,ResponseType.None())
+                        response = Response(
+                            SuccessHandling.DONE_Get_All_Products_By_Store,
+                            ResponseType.None()
+                        )
                     )
                 )
             }
@@ -331,7 +341,10 @@ constructor(
                 onCompleteJob(
                     DataState.data(
                         data = null,
-                        response = Response(SuccessHandling.DONE_Follow_Store,ResponseType.Dialog())
+                        response = Response(
+                            SuccessHandling.DONE_Follow_Store,
+                            ResponseType.Dialog()
+                        )
                     )
                 )
             }
@@ -380,7 +393,10 @@ constructor(
                 onCompleteJob(
                     DataState.data(
                         data = null,
-                        response = Response(SuccessHandling.DONE_Stop_Following_Store,ResponseType.None())
+                        response = Response(
+                            SuccessHandling.DONE_Stop_Following_Store,
+                            ResponseType.None()
+                        )
                     )
                 )
             }
@@ -429,7 +445,10 @@ constructor(
                 onCompleteJob(
                     DataState.data(
                         data = null,
-                        response = Response(response.body.response,ResponseType.None())
+                        response = Response(
+                            response.body.response,
+                            ResponseType.None()
+                        )
                     )
                 )
             }

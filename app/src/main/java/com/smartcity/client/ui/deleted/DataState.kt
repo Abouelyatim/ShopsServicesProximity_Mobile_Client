@@ -1,9 +1,11 @@
-package com.smartcity.client.ui
+package com.smartcity.client.ui.deleted
 
 
 data class DataState<T>(
     var error: Event<StateError>? = null,
-    var loading: Loading = Loading(false),
+    var loading: Loading = Loading(
+        false
+    ),
     var data: Data<T>? = null
 ) {
 
@@ -47,7 +49,9 @@ data class DataState<T>(
                 loading = Loading(false),
                 data = Data(
                     Event.dataEvent(data),
-                    Event.responseEvent(response)
+                    Event.responseEvent(
+                        response
+                    )
                 )
             )
         }

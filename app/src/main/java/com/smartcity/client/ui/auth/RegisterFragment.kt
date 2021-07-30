@@ -1,32 +1,27 @@
 package com.smartcity.client.ui.auth
 
-
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-
 import com.smartcity.client.R
 import com.smartcity.client.di.auth.AuthScope
-import com.smartcity.client.ui.auth.state.AuthStateEvent.*
+import com.smartcity.client.ui.auth.state.AuthStateEvent.RegisterAttemptEvent
 import com.smartcity.client.ui.auth.state.RegistrationFields
 import kotlinx.android.synthetic.main.fragment_register.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @AuthScope
 class RegisterFragment
 @Inject
 constructor(
-    private val viewModelFactory: ViewModelProvider.Factory
-): BaseAuthFragment(R.layout.fragment_register) {
-
-
-
-    val viewModel: AuthViewModel by viewModels{
-        viewModelFactory
-    }
+    viewModelFactory: ViewModelProvider.Factory
+): BaseAuthFragment(R.layout.fragment_register,viewModelFactory) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,25 +37,7 @@ constructor(
         subscribeObservers()
     }
 
-    override fun cancelActiveJobs() {
-        viewModel.cancelActiveJobs()
-    }
-
     fun subscribeObservers(){
-        viewModel.dataState.observe(viewLifecycleOwner, Observer{ dataState ->
-            stateChangeListener.onDataStateChange(dataState)
-
-            if(dataState != null){
-                dataState.data?.let { data ->
-                    data.data?.peekContent()?.let{
-                        viewModel.setIsRegistred(
-                            it.registrationState.isRegistred
-                        )
-                    }
-                }
-            }
-
-        })
         viewModel.viewState.observe(viewLifecycleOwner, Observer{viewState ->
             viewState.registrationFields?.let {
                 it.registration_email?.let{input_email.setText(it)}
@@ -76,9 +53,11 @@ constructor(
             }
         })
     }
+
     fun navLauncherFragment(){
-        findNavController().navigate(R.id.action_registerFragment_to_launcherFragment   )
+        findNavController().navigate(R.id.action_registerFragment_to_launcherFragment)
     }
+
     fun register(){
         viewModel.setRegistrationFields(
             RegistrationFields(
@@ -111,6 +90,4 @@ constructor(
             )
         )
     }
-
-
 }

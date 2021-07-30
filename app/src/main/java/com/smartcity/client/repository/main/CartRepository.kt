@@ -12,12 +12,12 @@ import com.smartcity.client.models.Order
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.persistence.BlogPostDao
-import com.smartcity.client.repository.JobManager
-import com.smartcity.client.repository.NetworkBoundResource
+import com.smartcity.client.repository.deleted.JobManager
+import com.smartcity.client.repository.deleted.NetworkBoundResource
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.Response
-import com.smartcity.client.ui.ResponseType
+import com.smartcity.client.ui.deleted.DataState
+import com.smartcity.client.ui.deleted.Response
+import com.smartcity.client.ui.deleted.ResponseType
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.ui.main.cart.state.CartViewState.*
 import com.smartcity.client.util.*
@@ -25,6 +25,9 @@ import com.smartcity.client.util.SuccessHandling.Companion.DELETE_DONE
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_STORE_POLICY
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_TOTAL_BILL
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_USER_ADDRESSES
+import com.smartcity.client.util.deleted.AbsentLiveData
+import com.smartcity.client.util.deleted.ApiSuccessResponse
+import com.smartcity.client.util.deleted.GenericApiResponse
 import com.smartcity.provider.models.Policy
 import kotlinx.coroutines.Job
 import javax.inject.Inject
@@ -192,7 +195,7 @@ constructor(
                             data = null
                             ,
                             response = Response(
-                                SuccessHandling.DELETE_DONE,
+                                DELETE_DONE,
                                 ResponseType.SnackBar()
                             )
                         )
@@ -328,7 +331,10 @@ constructor(
                                 storePolicy = response.body
                             )
                         ),
-                        response = Response(DONE_STORE_POLICY,ResponseType.None())
+                        response = Response(
+                            DONE_STORE_POLICY,
+                            ResponseType.None()
+                        )
                     )
                 )
             }
@@ -382,7 +388,10 @@ constructor(
                                 total = response.body
                             )
                         ),
-                        response = Response(DONE_TOTAL_BILL,ResponseType.None())
+                        response = Response(
+                            DONE_TOTAL_BILL,
+                            ResponseType.None()
+                        )
                     )
                 )
             }
@@ -434,7 +443,10 @@ constructor(
                         data = CartViewState(
                             orderFields=OrderFields(addressList=response.body.results)
                         ),
-                        response = Response(DONE_USER_ADDRESSES,ResponseType.None())
+                        response = Response(
+                            DONE_USER_ADDRESSES,
+                            ResponseType.None()
+                        )
                     )
                 )
             }

@@ -6,13 +6,13 @@ import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.repository.main.AccountRepository
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.BaseViewModel
-import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.Loading
+import com.smartcity.client.ui.deleted.BaseViewModel
+import com.smartcity.client.ui.deleted.DataState
+import com.smartcity.client.ui.deleted.Loading
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountStateEvent.*
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.util.AbsentLiveData
+import com.smartcity.client.util.deleted.AbsentLiveData
 import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_LATITUDE
 import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_LONGITUDE
 import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_RADIUS

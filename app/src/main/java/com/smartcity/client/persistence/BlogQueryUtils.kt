@@ -1,6 +1,5 @@
 package com.smartcity.client.persistence
 
-import androidx.lifecycle.LiveData
 import com.smartcity.client.models.BlogPost
 import com.smartcity.client.persistence.BlogQueryUtils.Companion.ORDER_BY_ASC_DATE_UPDATED
 import com.smartcity.client.persistence.BlogQueryUtils.Companion.ORDER_BY_ASC_USERNAME
@@ -27,11 +26,11 @@ class BlogQueryUtils {
 }
 
 
-fun BlogPostDao.returnOrderedBlogQuery(
+suspend fun BlogPostDao.returnOrderedBlogQuery(
     query: String,
     filterAndOrder: String,
     page: Int
-): LiveData<List<BlogPost>> {
+): List<BlogPost> {
 
     when{
 
@@ -59,7 +58,7 @@ fun BlogPostDao.returnOrderedBlogQuery(
                 page = page)
         }
         else ->
-            return searchBlogPostsOrderByDateASC(
+            return searchBlogPostsOrderByDateDESC(
                 query = query,
                 page = page
             )

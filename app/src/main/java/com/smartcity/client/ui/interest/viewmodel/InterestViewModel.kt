@@ -1,18 +1,16 @@
 package com.smartcity.client.ui.interest.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.smartcity.client.di.interest.InterestScope
-import com.smartcity.client.models.product.Category
 import com.smartcity.client.repository.interest.InterestRepository
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.BaseViewModel
-import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.Loading
+import com.smartcity.client.ui.deleted.BaseViewModel
+import com.smartcity.client.ui.deleted.DataState
+import com.smartcity.client.ui.deleted.Loading
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.state.InterestViewState
-import com.smartcity.client.util.AbsentLiveData
+import com.smartcity.client.util.deleted.AbsentLiveData
 import javax.inject.Inject
 
 @InterestScope

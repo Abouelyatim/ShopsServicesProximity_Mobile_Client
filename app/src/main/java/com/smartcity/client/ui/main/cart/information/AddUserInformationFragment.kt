@@ -9,9 +9,8 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.smartcity.client.R
-import com.smartcity.client.models.Address
 import com.smartcity.client.models.UserInformation
-import com.smartcity.client.ui.*
+import com.smartcity.client.ui.deleted.*
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartViewState
@@ -110,9 +109,20 @@ constructor(
     fun showErrorDialog(errorMessage: String){
         stateChangeListener.onDataStateChange(
             DataState(
-                Event(StateError(Response(errorMessage, ResponseType.Dialog()))),
+                Event(
+                    StateError(
+                        Response(
+                            errorMessage,
+                            ResponseType.Dialog()
+                        )
+                    )
+                ),
                 Loading(isLoading = false),
-                Data(Event.dataEvent(null), null)
+                Data(
+                    Event.dataEvent(
+                        null
+                    ), null
+                )
             )
         )
     }

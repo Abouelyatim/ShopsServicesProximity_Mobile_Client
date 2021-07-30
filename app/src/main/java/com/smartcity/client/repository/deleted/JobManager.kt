@@ -1,4 +1,4 @@
-package com.smartcity.client.repository
+package com.smartcity.client.repository.deleted
 
 import android.util.Log
 import kotlinx.coroutines.Job

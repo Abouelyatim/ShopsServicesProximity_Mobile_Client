@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.ui.DataState
+import com.smartcity.client.ui.deleted.DataState
 import com.smartcity.client.ui.main.blog.products.ProductListAdapter
 import com.smartcity.client.ui.main.blog.products.BaseBlogFragment
 import com.smartcity.client.ui.main.blog.products.ProductGridAdapter

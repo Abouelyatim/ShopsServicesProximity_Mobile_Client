@@ -15,9 +15,9 @@ import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.models.product.CartProductVariant
-import com.smartcity.client.ui.AreYouSureCallback
-import com.smartcity.client.ui.UIMessage
-import com.smartcity.client.ui.UIMessageType
+import com.smartcity.client.ui.deleted.AreYouSureCallback
+import com.smartcity.client.ui.deleted.UIMessage
+import com.smartcity.client.ui.deleted.UIMessageType
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.CartAppBarFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
@@ -222,7 +222,8 @@ constructor(
 
     override fun deleteCartProduct(variantId: Long) {
 
-        val callback: AreYouSureCallback = object: AreYouSureCallback {
+        val callback: AreYouSureCallback = object:
+            AreYouSureCallback {
             override fun proceed() {
                 viewModel.setStateEvent(
                     CartStateEvent.DeleteProductCartEvent(variantId)
@@ -235,7 +236,9 @@ constructor(
         uiCommunicationListener.onUIMessageReceived(
             UIMessage(
                 getString(R.string.are_you_sure_delete),
-                UIMessageType.AreYouSureDialog(callback)
+                UIMessageType.AreYouSureDialog(
+                    callback
+                )
             )
         )
 

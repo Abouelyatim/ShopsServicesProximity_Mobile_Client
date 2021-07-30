@@ -1,7 +1,8 @@
-package com.smartcity.client.ui
+package com.smartcity.client.ui.deleted
 
 import androidx.annotation.ColorRes
 import androidx.fragment.app.Fragment
+import com.smartcity.client.ui.deleted.DataState
 
 interface DataStateChangeListener{
 

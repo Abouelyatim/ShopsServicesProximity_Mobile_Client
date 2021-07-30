@@ -8,14 +8,17 @@ import com.smartcity.client.api.main.responses.ListGenericResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.repository.JobManager
-import com.smartcity.client.repository.NetworkBoundResource
+import com.smartcity.client.repository.deleted.JobManager
+import com.smartcity.client.repository.deleted.NetworkBoundResource
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.Response
-import com.smartcity.client.ui.ResponseType
+import com.smartcity.client.ui.deleted.DataState
+import com.smartcity.client.ui.deleted.Response
+import com.smartcity.client.ui.deleted.ResponseType
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.*
+import com.smartcity.client.util.deleted.AbsentLiveData
+import com.smartcity.client.util.deleted.ApiSuccessResponse
+import com.smartcity.client.util.deleted.GenericApiResponse
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 

@@ -13,12 +13,12 @@ import com.smartcity.client.models.AuthToken
 import com.smartcity.client.models.City
 import com.smartcity.client.models.product.Category
 import com.smartcity.client.persistence.AuthTokenDao
-import com.smartcity.client.repository.JobManager
-import com.smartcity.client.repository.NetworkBoundResource
+import com.smartcity.client.repository.deleted.JobManager
+import com.smartcity.client.repository.deleted.NetworkBoundResource
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.DataState
-import com.smartcity.client.ui.Response
-import com.smartcity.client.ui.ResponseType
+import com.smartcity.client.ui.deleted.DataState
+import com.smartcity.client.ui.deleted.Response
+import com.smartcity.client.ui.deleted.ResponseType
 import com.smartcity.client.ui.interest.state.CategoryFields
 import com.smartcity.client.ui.interest.state.ConfigurationFields
 import com.smartcity.client.ui.interest.state.InterestViewState
@@ -26,6 +26,9 @@ import com.smartcity.client.util.*
 import com.smartcity.client.util.ErrorHandling.Companion.GENERIC_AUTH_ERROR
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_Resolve_User_Address
 import com.smartcity.client.util.SuccessHandling.Companion.DONE_User_Interest_Center
+import com.smartcity.client.util.deleted.AbsentLiveData
+import com.smartcity.client.util.deleted.ApiSuccessResponse
+import com.smartcity.client.util.deleted.GenericApiResponse
 import kotlinx.coroutines.Job
 import javax.inject.Inject
 
@@ -130,8 +133,13 @@ constructor(
                         )
                     )
                     if(result < 0){
-                        return onCompleteJob(DataState.error(
-                            Response(ErrorHandling.ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog()))
+                        return onCompleteJob(
+                            DataState.error(
+                                Response(
+                                    ErrorHandling.ERROR_SAVE_AUTH_TOKEN,
+                                    ResponseType.Dialog()
+                                )
+                            )
                         )
                     }
 
@@ -196,8 +204,7 @@ constructor(
             it.interest
         }
         val interestCenter=sharedPreferences.getStringSet(PreferenceKeys.USER_INTEREST_CENTER, null)
-        Log.d("ii",sessionManager.cachedToken.value!!.interest!!.toString())
-        if(sessionManager.cachedToken.value!!.interest!! && !interestCenter.isNullOrEmpty()){//if interest is set so do not do request
+        if(!interestCenter.isNullOrEmpty()){//if interest is set so do not do request
             return returnErrorResponse("", ResponseType.None())
         }
 
@@ -225,8 +232,13 @@ constructor(
                         )
                     )
                     if(result < 0){
-                        return onCompleteJob(DataState.error(
-                            Response(ErrorHandling.ERROR_SAVE_AUTH_TOKEN, ResponseType.Dialog()))
+                        return onCompleteJob(
+                            DataState.error(
+                                Response(
+                                    ErrorHandling.ERROR_SAVE_AUTH_TOKEN,
+                                    ResponseType.Dialog()
+                                )
+                            )
                         )
                     }
                 }
@@ -236,7 +248,7 @@ constructor(
                         data = InterestViewState(
                             categoryFields = CategoryFields(response.body.results)
                         ),
-                        response =  Response(
+                        response = Response(
                             DONE_User_Interest_Center,
                             ResponseType.None()
                         )
@@ -295,7 +307,7 @@ constructor(
                                 cityList = response.body.results
                             )
                         ),
-                        response =  Response(
+                        response = Response(
                             DONE_Resolve_User_Address,
                             ResponseType.None()
                         )

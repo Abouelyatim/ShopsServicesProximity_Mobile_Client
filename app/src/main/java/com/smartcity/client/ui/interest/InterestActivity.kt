@@ -15,7 +15,7 @@ import com.smartcity.client.BaseApplication
 import com.smartcity.client.R
 import com.smartcity.client.fragments.interest.InterestNavHostFragment
 import com.smartcity.client.models.product.Category
-import com.smartcity.client.ui.BaseActivity
+import com.smartcity.client.ui.deleted.BaseActivity
 import com.smartcity.client.ui.interest.viewmodel.InterestViewModel
 import com.smartcity.client.ui.main.MainActivity
 import com.smartcity.client.util.PreferenceKeys

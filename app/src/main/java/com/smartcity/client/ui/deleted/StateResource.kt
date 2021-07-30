@@ -1,4 +1,4 @@
-package com.smartcity.client.ui
+package com.smartcity.client.ui.deleted
 
 
 data class Loading(val isLoading: Boolean)

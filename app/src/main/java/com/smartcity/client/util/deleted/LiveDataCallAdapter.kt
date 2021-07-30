@@ -1,4 +1,4 @@
-package com.smartcity.client.util
+package com.smartcity.client.util.deleted
 
 import androidx.lifecycle.LiveData
 import retrofit2.Call
@@ -21,11 +21,19 @@ class LiveDataCallAdapter<R>(private val responseType: Type) :
                 if (started.compareAndSet(false, true)) {
                     call.enqueue(object : Callback<R> {
                         override fun onResponse(call: Call<R>, response: Response<R>) {
-                            postValue(GenericApiResponse.create(response))
+                            postValue(
+                                GenericApiResponse.create(
+                                    response
+                                )
+                            )
                         }
 
                         override fun onFailure(call: Call<R>, throwable: Throwable) {
-                            postValue(GenericApiResponse.create(throwable))
+                            postValue(
+                                GenericApiResponse.create(
+                                    throwable
+                                )
+                            )
                         }
                     })
                 }

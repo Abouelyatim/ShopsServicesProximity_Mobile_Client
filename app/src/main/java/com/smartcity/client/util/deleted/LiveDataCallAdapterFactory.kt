@@ -1,4 +1,4 @@
-package com.smartcity.client.util
+package com.smartcity.client.util.deleted
 
 import androidx.lifecycle.LiveData
 import retrofit2.CallAdapter
@@ -25,6 +25,8 @@ class LiveDataCallAdapterFactory : Factory() {
             throw IllegalArgumentException("resource must be parameterized")
         }
         val bodyType = Factory.getParameterUpperBound(0, observableType)
-        return LiveDataCallAdapter<Any>(bodyType)
+        return LiveDataCallAdapter<Any>(
+            bodyType
+        )
     }
 }

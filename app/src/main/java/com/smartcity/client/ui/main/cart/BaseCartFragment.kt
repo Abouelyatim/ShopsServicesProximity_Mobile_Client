@@ -13,8 +13,8 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 
 import com.smartcity.client.R
-import com.smartcity.client.ui.DataStateChangeListener
-import com.smartcity.client.ui.UICommunicationListener
+import com.smartcity.client.ui.deleted.DataStateChangeListener
+import com.smartcity.client.ui.deleted.UICommunicationListener
 
 abstract class BaseCartFragment
 constructor(

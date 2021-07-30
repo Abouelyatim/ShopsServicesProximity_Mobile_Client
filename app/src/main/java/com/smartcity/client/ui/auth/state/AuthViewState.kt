@@ -1,6 +1,5 @@
 package com.smartcity.client.ui.auth.state
 
-import android.net.Uri
 import android.os.Parcelable
 import com.smartcity.client.models.AuthToken
 import kotlinx.android.parcel.Parcelize
@@ -9,9 +8,9 @@ const val AUTH_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.auth.stat
 
 @Parcelize
 data class AuthViewState(
-    var registrationFields: RegistrationFields? = RegistrationFields(),
+    var registrationFields: RegistrationFields? = null,
 
-    var loginFields: LoginFields? = LoginFields(),
+    var loginFields: LoginFields? = null,
 
     var authToken: AuthToken? = null,
 
@@ -20,7 +19,7 @@ data class AuthViewState(
 ) : Parcelable
 @Parcelize
 data class RegistrationState(
-    var isRegistred: Boolean = false
+    var isRegistred: Boolean? = null
 ) : Parcelable
 
 

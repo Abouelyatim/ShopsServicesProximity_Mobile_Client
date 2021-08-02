@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -149,34 +150,33 @@ class AuthActivity : BaseActivity()
         // ignore
     }
 
-   /* override fun displayBadgeBottomNavigationFlash(bool: Boolean) {
-
+    override fun displayBadgeBottomNavigationFlash(bool: Boolean) {
+        
     }
 
     override fun displayBottomNavigation(bool: Boolean) {
-
-    }
-
-    override fun displayAppBar(bool: Boolean) {
-
-    }
-
-    override fun setAppBarLayout(fragment: Fragment) {
-
-    }
-
-    override fun updateStatusBarColor(statusBarColor: Int,statusBarTextColor:Boolean) {
-
+        
     }
 
     override fun displayRetryView() {
-
+        
     }
 
     override fun displayFragmentContainerView() {
-
+        
     }
-    */
+
+    override fun displayAppBar(bool: Boolean) {
+        
+    }
+
+    override fun setAppBarLayout(fragment: Fragment) {
+        
+    }
+
+    override fun updateStatusBarColor(statusBarColor: Int, statusBarTextColor: Boolean) {
+        
+    }
 }
 
 

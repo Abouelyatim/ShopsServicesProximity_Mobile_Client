@@ -1,35 +1,28 @@
 package com.smartcity.client.ui.interest
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
-import com.smartcity.client.ui.interest.viewmodel.InterestViewModel
-import com.smartcity.client.ui.interest.viewmodel.getHomeAddress
 import com.smartcity.client.ui.interest.viewmodel.getSavedHomeAddress
 import com.smartcity.client.util.RetryToHandelNetworkError
 import kotlinx.android.synthetic.main.fragment_configure_delivery_address.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @InterestScope
 class ConfigureDeliveryAddressFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory
-): BaseInterestFragment(R.layout.fragment_configure_delivery_address),
+): BaseInterestFragment(R.layout.fragment_configure_delivery_address,viewModelFactory),
     RetryToHandelNetworkError
 {
-
-    val viewModel: InterestViewModel by viewModels{
-        viewModelFactory
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.cancelActiveJobs()
@@ -37,10 +30,6 @@ constructor(
 
     override fun resendNetworkRequest() {
 
-    }
-
-    override fun cancelActiveJobs() {
-        viewModel.cancelActiveJobs()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

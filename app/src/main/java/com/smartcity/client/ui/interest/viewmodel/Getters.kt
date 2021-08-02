@@ -6,31 +6,31 @@ import com.smartcity.client.models.product.Category
 
 fun InterestViewModel.getCategoryList():List<Category>{
     getCurrentViewStateOrNew().let {
-        return it.categoryFields.categoryList
+        return it.categoryFields.categoryList?: ArrayList()
     }
 }
 
 fun InterestViewModel.getSelectedCategoriesList():MutableList<String>{
     getCurrentViewStateOrNew().let {
-        return it.categoryFields.selectedCategories
+        return it.categoryFields.selectedCategories?:mutableListOf<String>()
     }
 }
 
 fun InterestViewModel.getCountry():String{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.country
+        return it.configurationFields.country?:""
     }
 }
 
 fun InterestViewModel.getCity():String{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.city
+        return it.configurationFields.city?:""
     }
 }
 
 fun InterestViewModel.getCityList():List<City>{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.cityList
+        return it.configurationFields.cityList?: listOf()
     }
 }
 
@@ -42,19 +42,25 @@ fun InterestViewModel.getSelectedCity():City?{
 
 fun InterestViewModel.getHomeLat():Double{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.homeLatLong.first
+        if(it.configurationFields.homeLatLong==null){
+            return 0.0
+        }
+        return it.configurationFields.homeLatLong!!.first
     }
 }
 
 fun InterestViewModel.getHomeLong():Double{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.homeLatLong.second
+        if(it.configurationFields.homeLatLong==null){
+            return 0.0
+        }
+        return it.configurationFields.homeLatLong!!.second
     }
 }
 
 fun InterestViewModel.getHomeAddress():String{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.homeAddress
+        return it.configurationFields.homeAddress?:""
     }
 }
 
@@ -66,24 +72,24 @@ fun InterestViewModel.getNetworkHomeAddress():Address?{
 
 fun InterestViewModel.getSavedHomeAddress():String{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.savedHomeAddress
+        return it.configurationFields.savedHomeAddress?:""
     }
 }
 
 fun InterestViewModel.getApartmentNumber():String{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.apartmentNumber
+        return it.configurationFields.apartmentNumber?:""
     }
 }
 
 fun InterestViewModel.getBusinessName():String{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.businessName
+        return it.configurationFields.businessName?:""
     }
 }
 
 fun InterestViewModel.getDoorCodeName():String{
     getCurrentViewStateOrNew().let {
-        return it.configurationFields.doorCodeName
+        return it.configurationFields.doorCodeName?:""
     }
 }

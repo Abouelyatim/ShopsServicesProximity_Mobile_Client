@@ -6,7 +6,7 @@ import com.here.oksse.ServerSentEvent
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.responses.ListAddressResponse
-import com.smartcity.client.api.main.responses.ListGenericResponse
+import com.smartcity.client.util.ListGenericResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address

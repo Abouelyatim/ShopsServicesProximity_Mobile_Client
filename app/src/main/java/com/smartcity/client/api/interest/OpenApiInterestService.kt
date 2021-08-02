@@ -1,44 +1,42 @@
 package com.smartcity.client.api.interest
 
-import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
-import com.smartcity.client.api.interest.response.ListCategoryResponse
-import com.smartcity.client.api.main.responses.ListGenericResponse
+import com.smartcity.client.api.ListGenericDto
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.City
-import com.smartcity.client.util.deleted.GenericApiResponse
+import com.smartcity.client.models.product.Category
 import retrofit2.http.*
 
 @InterestScope
 interface OpenApiInterestService {
 
     @GET("category")
-    fun getAllCategory(): LiveData<GenericApiResponse<ListCategoryResponse>>
+    suspend fun getAllCategory(): ListGenericDto<Category, CategoryDto>
 
     @POST("user/interestCenter")
     @FormUrlEncoded
-    fun setInterestCenter(
+    suspend fun setInterestCenter(
         @Field("id") id: Long,
         @Field("interest") interest: List<String>
-    ): LiveData<GenericApiResponse<GenericResponse>>
+    ): GenericResponse
 
     @GET("user/interestCenter/{id}")
-    fun getUserInterestCenter(@Path("id") id: Long?): LiveData<GenericApiResponse<ListCategoryResponse>>
+    suspend fun getUserInterestCenter(@Path("id") id: Long?): ListGenericDto<Category, CategoryDto>
 
     @GET("nominatim/search")
-    fun resolveUserCity(
+    suspend fun resolveUserCity(
         @Query(value = "country") country: String,
         @Query(value = "city") city: String
-    ): LiveData<GenericApiResponse<ListGenericResponse<City>>>
+    ): ListGenericDto<City, CityDto>
 
     @POST("address/create")
-    fun createAddress(
+    suspend fun createAddress(
         @Body address: Address
-    ):LiveData<GenericApiResponse<GenericResponse>>
+    ):GenericResponse
 
     @POST("user/default-city")
-    fun setUserDefaultCity(
+    suspend fun setUserDefaultCity(
         @Body city: City
-    ):LiveData<GenericApiResponse<GenericResponse>>
+    ):GenericResponse
 }

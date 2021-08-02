@@ -3,7 +3,7 @@ package com.smartcity.client.api.main
 import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.responses.ListAddressResponse
-import com.smartcity.client.api.main.responses.ListGenericResponse
+import com.smartcity.client.util.ListGenericResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope

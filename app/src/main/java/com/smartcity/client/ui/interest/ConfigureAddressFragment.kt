@@ -13,7 +13,6 @@ import android.widget.EditText
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -25,30 +24,31 @@ import com.smartcity.client.models.City
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.viewmodel.*
 import com.smartcity.client.util.RetryToHandelNetworkError
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import com.sucho.placepicker.AddressData
 import com.sucho.placepicker.MapType
 import com.sucho.placepicker.PlacePicker
 import kotlinx.android.synthetic.main.fragment_configure_address.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @InterestScope
 class ConfigureAddressFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory
-): BaseInterestFragment(R.layout.fragment_configure_address),
+): BaseInterestFragment(R.layout.fragment_configure_address,viewModelFactory),
     RetryToHandelNetworkError,
     CityAdapter.Interaction
 {
     private lateinit var cityRecyclerAdapter: CityAdapter
 
     private lateinit var citySearchView: SearchView
-
-    val viewModel: InterestViewModel by viewModels{
-        viewModelFactory
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,7 @@ constructor(
         val applicationInfo = requireActivity().packageManager.getApplicationInfo( activity?.packageName, PackageManager.GET_META_DATA)
         my_position_button.setOnClickListener {
             val gpsTracker = GpsTracker(requireContext())
-            if(stateChangeListener.isFineLocationPermissionGranted()){
+            if(uiCommunicationListener.isFineLocationPermissionGranted()){
                 gpsTracker.getCurrentLocation()
                 val latitude: Double = gpsTracker.getLatitude()
                 val longitude: Double = gpsTracker.getLongitude()
@@ -88,7 +88,7 @@ constructor(
 
                 startForResult.launch(intent)
             }else{
-                stateChangeListener.isFineLocationPermissionGranted()
+                uiCommunicationListener.isFineLocationPermissionGranted()
             }
         }
     }
@@ -167,32 +167,31 @@ constructor(
 
     private fun resolveAddress(){
         viewModel.setStateEvent(
-            InterestStateEvent.ResolveUserAddress()
+            InterestStateEvent.ResolveUserAddressEvent()
         )
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateChangeListener.onDataStateChange(dataState)
-            //set Offer list get it from network
-            dataState.data?.let { data ->
-                data.data?.let{
-                    it.getContentIfNotHandled()?.let{
-                        it.configurationFields.cityList.let {
-                            viewModel.setCityList(it)
-                        }
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
+            stateMessage?.let {
 
-                    }
-
+                if(stateMessage.response.message.equals(SuccessHandling.DONE_User_Default_City)){
+                    navDeliveryAddress()
                 }
-                data.response?.peekContent()?.let { response ->
-                    when (response.message) {
-                        SuccessHandling.DONE_User_Default_City ->{
-                            navDeliveryAddress()
+
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
                         }
                     }
-                }
+                )
             }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
@@ -202,10 +201,6 @@ constructor(
 
     override fun resendNetworkRequest() {
 
-    }
-
-    override fun cancelActiveJobs() {
-        viewModel.cancelActiveJobs()
     }
 
     private fun initCityRecyclerView(){

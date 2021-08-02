@@ -9,6 +9,7 @@ import com.smartcity.client.util.ErrorHandling.Companion.UNKNOWN_ERROR
 import kotlinx.coroutines.*
 import retrofit2.HttpException
 import java.io.IOException
+
 /**
  * Reference: https://medium.com/@douglas.iacovelli/how-to-handle-errors-with-retrofit-and-coroutines-33e7492a912
  */

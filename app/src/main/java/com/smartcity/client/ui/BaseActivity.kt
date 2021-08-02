@@ -14,11 +14,10 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.smartcity.client.BaseApplication
 import com.smartcity.client.R
 import com.smartcity.client.session.SessionManager
+import com.smartcity.client.ui.deleted.Event
+import com.smartcity.client.ui.deleted.StateError
+import com.smartcity.client.util.*
 import com.smartcity.client.util.Constants.Companion.PERMISSIONS_REQUEST_READ_STORAGE
-import com.smartcity.client.util.MessageType
-import com.smartcity.client.util.Response
-import com.smartcity.client.util.StateMessageCallback
-import com.smartcity.client.util.UIComponentType
 import javax.inject.Inject
 
 abstract class BaseActivity: AppCompatActivity(),
@@ -44,7 +43,7 @@ abstract class BaseActivity: AppCompatActivity(),
         response: Response,
         stateMessageCallback: StateMessageCallback
     ) {
-
+        handleNetworkStateError(response)
         when(response.uiComponentType){
 
             is UIComponentType.AreYouSureDialog -> {
@@ -248,4 +247,42 @@ abstract class BaseActivity: AppCompatActivity(),
                 cancelable(false)
             }
     }
+
+    override fun isFineLocationPermissionGranted(): Boolean {
+        if (
+            ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED  ) {
+
+            ActivityCompat.requestPermissions(this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                Constants.PERMISSIONS_REQUEST_FINE_LOCATION
+            )
+
+            return false
+        } else {
+            // Permission has already been granted
+            return true
+        }
+    }
+
+    lateinit var handelNetworkError: RetryToHandelNetworkError
+
+    fun initHandelNetworkError(handelNetworkError: RetryToHandelNetworkError){
+        this.handelNetworkError=handelNetworkError
+    }
+
+    private fun handleNetworkStateError(response: Response){
+        if(response.message in ErrorHandling.NETWORK_ERRORS ||
+            response.message!!.contains(ErrorHandling.FAILED_TO_CONNECT_TO)){
+            displayFragmentContainerView()
+            displayRetryView()
+        }
+    }
+
+    abstract fun displayRetryView()
+
+    abstract fun displayFragmentContainerView()
 }

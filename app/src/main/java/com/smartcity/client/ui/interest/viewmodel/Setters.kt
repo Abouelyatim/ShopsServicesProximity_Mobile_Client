@@ -9,6 +9,13 @@ fun InterestViewModel.setCategoryList(categoryList:List<Category>){
     update.categoryFields.categoryList = categoryList
     setViewState(update)
 }
+
+fun InterestViewModel.setUserInterestList(categoryList:List<Category>){
+    val update = getCurrentViewStateOrNew()
+    update.categoryFields.userInterestList = categoryList
+    setViewState(update)
+}
+
 fun InterestViewModel.setSelectedCategoriesList(list: MutableList<String>){
     val update = getCurrentViewStateOrNew()
     update.categoryFields.selectedCategories = list
@@ -41,13 +48,21 @@ fun InterestViewModel.setSelectedCity(value: City){
 
 fun InterestViewModel.setHomeLat(value :Double){
     val update = getCurrentViewStateOrNew()
-    update.configurationFields.homeLatLong = Pair(value,update.configurationFields.homeLatLong.second)
+    var default = 0.0
+    if(update.configurationFields.homeLatLong!=null){
+        default=update.configurationFields.homeLatLong!!.second
+    }
+    update.configurationFields.homeLatLong = Pair(value,default)
     setViewState(update)
 }
 
 fun InterestViewModel.setHomeLong(value :Double){
     val update = getCurrentViewStateOrNew()
-    update.configurationFields.homeLatLong = Pair(update.configurationFields.homeLatLong.first,value)
+    var default = 0.0
+    if(update.configurationFields.homeLatLong!=null){
+        default=update.configurationFields.homeLatLong!!.first
+    }
+    update.configurationFields.homeLatLong = Pair(default,value)
     setViewState(update)
 }
 

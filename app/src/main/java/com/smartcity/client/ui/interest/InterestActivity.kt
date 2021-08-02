@@ -15,17 +15,22 @@ import com.smartcity.client.BaseApplication
 import com.smartcity.client.R
 import com.smartcity.client.fragments.interest.InterestNavHostFragment
 import com.smartcity.client.models.product.Category
-import com.smartcity.client.ui.deleted.BaseActivity
+import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.interest.viewmodel.InterestViewModel
 import com.smartcity.client.ui.main.MainActivity
 import com.smartcity.client.util.PreferenceKeys
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.SuccessHandling
 import kotlinx.android.synthetic.main.activity_auth.fragment_container
 import kotlinx.android.synthetic.main.activity_auth.progress_bar
 import kotlinx.android.synthetic.main.activity_interest.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 import javax.inject.Named
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class InterestActivity : BaseActivity() {
     @Inject
     @Named("InterestFragmentFactory")
@@ -64,54 +69,41 @@ class InterestActivity : BaseActivity() {
 
     private fun subscribeObservers() {
         val interestCenter=sharedPreferences.getStringSet(PreferenceKeys.USER_INTEREST_CENTER, null)
+        if(!interestCenter.isNullOrEmpty()){
+            navMainActivity()
+        }
 
-        viewModel.dataState.observe(this, Observer { dataState ->
-            onDataStateChange(dataState)
+        viewModel.stateMessage.observe(this, Observer { stateMessage ->//must
 
-            dataState.data?.let { data ->
-                data.response?.let{event ->
-                    //after save interest center navigate to main
-                    event.peekContent().let{ response ->
-                        response.message?.let{ message ->
-                            if(message.equals(SuccessHandling.CREATED_DONE)){
-                                navMainActivity()
-                            }
+            stateMessage?.let {
 
-                        }
-                    }
-                    //check if user set interest center
-                    event.peekContent().let{ response ->
-                        response.message?.let{ message ->
-                            if(message.equals(SuccessHandling.DONE_User_Interest_Center)){
-                                data.data?.let {
-                                    if(it.peekContent().categoryFields.categoryList.isNotEmpty()){
-                                        saveInterestCenter(sharedPreferences,it.peekContent().categoryFields.categoryList)
-                                        navMainActivity()
-                                    }else{
-                                        onFinishCheckPreviousAuthUser()
-                                    }
-                                }
+                if(stateMessage.response.message.equals(SuccessHandling.CREATED_DONE)){//after save interest center navigate to main
+                    onResponseReceived(
+                        response = it.response,
+                        stateMessageCallback = object: StateMessageCallback {
+                            override fun removeMessageFromStack() {
+                                viewModel.clearStateMessage()
                             }
                         }
-                    }
+                    )
+                    navMainActivity()
                 }
             }
         })
 
-        //check previous set of interest center
-        sessionManager.cachedToken.observe(this, Observer{ dataState ->
-            Log.d(TAG, "AuthActivity, subscribeObservers: AuthDataState: ${dataState}")
-            dataState.let{ authToken ->
-                authToken?.let {
-                    it.interest?.let {interest->
-                        if(interest){
-                            if(!interestCenter.isNullOrEmpty()){
-                                navMainActivity()
-                            }
-                        }
-                    }
-                }
+        viewModel.numActiveJobs.observe(this, Observer { jobCounter ->//must
+            displayProgressBar(viewModel.areAnyJobsActive())
+        })
 
+        viewModel.viewState.observe(this, Observer{ viewState ->
+            Log.d(TAG, "AuthActivity, subscribeObservers: AuthViewState: ${viewState}")
+            viewState.categoryFields.userInterestList?.let {
+                if(it.isNotEmpty()){
+                    saveInterestCenter(sharedPreferences,it)
+                    navMainActivity()
+                }else{
+                    onFinishCheckPreviousAuthUser()
+                }
             }
         })
     }
@@ -182,14 +174,14 @@ class InterestActivity : BaseActivity() {
     }
 
     override fun displayAppBar(bool: Boolean) {
-        TODO("Not yet implemented")
+
     }
 
     override fun setAppBarLayout(fragment: Fragment) {
-        TODO("Not yet implemented")
+
     }
 
     override fun updateStatusBarColor(statusBarColor: Int,statusBarTextColor:Boolean) {
-        TODO("Not yet implemented")
+
     }
 }

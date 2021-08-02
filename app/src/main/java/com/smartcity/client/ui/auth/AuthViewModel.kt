@@ -1,6 +1,5 @@
 package com.smartcity.client.ui.auth
 
-import android.util.Log
 import com.smartcity.client.di.auth.AuthScope
 import com.smartcity.client.models.AuthToken
 import com.smartcity.client.repository.auth.AuthRepositoryImpl

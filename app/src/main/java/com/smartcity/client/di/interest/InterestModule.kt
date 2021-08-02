@@ -2,15 +2,16 @@ package com.smartcity.client.di.interest
 
 import android.content.SharedPreferences
 import com.smartcity.client.api.interest.OpenApiInterestService
-import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.persistence.AuthTokenDao
-import com.smartcity.client.repository.interest.InterestRepository
+import com.smartcity.client.repository.interest.InterestRepositoryImpl
 import com.smartcity.client.session.SessionManager
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.FlowPreview
 import retrofit2.Retrofit
 import javax.inject.Named
 
+@FlowPreview
 @Module
 object InterestModule{
 
@@ -32,8 +33,8 @@ object InterestModule{
         openApiInterestService: OpenApiInterestService,
         preferences: SharedPreferences,
         editor: SharedPreferences.Editor
-    ): InterestRepository {
-        return InterestRepository(
+    ): InterestRepositoryImpl {
+        return InterestRepositoryImpl(
             authTokenDao,
             openApiInterestService,
             sessionManager,

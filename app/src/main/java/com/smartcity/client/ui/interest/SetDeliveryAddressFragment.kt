@@ -6,12 +6,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -19,35 +17,36 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.viewmodel.*
 import com.smartcity.client.util.RetryToHandelNetworkError
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.SuccessHandling
 import com.sucho.placepicker.AddressData
 import com.sucho.placepicker.MapType
 import com.sucho.placepicker.PlacePicker
 import kotlinx.android.synthetic.main.fragment_set_delivery_address.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @InterestScope
 class SetDeliveryAddressFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory
-): BaseInterestFragment(R.layout.fragment_set_delivery_address),
+): BaseInterestFragment(R.layout.fragment_set_delivery_address,viewModelFactory),
     RetryToHandelNetworkError,
     OnMapReadyCallback
 {
-
     private lateinit var mMapView:MapView
     private var mGoogleMap:GoogleMap?=null
-
-    val viewModel: InterestViewModel by viewModels{
-        viewModelFactory
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,10 +55,6 @@ constructor(
 
     override fun resendNetworkRequest() {
 
-    }
-
-    override fun cancelActiveJobs() {
-        viewModel.cancelActiveJobs()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,21 +70,26 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateChangeListener.onDataStateChange(dataState)
-            dataState.data?.let { data ->
-                data.response?.peekContent()?.let { response ->
-                    when (response.message) {
-                        SuccessHandling.DONE_Create_Address ->{
-                           findNavController().popBackStack()
-                        }
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
+            stateMessage?.let {
 
-                        else ->{
+                if(stateMessage.response.message.equals(SuccessHandling.DONE_Create_Address)){
+                    findNavController().popBackStack()
+                }
 
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
                         }
                     }
-                }
+                )
             }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
         })
     }
 
@@ -136,7 +136,7 @@ constructor(
     private fun myPosition() {
         my_position_button.setOnClickListener {
             val gpsTracker = GpsTracker(requireContext())
-            if(stateChangeListener.isFineLocationPermissionGranted()){
+            if(uiCommunicationListener.isFineLocationPermissionGranted()){
                 gpsTracker.getCurrentLocation()
                 val latitude: Double = gpsTracker.getLatitude()
                 val longitude: Double = gpsTracker.getLongitude()
@@ -144,7 +144,7 @@ constructor(
                 val intent = prepareMapIntent(latitude,longitude)
                 startForResult.launch(intent)
             }else{
-                stateChangeListener.isFineLocationPermissionGranted()
+                uiCommunicationListener.isFineLocationPermissionGranted()
             }
         }
     }
@@ -272,6 +272,4 @@ constructor(
         }
         setAddress()
     }
-
-
 }

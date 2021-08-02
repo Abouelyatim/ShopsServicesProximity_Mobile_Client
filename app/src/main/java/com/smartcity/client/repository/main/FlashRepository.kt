@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
-import com.smartcity.client.api.main.responses.ListGenericResponse
+import com.smartcity.client.util.ListGenericResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product

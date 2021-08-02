@@ -2,7 +2,11 @@ package com.smartcity.client.di.auth
 
 import com.smartcity.client.ui.auth.*
 import dagger.Subcomponent
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @AuthScope
 @Subcomponent(
     modules = [
@@ -19,5 +23,4 @@ interface AuthComponent {
     }
 
     fun inject(authActivity: AuthActivity)
-
 }

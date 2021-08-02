@@ -2,7 +2,6 @@ package com.smartcity.client.ui.interest
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,28 +9,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.ui.interest.state.InterestStateEvent
-import com.smartcity.client.ui.interest.viewmodel.*
+import com.smartcity.client.ui.interest.viewmodel.getCategoryList
+import com.smartcity.client.ui.interest.viewmodel.getSelectedCategoriesList
+import com.smartcity.client.ui.interest.viewmodel.setSelectedCategoriesList
 import com.smartcity.client.util.RetryToHandelNetworkError
-import com.smartcity.client.util.SuccessHandling
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_choose_interest.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 @InterestScope
 class ChooseInterestFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory
-): BaseInterestFragment(R.layout.fragment_choose_interest),
+): BaseInterestFragment(R.layout.fragment_choose_interest,viewModelFactory),
     CategoriesAdapter.Interaction,
     RetryToHandelNetworkError
 {
-
     private lateinit var recyclerAdapter: CategoriesAdapter
-
-    val viewModel: InterestViewModel by viewModels{
-        viewModelFactory
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +42,9 @@ constructor(
         super.onViewCreated(view, savedInstanceState)
         (activity as InterestActivity).initHandelNetworkError(this)
 
-        getUserInterestCenter()
+        //getUserInterestCenter()
 
+        getAllCategory()
         subscribeObservers()
         initRecyclerView()
         saveInterestCenter()
@@ -56,7 +57,7 @@ constructor(
 
     private fun getUserInterestCenter() {
         viewModel.setStateEvent(
-            InterestStateEvent.UserInterestCenter()
+            InterestStateEvent.UserInterestCenterEvent()
         )
     }
 
@@ -64,7 +65,7 @@ constructor(
     private fun saveInterestCenter() {
         next_button_interest.setOnClickListener {
             viewModel.setStateEvent(
-                InterestStateEvent.SetInterestCenter(
+                InterestStateEvent.SetInterestCenterEvent(
                     viewModel.getSelectedCategoriesList()
                 )
             )
@@ -75,37 +76,25 @@ constructor(
 
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateChangeListener.onDataStateChange(dataState)
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
+            stateMessage?.let {
 
 
-
-            dataState.data?.let { data ->
-                data.response?.let{event ->
-                    //check if user set interest center if not send request to get category list
-                    event.peekContent().let{ response ->
-                        response.message?.let{ message ->
-                            if(message.equals(SuccessHandling.DONE_User_Interest_Center)){
-                                data.data?.let {
-                                    if(it.peekContent().categoryFields.categoryList.isEmpty()){
-                                        getAllCategory()
-                                    }
-                                }
-                            }
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
                         }
                     }
-                }
-
-                //set  Category list get it from network
-                data.data?.let{
-                    it.getContentIfNotHandled()?.let{
-                        viewModel.setCategoryList(it.categoryFields.categoryList)
-                    }
-
-                }
-
+                )
             }
         })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
+        })
+
         //submit list to recycler view
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             recyclerAdapter.submitList(viewModel.getCategoryList().distinct())
@@ -137,15 +126,9 @@ constructor(
 
     private fun getAllCategory() {
         viewModel.setStateEvent(
-            InterestStateEvent.AllCategory()
+            InterestStateEvent.AllCategoryEvent()
         )
     }
-
-
-    override fun cancelActiveJobs() {
-        viewModel.cancelActiveJobs()
-    }
-
 
     override fun onItemSelected(option: String, value: String) {
         category_recyclerview.adapter!!.notifyDataSetChanged()
@@ -157,8 +140,4 @@ constructor(
         }
         viewModel.setSelectedCategoriesList(list.distinct().toMutableList())
     }
-
-
-
-
 }

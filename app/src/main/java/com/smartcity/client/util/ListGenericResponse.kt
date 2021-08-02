@@ -1,4 +1,4 @@
-package com.smartcity.client.api.main.responses
+package com.smartcity.client.util
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

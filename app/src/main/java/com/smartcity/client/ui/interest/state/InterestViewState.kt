@@ -17,24 +17,25 @@ data class InterestViewState(
 
 @Parcelize
 data class ConfigurationFields(
-    var country:String = "",
-    var city:String = "",
-    var cityList: List<City> = listOf(),
+    var country:String ?= null,
+    var city:String?= null,
+    var cityList: List<City>? = null,
     var selectedCity: City? = null,
-    var homeLatLong:Pair<Double,Double> = Pair(0.0,0.0),
-    var savedHomeAddress:String="",
-    var homeAddress:String="",
+    var homeLatLong:Pair<Double,Double> ?= null,
+    var savedHomeAddress:String?=null,
+    var homeAddress:String?=null,
     var networkHomeAddress:Address?=null,
-    var apartmentNumber:String="",
-    var businessName:String="",
-    var doorCodeName:String=""
+    var apartmentNumber:String?=null,
+    var businessName:String?=null,
+    var doorCodeName:String?=null
     ) : Parcelable{
-
 }
+
 @Parcelize
 data class CategoryFields(
-    var categoryList:List<Category> = ArrayList(),
-    var selectedCategories:MutableList<String> = mutableListOf<String>()
+    var userInterestList:List<Category>? = null,
+    var categoryList:List<Category>? = null,
+    var selectedCategories:MutableList<String>? = null
 ) : Parcelable{
     class SelectedCategoriesError {
 
@@ -52,8 +53,13 @@ data class CategoryFields(
     }
 
     fun isValid(): String{
-        if(selectedCategories.size<1){
+        if(selectedCategories==null){
             return SelectedCategoriesError.mustChoose()
+        }
+        selectedCategories?.let {
+            if(it.size<1){
+                return SelectedCategoriesError.mustChoose()
+            }
         }
         return SelectedCategoriesError.none()
     }

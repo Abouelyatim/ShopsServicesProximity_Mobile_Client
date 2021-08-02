@@ -1,84 +1,110 @@
 package com.smartcity.client.ui.interest.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.smartcity.client.di.interest.InterestScope
-import com.smartcity.client.repository.interest.InterestRepository
+import com.smartcity.client.repository.interest.InterestRepositoryImpl
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.deleted.BaseViewModel
-import com.smartcity.client.ui.deleted.DataState
-import com.smartcity.client.ui.deleted.Loading
+import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.state.InterestViewState
-import com.smartcity.client.util.deleted.AbsentLiveData
+import com.smartcity.client.util.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @InterestScope
 class InterestViewModel
 @Inject
 constructor(
-    val interestRepository: InterestRepository,
+    val interestRepository: InterestRepositoryImpl,
     private val sessionManager: SessionManager
-): BaseViewModel<InterestStateEvent, InterestViewState>()
+): BaseViewModel<InterestViewState>()
 {
-    override fun handleStateEvent(stateEvent: InterestStateEvent): LiveData<DataState<InterestViewState>> {
-        when (stateEvent) {
-
-            is InterestStateEvent.UserInterestCenter ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    interestRepository.attemptUserInterestCenter(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
+    override fun handleNewData(data: InterestViewState) {
+        data.categoryFields.let {categoryFields ->
+            categoryFields.categoryList?.let {list ->
+                setCategoryList(list)
             }
 
-            is InterestStateEvent.SetInterestCenter ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    interestRepository.attemptSetInterestCenter(
-                        authToken.account_pk!!.toLong(),
-                        stateEvent.list
-                    )
-                }?: AbsentLiveData.create()
+            categoryFields.userInterestList?.let {list ->
+                setUserInterestList(list)
             }
-            is InterestStateEvent.AllCategory ->{
-                return interestRepository.attemptAllCategory()
-            }
+        }
 
-            is InterestStateEvent.ResolveUserAddress ->{
-                return interestRepository.attemptResolveUserAddress(
-                    getCountry(),
-                    getCity()
-                )
+        data.configurationFields.let {configurationFields ->
+            configurationFields.cityList?.let {list ->
+                setCityList(list)
             }
+        }
+    }
 
-            is InterestStateEvent.SetUserDefaultCityEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    stateEvent.city.userId=authToken.account_pk!!.toLong()
-                    interestRepository.attemptSetUserDefaultCity(
-                        stateEvent.city
-                    )
-                }?: AbsentLiveData.create()
-            }
+    override fun setStateEvent(stateEvent: StateEvent) {
+        if(!isJobAlreadyActive(stateEvent)){
+            sessionManager.cachedToken.value?.let { authToken ->
+                val job: Flow<DataState<InterestViewState>> = when(stateEvent){
 
-            is InterestStateEvent.CreateAddressEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    stateEvent.address.userId=authToken.account_pk!!.toLong()
-                    interestRepository.attemptCreateAddress(
-                        stateEvent.address
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is InterestStateEvent.None ->{
-                return liveData {
-                    emit(
-                        DataState<InterestViewState>(
-                            null,
-                            Loading(false),
-                            null
+                    is InterestStateEvent.UserInterestCenterEvent ->{
+                        interestRepository.attemptUserInterestCenter(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
                         )
-                    )
+                    }
+
+                    is InterestStateEvent.SetInterestCenterEvent ->{
+                        interestRepository.attemptSetInterestCenter(
+                            stateEvent,
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.list
+                        )
+                    }
+
+                    is InterestStateEvent.AllCategoryEvent ->{
+                        interestRepository.attemptAllCategory(stateEvent)
+                    }
+
+                    is InterestStateEvent.ResolveUserAddressEvent ->{
+                         interestRepository.attemptResolveUserAddress(
+                             stateEvent,
+                            getCountry(),
+                            getCity()
+                        )
+                    }
+
+                    is InterestStateEvent.SetUserDefaultCityEvent ->{
+                        stateEvent.city.userId=authToken.account_pk!!.toLong()
+                        interestRepository.attemptSetUserDefaultCity(
+                            stateEvent,
+                            stateEvent.city
+                        )
+                    }
+
+                    is InterestStateEvent.CreateAddressEvent ->{
+                        stateEvent.address.userId=authToken.account_pk!!.toLong()
+                        interestRepository.attemptCreateAddress(
+                            stateEvent,
+                            stateEvent.address
+                        )
+                    }
+
+                    else -> {
+                        flow{
+                            emit(
+                                DataState.error<InterestViewState>(
+                                    response = Response(
+                                        message = ErrorHandling.INVALID_STATE_EVENT,
+                                        uiComponentType = UIComponentType.None(),
+                                        messageType = MessageType.Error()
+                                    ),
+                                    stateEvent = stateEvent
+                                )
+                            )
+                        }
+                    }
                 }
+                launchJob(stateEvent, job)
             }
         }
     }
@@ -87,21 +113,8 @@ constructor(
         return InterestViewState()
     }
 
-    fun cancelActiveJobs(){
-        handlePendingData()
-        interestRepository.cancelActiveJobs()
-    }
-
-    fun handlePendingData(){
-        setStateEvent(InterestStateEvent.None())
-    }
-
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
-    }
-
-    override fun initRepositoryViewModel() {
-
     }
 }

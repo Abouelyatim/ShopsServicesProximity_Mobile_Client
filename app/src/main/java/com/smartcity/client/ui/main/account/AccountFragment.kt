@@ -3,34 +3,27 @@ package com.smartcity.client.ui.main.account
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.client.ui.main.account.viewmodel.clearOrderList
 import com.smartcity.client.ui.main.account.viewmodel.setOrderActionRecyclerPosition
-import com.smartcity.client.util.SuccessHandling
 import kotlinx.android.synthetic.main.fragment_account.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class AccountFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseAccountFragment(R.layout.fragment_account){
-
-
-
-    val viewModel: AccountViewModel by viewModels{
-        viewModelFactory
-    }
+): BaseAccountFragment(R.layout.fragment_account,viewModelFactory){
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
@@ -43,7 +36,6 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[ACCOUNT_VIEW_STATE_BUNDLE_KEY] as AccountViewState?)?.let { viewState ->
@@ -52,18 +44,12 @@ constructor(
         }
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.expandAppBar()
-        stateChangeListener.displayBottomNavigation(true)
+        uiCommunicationListener.expandAppBar()
+        uiCommunicationListener.displayBottomNavigation(true)
 
         subscribeObservers()
 
@@ -80,17 +66,14 @@ constructor(
         }
 
         around_stores_settings.setOnClickListener{
-            if(stateChangeListener.isFineLocationPermissionGranted()){
+            if(uiCommunicationListener.isFineLocationPermissionGranted()){
                 navAroundStore()
             }
         }
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateChangeListener.onDataStateChange(dataState)
 
-        })
     }
 
     private fun navOrders(){

@@ -8,8 +8,7 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import com.smartcity.client.ui.deleted.DataStateChangeListener
-import com.smartcity.client.ui.deleted.UICommunicationListener
+import com.smartcity.client.ui.UICommunicationListener
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 

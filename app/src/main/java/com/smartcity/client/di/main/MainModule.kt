@@ -5,18 +5,20 @@ import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.persistence.AccountPropertiesDao
 import com.smartcity.client.persistence.AppDatabase
 import com.smartcity.client.persistence.BlogPostDao
-import com.smartcity.client.repository.main.AccountRepository
-import com.smartcity.client.repository.main.BlogRepository
-import com.smartcity.client.repository.main.CartRepository
-import com.smartcity.client.repository.main.FlashRepository
+import com.smartcity.client.repository.main.AccountRepositoryImpl
+import com.smartcity.client.repository.main.ProductRepositoryImpl
+import com.smartcity.client.repository.main.CartRepositoryImpl
+import com.smartcity.client.repository.main.FlashRepositoryImpl
 
 
 import com.smartcity.client.session.SessionManager
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.FlowPreview
 import retrofit2.Retrofit
 import javax.inject.Named
 
+@FlowPreview
 @Module
 object MainModule {
 
@@ -36,8 +38,8 @@ object MainModule {
         openApiMainService: OpenApiMainService,
         accountPropertiesDao: AccountPropertiesDao,
         sessionManager: SessionManager
-    ): AccountRepository {
-        return AccountRepository(openApiMainService, accountPropertiesDao, sessionManager)
+    ): AccountRepositoryImpl {
+        return AccountRepositoryImpl(openApiMainService, accountPropertiesDao, sessionManager)
     }
 
     @JvmStatic
@@ -50,12 +52,12 @@ object MainModule {
     @JvmStatic
     @MainScope
     @Provides
-    fun provideBlogRepository(
+    fun provideProductRepository(
         openApiMainService: OpenApiMainService,
         blogPostDao: BlogPostDao,
         sessionManager: SessionManager
-    ): BlogRepository {
-        return BlogRepository(openApiMainService, blogPostDao, sessionManager)
+    ): ProductRepositoryImpl {
+        return ProductRepositoryImpl(openApiMainService, blogPostDao, sessionManager)
     }
 
     @JvmStatic
@@ -65,8 +67,8 @@ object MainModule {
         openApiMainService: OpenApiMainService,
         blogPostDao: BlogPostDao,
         sessionManager: SessionManager
-    ): CartRepository {
-        return CartRepository(openApiMainService, blogPostDao, sessionManager)
+    ): CartRepositoryImpl {
+        return CartRepositoryImpl(openApiMainService, blogPostDao, sessionManager)
     }
 
     @JvmStatic
@@ -75,8 +77,8 @@ object MainModule {
     fun provideFlashRepository(
         openApiMainService: OpenApiMainService,
         sessionManager: SessionManager
-    ): FlashRepository {
-        return FlashRepository(openApiMainService, sessionManager)
+    ): FlashRepositoryImpl {
+        return FlashRepositoryImpl(openApiMainService, sessionManager)
     }
 
     @JvmStatic

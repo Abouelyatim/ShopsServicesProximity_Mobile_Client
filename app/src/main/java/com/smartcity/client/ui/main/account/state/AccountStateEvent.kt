@@ -2,41 +2,111 @@ package com.smartcity.client.ui.main.account.state
 
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.UserInformation
-import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
+import com.smartcity.client.util.StateEvent
 
-sealed class AccountStateEvent{
-    class SaveAddress(
+sealed class AccountStateEvent: StateEvent {
+    
+    class SaveAddressEvent(
         var address: Address
-    ):AccountStateEvent()
+    ):AccountStateEvent() {
+        override fun errorInfo(): String {
+            return "Save address attempt failed."
+        }
 
-    class GetUserAddresses():AccountStateEvent()
+        override fun toString(): String {
+            return "SaveAddressStateEvent"
+        }
+    }
 
-    class DeleteAddress(
+    class GetUserAddressesEvent(): AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Get addresses attempt failed."
+        }
+
+        override fun toString(): String {
+            return "GetUserAddressesStateEvent"
+        }
+    }
+
+    class DeleteAddressEvent(
         var id:Long
-    ):AccountStateEvent()
+    ):AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Delete address attempt failed."
+        }
 
-    class SetUserInformation(
+        override fun toString(): String {
+            return "DeleteAddressStateEvent"
+        }
+    }
+
+    class SetUserInformationEvent(
         var userInformation: UserInformation
-    ):AccountStateEvent()
+    ):AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Save information attempt failed."
+        }
 
-    class GetUserInformation(
-    ):AccountStateEvent()
+        override fun toString(): String {
+            return "SetUserInformationStateEvent"
+        }
+    }
 
-    class GetUserInProgressOrdersEvent():AccountStateEvent()
+    class GetUserInformationEvent():AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Get information attempt failed."
+        }
 
-    class GetUserFinalizedOrdersEvent():AccountStateEvent()
+        override fun toString(): String {
+            return "GetUserInformationStateEvent"
+        }
+    }
+
+    class GetUserInProgressOrdersEvent():AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Get orders attempt failed."
+        }
+
+        override fun toString(): String {
+            return "GetUserInProgressOrdersStateEvent"
+        }
+    }
+
+    class GetUserFinalizedOrdersEvent():AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Get orders attempt failed."
+        }
+
+        override fun toString(): String {
+            return "GetUserFinalizedOrdersStateEvent"
+        }
+    }
 
     class ConfirmOrderReceivedEvent(
         var id:Long
-    ) : AccountStateEvent()
+    ) : AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Confirm order attempt failed."
+        }
 
-    class SubscribeOrderChangeEvent: AccountStateEvent()
+        override fun toString(): String {
+            return "ConfirmOrderReceivedStateEvent"
+        }
+    }
 
-    class FinishOrderChangeEvent: AccountStateEvent()
+    class GetStoresAroundEvent: AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Get stores attempt failed."
+        }
 
-    class ResponseOrderChangeEvent: AccountStateEvent()
+        override fun toString(): String {
+            return "GetStoresAroundStateEvent"
+        }
+    }
 
-    class GetStoresAround: AccountStateEvent()
-
-    class None: AccountStateEvent()
+    class None: AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "None"
+        }
+    }
 }

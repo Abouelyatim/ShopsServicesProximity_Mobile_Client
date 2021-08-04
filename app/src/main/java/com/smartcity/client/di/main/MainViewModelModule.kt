@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.smartcity.client.di.auth.keys.MainViewModelKey
 import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
-import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
+import com.smartcity.client.ui.main.product.viewmodel.ProductViewModel
 import com.smartcity.client.ui.main.cart.viewmodel.CartViewModel
 import com.smartcity.client.ui.main.flash_notification.viewmodel.FlashViewModel
 
@@ -27,12 +27,12 @@ abstract class MainViewModelModule {
     @Binds
     @IntoMap
     @MainViewModelKey(ProductViewModel::class)
-    abstract fun bindBlogViewModel(productViewModel: ProductViewModel): ViewModel
+    abstract fun bindProductViewModel(productViewModel: ProductViewModel): ViewModel
 
     @Binds
     @IntoMap
     @MainViewModelKey(CartViewModel::class)
-    abstract fun bindCreateBlogViewModel(cartViewModel: CartViewModel): ViewModel
+    abstract fun bindCartViewModel(cartViewModel: CartViewModel): ViewModel
 
     @Binds
     @IntoMap

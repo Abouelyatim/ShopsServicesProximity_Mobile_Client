@@ -4,7 +4,7 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.fragments.main.account.AccountFragmentFactory
-import com.smartcity.client.fragments.main.blog.BlogFragmentFactory
+import com.smartcity.client.fragments.main.product.ProductFragmentFactory
 import com.smartcity.client.fragments.main.cart.CartFragmentFactory
 import com.smartcity.client.fragments.main.flash_notification.FlashFragmentFactory
 
@@ -32,12 +32,12 @@ object MainFragmentsModule {
     @JvmStatic
     @MainScope
     @Provides
-    @Named("BlogFragmentFactory")
-    fun provideBlogFragmentFactory(
+    @Named("ProductFragmentFactory")
+    fun provideProductFragmentFactory(
         viewModelFactory: ViewModelProvider.Factory,
         requestManager: RequestManager
     ): FragmentFactory {
-        return BlogFragmentFactory(
+        return ProductFragmentFactory(
             viewModelFactory,
             requestManager
         )

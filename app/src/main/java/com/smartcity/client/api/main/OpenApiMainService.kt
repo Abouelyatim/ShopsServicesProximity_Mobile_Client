@@ -1,16 +1,14 @@
 package com.smartcity.client.api.main
 
-import androidx.lifecycle.LiveData
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.responses.ListAddressResponse
-import com.smartcity.client.util.ListGenericResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.util.deleted.GenericApiResponse
+import com.smartcity.client.util.ListGenericResponse
 import com.smartcity.provider.models.Policy
 import retrofit2.http.*
 
@@ -18,135 +16,132 @@ import retrofit2.http.*
 interface OpenApiMainService {
 
     @GET("product")
-    fun searchListProduct(
+    suspend fun searchListProduct(
         @Query("search") query: String,
         @Query("page") page: Int,
         @Query("id") userId: Long,
-    ): LiveData<GenericApiResponse<ListProductResponse>>
-
+    ): ListProductResponse
 
     @POST("cart/add")
-    fun addProductCart(
+    suspend fun addProductCart(
         @Query("userId") userId: Long,
         @Query("variantId") variantId: Long,
         @Query("quantity") quantity: Int
-    ):LiveData<GenericApiResponse<GenericResponse>>
-
+    ):GenericResponse
 
     @GET("cart/{userId}")
-    fun getUserCart(@Path("userId") id: Long?):LiveData<GenericApiResponse<Cart>>
-
+    suspend fun getUserCart(@Path("userId") id: Long?):Cart
 
     @DELETE("cart/delete")
-    fun deleteProductCart(
+    suspend fun deleteProductCart(
         @Query("userId") userId: Long,
         @Query("variantId") variantId: Long
-    ):LiveData<GenericApiResponse<GenericResponse>>
+    ):GenericResponse
 
     @POST("order/create")
-    fun placeOrder(
+    suspend fun placeOrder(
         @Body order: Order
-    ):LiveData<GenericApiResponse<GenericResponse>>
+    ):GenericResponse
 
     @GET("policy/store/{id}")
-    fun getStorePolicy(
+    suspend fun getStorePolicy(
         @Path("id") storeId: Long
-    ):LiveData<GenericApiResponse<Policy>>
+    ):Policy
 
     @POST("bill/total")
-    fun getTotalBill(
+    suspend fun getTotalBill(
         @Body bill: BillTotal
-    ):LiveData<GenericApiResponse<BillTotal>>
+    ):BillTotal
 
     @POST("address/create")
-    fun createAddress(
+    suspend fun createAddress(
         @Body address: Address
-    ):LiveData<GenericApiResponse<GenericResponse>>
+    ):GenericResponse
 
     @GET("address/{id}")
-    fun getUserAddresses(
+    suspend fun getUserAddresses(
         @Path(value = "id") userId: Long
-    ):LiveData<GenericApiResponse<ListAddressResponse>>
+    ):ListAddressResponse
 
     @DELETE("address/delete/{id}")
-    fun deleteUserAddress(
+    suspend fun deleteUserAddress(
         @Path(value = "id") id: Long
-    ):LiveData<GenericApiResponse<GenericResponse>>
+    ):GenericResponse
 
     @POST("user/Information")
-    fun setUserInformation(
+    suspend fun setUserInformation(
         @Body userInformation: UserInformation
-    ): LiveData<GenericApiResponse<GenericResponse>>
+    ): GenericResponse
 
     @GET("user/Information/{id}")
-    fun getUserInformation(
+    suspend fun getUserInformation(
         @Path(value = "id") id:Long
-    ): LiveData<GenericApiResponse<UserInformation>>
+    ): UserInformation
 
     @GET("order/current-user/{id}/inProgress")
-    fun getUserInProgressOrders(
+    suspend fun getUserInProgressOrders(
         @Path(value = "id") id:Long
-    ): LiveData<GenericApiResponse<ListOrderResponse>>
+    ): ListOrderResponse
 
     @GET("order/current-user/{id}/finalized")
-    fun getUserFinalizedOrders(
+    suspend fun getUserFinalizedOrders(
         @Path(value = "id") id:Long
-    ): LiveData<GenericApiResponse<ListOrderResponse>>
+    ): ListOrderResponse
 
     @PUT("order/current-user/{id}/received")
-    fun confirmOrderReceived(
+    suspend fun confirmOrderReceived(
         @Path(value = "id") id:Long
-    ): LiveData<GenericApiResponse<GenericResponse>>
+    ): GenericResponse
 
     @GET("user/flash/{id}")
-    fun getUserFlashDeals(
+    suspend fun getUserFlashDeals(
         @Path(value = "id") id:Long
-    ): LiveData<GenericApiResponse<ListGenericResponse<FlashDeal>>>
+    ): ListGenericResponse<FlashDeal>
 
     @GET("user/offer/{id}")
-    fun getUserDiscountProduct(
+    suspend fun getUserDiscountProduct(
         @Path(value = "id") id:Long
-    ): LiveData<GenericApiResponse<ListGenericResponse<Product>>>
+    ): ListGenericResponse<Product>
 
     @GET("store/customCategory/store/all/{id}")
-    fun getStoreCustomCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<ListGenericResponse<CustomCategory>>>
+    suspend fun getStoreCustomCategory(@Path("id") id: Long?):ListGenericResponse<CustomCategory>
 
     @GET("product/all/category/{id}")
-    fun getProductsByCustomCategory(@Path("id") id: Long?):LiveData<GenericApiResponse<ListGenericResponse<Product>>>
+    suspend fun getProductsByCustomCategory(@Path("id") id: Long?):ListGenericResponse<Product>
 
     @GET("product/all/store/{id}")
-    fun getAllProductsByStore(@Path("id") id: Long?):LiveData<GenericApiResponse<ListGenericResponse<Product>>>
+    suspend fun getAllProductsByStore(@Path("id") id: Long?):ListGenericResponse<Product>
 
     @POST("user/follow/store/{id}/{idUser}")
-    fun followStore(
+    suspend fun followStore(
         @Path(value = "id") id: Long,
         @Path(value = "idUser") idUser: Long
-    ): LiveData<GenericApiResponse<GenericResponse>>
+    ): GenericResponse
 
     @POST("user/stop-follow/store/{id}/{idUser}")
-    fun stopFollowingStore(
+    suspend fun stopFollowingStore(
         @Path(value = "id") id: Long,
         @Path(value = "idUser") idUser: Long
-    ): LiveData<GenericApiResponse<GenericResponse>>
+    ): GenericResponse
 
     @GET("user/is-follow/store/{id}/{idUser}")
-    fun isFollowingStore(
+    suspend fun isFollowingStore(
         @Path(value = "id") id: Long,
         @Path(value = "idUser") idUser: Long
-    ): LiveData<GenericApiResponse<GenericResponse>>
+    ): GenericResponse
 
     @GET("store/store-around")
-    fun getStoresAround(
+    suspend fun getStoresAround(
         @Query(value = "distance") distance: Double,
         @Query(value = "longitude") longitude: Double,
         @Query(value = "latitude") latitude: Double
-    ): LiveData<GenericApiResponse<ListGenericResponse<Store>>>
+    ): ListGenericResponse<Store>
 
     @GET("product/interest")
-    fun getInterestProduct(
+    suspend fun getInterestProduct(
         @Query("page") page: Int,
         @Query("id") userId: Long,
-    ): LiveData<GenericApiResponse<ListProductResponse>>
+    ): ListProductResponse
 }
 
 

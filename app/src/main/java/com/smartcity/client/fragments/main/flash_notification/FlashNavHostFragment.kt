@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import androidx.annotation.NavigationRes
 import androidx.navigation.fragment.NavHostFragment
-import com.smartcity.client.fragments.main.cart.CartNavHostFragment
 import com.smartcity.client.ui.main.MainActivity
 
 class FlashNavHostFragment : NavHostFragment(){

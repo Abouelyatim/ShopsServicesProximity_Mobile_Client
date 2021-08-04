@@ -26,9 +26,5 @@ interface UICommunicationListener {
 
     fun isFineLocationPermissionGranted(): Boolean
 
-    fun displayAppBar(bool: Boolean)
-
-    fun setAppBarLayout(fragment: Fragment)
-
     fun updateStatusBarColor(@ColorRes statusBarColor: Int, statusBarTextColor:Boolean)
 }

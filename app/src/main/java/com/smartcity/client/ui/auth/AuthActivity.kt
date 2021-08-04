@@ -166,14 +166,6 @@ class AuthActivity : BaseActivity()
         
     }
 
-    override fun displayAppBar(bool: Boolean) {
-        
-    }
-
-    override fun setAppBarLayout(fragment: Fragment) {
-        
-    }
-
     override fun updateStatusBarColor(statusBarColor: Int, statusBarTextColor: Boolean) {
         
     }

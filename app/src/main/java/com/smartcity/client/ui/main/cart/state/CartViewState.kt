@@ -28,9 +28,8 @@ class CartViewState(
         var selectedCartProduct: Cart?=null,
         var total:BillTotal?=null,
         var orderType: OrderType?=null,
-        var addressList:List<Address> = listOf(),
+        var addressList:List<Address>? = null,
         var deliveryAddress:Address? =null,
         var userInformation: UserInformation?=null
     ) : Parcelable
-
 }

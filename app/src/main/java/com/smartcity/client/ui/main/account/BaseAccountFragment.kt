@@ -7,29 +7,41 @@ import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.smartcity.client.R
-import com.smartcity.client.ui.deleted.DataStateChangeListener
-import com.smartcity.client.ui.deleted.UICommunicationListener
+import com.smartcity.client.ui.UICommunicationListener
+import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 abstract class BaseAccountFragment
 constructor(
     @LayoutRes
-    private val layoutRes: Int
+    private val layoutRes: Int,
+    private val viewModelFactory: ViewModelProvider.Factory
 ): Fragment(layoutRes){
 
     val TAG: String = "AppDebug"
 
-    lateinit var stateChangeListener: DataStateChangeListener
+    val viewModel: AccountViewModel by viewModels{
+        viewModelFactory
+    }
 
     lateinit var uiCommunicationListener: UICommunicationListener
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupActionBarWithNavController(R.id.accountFragment, activity as AppCompatActivity)
+        setupChannel()
     }
+
+    private fun setupChannel() = viewModel.setupChannel()
 
     fun setupActionBarWithNavController(fragmentId: Int, activity: AppCompatActivity){
         val appBarConfiguration = AppBarConfiguration(setOf(fragmentId))
@@ -40,22 +52,13 @@ constructor(
         )
     }
 
-    abstract fun cancelActiveJobs()
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        try{
-            stateChangeListener = context as DataStateChangeListener
-        }catch(e: ClassCastException){
-            Log.e(TAG, "$context must implement DataStateChangeListener" )
-        }
-
         try{
             uiCommunicationListener = context as UICommunicationListener
         }catch(e: ClassCastException){
             Log.e(TAG, "$context must implement UICommunicationListener" )
         }
-
     }
 }
 

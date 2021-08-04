@@ -60,6 +60,4 @@ class BaseApplication : Application(){
             .application(this)
             .build()
     }
-
-
 }

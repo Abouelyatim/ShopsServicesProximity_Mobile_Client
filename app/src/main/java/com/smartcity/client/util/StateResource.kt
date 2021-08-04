@@ -13,6 +13,8 @@ data class Response(
 
 sealed class UIComponentType{
 
+    class SnackBar: UIComponentType()
+
     class Toast: UIComponentType()
 
     class Dialog: UIComponentType()

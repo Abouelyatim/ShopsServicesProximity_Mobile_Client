@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +11,6 @@ import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.Order
 import com.smartcity.client.models.OrderType
-import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountViewState
@@ -21,21 +19,20 @@ import com.smartcity.client.util.Constants
 import com.smartcity.client.util.DateUtils.Companion.convertStringToStringDate
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_order.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class ViewOrderFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseAccountFragment(R.layout.fragment_view_order){
+): BaseAccountFragment(R.layout.fragment_view_order,viewModelFactory){
 
     private  var  orderProductRecyclerAdapter: OrderProductAdapter?=null
-
-    val viewModel: AccountViewModel by viewModels{
-        viewModelFactory
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
@@ -48,7 +45,6 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[ACCOUNT_VIEW_STATE_BUNDLE_KEY] as AccountViewState?)?.let { viewState ->
@@ -57,17 +53,13 @@ constructor(
         }
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.expandAppBar()
-        stateChangeListener.hideSoftKeyboard()
-        stateChangeListener.displayBottomNavigation(false)
+        uiCommunicationListener.expandAppBar()
+        uiCommunicationListener.hideSoftKeyboard()
+        uiCommunicationListener.displayBottomNavigation(false)
 
         viewModel.getSelectedOrder()!!.apply {
             setOrderType(this)
@@ -148,5 +140,4 @@ constructor(
             adapter = orderProductRecyclerAdapter
         }
     }
-
 }

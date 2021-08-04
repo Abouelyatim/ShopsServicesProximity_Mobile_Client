@@ -35,7 +35,7 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.cancelActiveJobs()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

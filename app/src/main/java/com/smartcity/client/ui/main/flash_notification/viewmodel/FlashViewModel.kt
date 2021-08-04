@@ -1,32 +1,32 @@
 package com.smartcity.client.ui.main.flash_notification.viewmodel
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.repository.main.FlashRepository
+import com.smartcity.client.repository.main.FlashRepositoryImpl
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.deleted.BaseViewModel
-import com.smartcity.client.ui.deleted.DataState
-import com.smartcity.client.ui.deleted.Loading
+import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
-import com.smartcity.client.util.deleted.AbsentLiveData
-import com.smartcity.client.util.PreferenceKeys
+import com.smartcity.client.util.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @MainScope
 class FlashViewModel
 @Inject
 constructor(
-    private val flashRepository: FlashRepository,
+    private val flashRepository: FlashRepositoryImpl,
     private val sessionManager: SessionManager,
     private val editor: SharedPreferences.Editor
-): BaseViewModel<FlashStateEvent, FlashViewState>() {
+): BaseViewModel<FlashViewState>() {
 
     init {
         saveFlashBadge()
-        initRepositoryViewModel()
     }
 
     private fun saveFlashBadge(){
@@ -34,45 +34,61 @@ constructor(
         editor.apply()
     }
 
-    override fun handleStateEvent(stateEvent: FlashStateEvent): LiveData<DataState<FlashViewState>> {
-        when(stateEvent) {
-
-            is FlashStateEvent.GetUserFlashDealsEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    flashRepository.attemptUserFlashDeals(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
+    override fun handleNewData(data: FlashViewState) {
+        data.flashFields.let { flashFields ->
+            flashFields.flashDealsList?.let {list ->
+                setFlashDealsList(list)
             }
 
-            is FlashStateEvent.GetUserDiscountProductEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    flashRepository.attemptUserDiscountProduct(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
+            flashFields.productDiscountList?.let { list ->
+                setDiscountProductList(list)
             }
+        }
+    }
 
-            is FlashStateEvent.AddProductCartEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    flashRepository.attemptAddProductCart(
-                        authToken.account_pk!!.toLong(),
-                        stateEvent.variantId,
-                        stateEvent.quantity
-                    )
-                }?: AbsentLiveData.create()
-            }
+    override fun setStateEvent(stateEvent: StateEvent) {
+        if(!isJobAlreadyActive(stateEvent)){
+            sessionManager.cachedToken.value?.let { authToken ->
+                val job: Flow<DataState<FlashViewState>> = when(stateEvent){
 
-            is FlashStateEvent.None -> {
-                return liveData {
-                    emit(
-                        DataState<FlashViewState>(
-                            null,
-                            Loading(false),
-                            null
+                    is FlashStateEvent.GetUserFlashDealsEvent ->{
+                        flashRepository.attemptUserFlashDeals(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
                         )
-                    )
+                    }
+
+                    is FlashStateEvent.GetUserDiscountProductEvent ->{
+                        flashRepository.attemptUserDiscountProduct(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is FlashStateEvent.AddProductCartEvent ->{
+                        flashRepository.attemptAddProductCart(
+                            stateEvent,
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.variantId,
+                            stateEvent.quantity
+                        )
+                    }
+                    else -> {
+                        flow{
+                            emit(
+                                DataState.error<FlashViewState>(
+                                    response = Response(
+                                        message = ErrorHandling.INVALID_STATE_EVENT,
+                                        uiComponentType = UIComponentType.None(),
+                                        messageType = MessageType.Error()
+                                    ),
+                                    stateEvent = stateEvent
+                                )
+                            )
+                        }
+                    }
                 }
+                launchJob(stateEvent, job)
             }
         }
     }
@@ -81,21 +97,8 @@ constructor(
         return FlashViewState()
     }
 
-    fun cancelActiveJobs(){
-        flashRepository.cancelActiveJobs()
-        handlePendingData()
-    }
-
-    fun handlePendingData(){
-        setStateEvent(FlashStateEvent.None())
-    }
-
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
-    }
-
-    override fun initRepositoryViewModel() {
-
     }
 }

@@ -5,6 +5,8 @@ import android.util.Log
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.ListGenericDto
 import com.smartcity.client.api.interest.*
+import com.smartcity.client.api.interest.dto.CategoryDto
+import com.smartcity.client.api.interest.dto.CityDto
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.AuthToken

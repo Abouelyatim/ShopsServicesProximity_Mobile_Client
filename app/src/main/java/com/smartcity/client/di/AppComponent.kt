@@ -5,6 +5,7 @@ import com.smartcity.client.di.auth.AuthComponent
 import com.smartcity.client.di.interest.InterestComponent
 import com.smartcity.client.di.main.MainComponent
 import com.smartcity.client.session.SessionManager
+import com.smartcity.client.ui.BaseActivity
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -29,9 +30,7 @@ interface AppComponent  {
         fun build(): AppComponent
     }
 
-    fun inject(baseActivity: com.smartcity.client.ui.BaseActivity)
-
-    fun inject(baseActivity: com.smartcity.client.ui.deleted.BaseActivity)
+    fun inject(baseActivity: BaseActivity)
 
     fun authComponent(): AuthComponent.Factory
 

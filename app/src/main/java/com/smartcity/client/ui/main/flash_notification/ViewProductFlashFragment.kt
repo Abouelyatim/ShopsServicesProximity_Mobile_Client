@@ -13,7 +13,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,28 +26,35 @@ import com.smartcity.client.models.product.AttributeValue
 import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.models.product.ProductVariants
-import com.smartcity.client.ui.main.blog.viewProduct.adapters.OptionsAdapter
-import com.smartcity.client.ui.main.blog.viewProduct.adapters.ValuesAdapter
-import com.smartcity.client.ui.main.blog.viewProduct.adapters.VariantImageAdapter
-import com.smartcity.client.ui.main.blog.viewProduct.adapters.ViewPagerAdapter
 import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
-import com.smartcity.client.ui.main.flash_notification.viewmodel.*
+import com.smartcity.client.ui.main.flash_notification.viewmodel.clearChoicesMap
+import com.smartcity.client.ui.main.flash_notification.viewmodel.getChoicesMap
+import com.smartcity.client.ui.main.flash_notification.viewmodel.getSelectedProduct
+import com.smartcity.client.ui.main.flash_notification.viewmodel.setChoicesMap
+import com.smartcity.client.ui.main.product.viewProduct.adapters.OptionsAdapter
+import com.smartcity.client.ui.main.product.viewProduct.adapters.ValuesAdapter
+import com.smartcity.client.ui.main.product.viewProduct.adapters.VariantImageAdapter
+import com.smartcity.client.ui.main.product.viewProduct.adapters.ViewPagerAdapter
 import com.smartcity.client.util.Constants
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_product.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class ViewProductFlashFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseFlashNotificationFragment(R.layout.fragment_view_product),
+): BaseFlashNotificationFragment(R.layout.fragment_view_product,viewModelFactory),
     OptionsAdapter.Interaction,
     VariantImageAdapter.Interaction
 {
@@ -61,13 +67,8 @@ constructor(
     private lateinit var  optionsRecyclerAdapter: OptionsAdapter
     private lateinit var optionsRecyclerview: RecyclerView
 
-    val viewModel: FlashViewModel by viewModels{
-        viewModelFactory
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY] as FlashViewState?)?.let { viewState ->
@@ -88,15 +89,11 @@ constructor(
         super.onSaveInstanceState(outState)
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.displayBadgeBottomNavigationFlash(false)
+        uiCommunicationListener.displayBadgeBottomNavigationFlash(false)
 
         viewModel.getSelectedProduct()?.let {
             product=it
@@ -113,7 +110,7 @@ constructor(
         subscribeObservers()
     }
     private fun initViewPager() {
-        viewPager = activity!!.findViewById(R.id.view_pager)
+        viewPager = requireActivity().findViewById(R.id.view_pager)
         viewPagerAdapter =
             ViewPagerAdapter(
                 requestManager
@@ -290,9 +287,26 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateChangeListener.onDataStateChange(dataState)
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
+
+            stateMessage?.let {
+
+
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
+                        }
+                    }
+                )
+            }
         })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
+        })
+
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             val map=viewModel.getChoicesMap()
             val sortedOption= mutableListOf<String>()
@@ -316,7 +330,7 @@ constructor(
     }
 
     private fun showVariantDialog(){
-        val dialog = Dialog(context!!, android.R.style.Theme_Light)
+        val dialog = Dialog(requireContext(), android.R.style.Theme_Light)
         dialog.window.setBackgroundDrawable( ColorDrawable(Color.parseColor("#99000000")))
         dialogView = layoutInflater.inflate(R.layout.dialog_variants, null)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -625,5 +639,4 @@ constructor(
         }
         viewModel.setChoicesMap(map)
     }
-
 }

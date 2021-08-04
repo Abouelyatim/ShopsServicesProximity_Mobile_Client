@@ -14,8 +14,6 @@ import com.afollestad.materialdialogs.callbacks.onDismiss
 import com.smartcity.client.BaseApplication
 import com.smartcity.client.R
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.deleted.Event
-import com.smartcity.client.ui.deleted.StateError
 import com.smartcity.client.util.*
 import com.smartcity.client.util.Constants.Companion.PERMISSIONS_REQUEST_READ_STORAGE
 import javax.inject.Inject
@@ -45,6 +43,15 @@ abstract class BaseActivity: AppCompatActivity(),
     ) {
         handleNetworkStateError(response)
         when(response.uiComponentType){
+
+            is UIComponentType.SnackBar ->{
+                response.message?.let {
+                    displaySnackBar(
+                        message = it,
+                        stateMessageCallback = stateMessageCallback
+                    )
+                }
+            }
 
             is UIComponentType.AreYouSureDialog -> {
 

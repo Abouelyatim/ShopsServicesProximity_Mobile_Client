@@ -2,9 +2,6 @@ package com.smartcity.client.ui.main.flash_notification.viewmodel
 
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
-import com.smartcity.client.ui.main.blog.state.ProductViewState
-import com.smartcity.client.ui.main.blog.viewmodel.ProductViewModel
 
 fun FlashViewModel.setFlashDealsList(list: List<FlashDeal>) {
     val update = getCurrentViewStateOrNew()

@@ -3,7 +3,6 @@ package com.smartcity.client.ui.main.flash_notification
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -13,25 +12,29 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.ui.main.blog.products.ProductListAdapter
 import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.getSelectedActionPositions
 import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.setSelectedActionPositions
 import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.ui.main.flash_notification.viewmodel.*
+import com.smartcity.client.ui.main.product.products.ProductListAdapter
 import com.smartcity.client.util.RightSpacingItemDecoration
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_flash_notification.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class FlashFlashNotificationFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseFlashNotificationFragment(R.layout.fragment_flash_notification),
+): BaseFlashNotificationFragment(R.layout.fragment_flash_notification,viewModelFactory),
     ProductListAdapter.Interaction,
     OfferActionAdapter.Interaction
 {
@@ -45,13 +48,8 @@ constructor(
         val DISCOUNT = Pair<String,Int>("Discount",1)
     }
 
-    val viewModel: FlashViewModel by viewModels{
-        viewModelFactory
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY] as FlashViewState?)?.let { viewState ->
@@ -72,15 +70,11 @@ constructor(
         super.onSaveInstanceState(outState)
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.displayBadgeBottomNavigationFlash(false)
+        uiCommunicationListener.displayBadgeBottomNavigationFlash(false)
 
         initRecyclerView()
         initProductRecyclerView()
@@ -174,24 +168,24 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateChangeListener.onDataStateChange(dataState)
-            //set Offer list get it from network
-            dataState.data?.let { data ->
-                data.data?.let{
-                    it.getContentIfNotHandled()?.let{
-                        it.flashFields.flashDealsList.let {
-                            viewModel.setFlashDealsList(it)
-                        }
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
 
-                        it.flashFields.productDiscountList.let {
-                            viewModel.setDiscountProductList(it)
+            stateMessage?.let {
+
+
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
                         }
                     }
-
-                }
-
+                )
             }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
         })
 
         //submit list to recycler view
@@ -260,7 +254,7 @@ constructor(
     private  fun resetUI(){
         flash_recyclerview.smoothScrollToPosition(0)
         discount_recyclerview.smoothScrollToPosition(0)
-        stateChangeListener.hideSoftKeyboard()
+        uiCommunicationListener.hideSoftKeyboard()
     }
 
     override fun onItemSelected(position: Int, item: Product) {

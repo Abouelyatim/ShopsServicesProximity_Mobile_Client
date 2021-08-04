@@ -7,7 +7,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -25,33 +24,32 @@ import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.ui.main.cart.viewmodel.*
 import com.smartcity.client.util.Constants
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import com.smartcity.provider.models.SelfPickUpOptions
 import kotlinx.android.synthetic.main.fragment_place_order.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class PlaceOrderFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseCartFragment(R.layout.fragment_place_order)
+): BaseCartFragment(R.layout.fragment_place_order,viewModelFactory)
 {
     private lateinit var dialogView: View
 
     private var orderProductRecyclerAdapter: OrderProductAdapter?=null
 
-    val viewModel: CartViewModel by viewModels{
-        viewModelFactory
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY] as CartViewState?)?.let { viewState ->
@@ -72,16 +70,12 @@ constructor(
         super.onSaveInstanceState(outState)
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.expandAppBar()
-        stateChangeListener.displayBottomNavigation(false)
+        uiCommunicationListener.expandAppBar()
+        uiCommunicationListener.displayBottomNavigation(false)
 
         selectOptionBehavior()
         getStorePolicy()
@@ -91,7 +85,8 @@ constructor(
         restoreUi()
         pickAddressListener()
         addUserInformationListener()
-
+        getUserAddresses()
+        getUserInformation()
 
         place_order_button.setOnClickListener {
             showOrderConfirmationDialog()
@@ -238,112 +233,56 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateChangeListener.onDataStateChange(dataState)
-            if (dataState!=null){
-                dataState.data?.let { data ->
-                    data.response?.peekContent()?.let{ response ->
-                        when(response.message){
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
 
-                            //set policy get it from network
-                            SuccessHandling.DONE_STORE_POLICY ->{
-                                data.data?.let{
-                                    it.getContentIfNotHandled()?.let{
-                                        it.orderFields.storePolicy?.let {
-                                            viewModel.setStorePolicy(it)
-                                        }
-                                    }
+            stateMessage?.let {
 
-                                }
-                            }
+                if(stateMessage.response.message.equals(SuccessHandling.DONE_PLACE_ORDER)){
+                    getUserCart()
+                }
 
-                            SuccessHandling.DONE_TOTAL_BILL ->{
-                                data.data?.let{
-                                    it.getContentIfNotHandled()?.let{
-                                        it.orderFields.total?.let {
-                                            viewModel.setTotalBill(it)
-                                            getUserAddresses()
-                                        }
-                                    }
+                if(stateMessage.response.message.equals(SuccessHandling.DONE_USER_CART)){
+                    findNavController().popBackStack()
+                }
 
-                                }
-                            }
-
-                            SuccessHandling.DONE_USER_ADDRESSES ->{
-                                data.data?.let{
-                                    it.getContentIfNotHandled()?.let{
-                                        it.orderFields.addressList?.let {
-                                            viewModel.setAddressList(it)
-                                            getUserInformation()
-                                        }
-                                    }
-                                }
-                            }
-
-                            SuccessHandling.DONE_USER_INFORMATION ->{
-                                data.data?.let{
-                                    it.getContentIfNotHandled()?.let{
-                                        it.orderFields.userInformation?.let {
-                                            if(viewModel.getUserInformation()==null){
-                                                viewModel.setUserInformation(it)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            SuccessHandling.DONE_PLACE_ORDER ->{
-                                getUserCart()
-                            }
-
-                            SuccessHandling.DONE_USER_CART ->{
-                                //set cart list get it from network
-                                data.data?.let{
-                                    it.getContentIfNotHandled()?.let{
-                                        it.cartFields.cartList?.let {
-                                            viewModel.setCartList(it)
-                                        }
-                                    }
-                                    findNavController().popBackStack()
-                                }
-                            }
-
-                            else ->{
-
-                            }
-
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
                         }
                     }
-                }
+                )
+            }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
+        })
+
+        setUpUi()
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            viewModel.getTotalBill()?.let { bill->
+                setTotalToPay(bill.total!!)
             }
 
 
+            viewModel.getAddressList().apply {
+                handelDeliveryAddressList(this)
+            }
 
-            setUpUi()
-            viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-                viewModel.getTotalBill()?.let { bill->
-                    setTotalToPay(bill.total!!)
-                }
+            viewModel.getUserInformation()?.let {userInformation ->
+                userInformation.birthDay?.plus(userInformation.firstName?.plus(userInformation.lastName?.let {
+                    setUserInformation(userInformation)
+                }))
 
-
-                viewModel.getAddressList().apply {
-                    handelDeliveryAddressList(this)
-                }
-
-                viewModel.getUserInformation()?.let {userInformation ->
-                    userInformation.birthDay?.plus(userInformation.firstName?.plus(userInformation.lastName?.let {
-                        setUserInformation(userInformation)
-                    }))
-
-                }
-            })
-
+            }
         })
     }
 
     private fun getUserCart() {
         viewModel.setStateEvent(
-            CartStateEvent.GetUserCart()
+            CartStateEvent.GetUserCartEvent()
         )
     }
 
@@ -494,13 +433,13 @@ constructor(
 
     override fun onDestroy() {
         super.onDestroy()
-        stateChangeListener.displayBottomNavigation(true)
+        uiCommunicationListener.displayBottomNavigation(true)
     }
 
     private fun getTotalToPay(orderType: OrderType) {
         viewModel.getStorePolicy()?.let {policy->
             viewModel.setStateEvent(
-                CartStateEvent.GetTotalBill(
+                CartStateEvent.GetTotalBillEvent(
                     BillTotal(
                         policy.id,
                         getTotal(),
@@ -514,14 +453,14 @@ constructor(
 
     private fun getUserAddresses(){
         viewModel.setStateEvent(
-            CartStateEvent.GetUserAddresses()
+            CartStateEvent.GetUserAddressesEvent()
         )
     }
 
     private fun getStorePolicy() {
         viewModel.getSelectedCartProduct()?.let {
             viewModel.setStateEvent(
-                CartStateEvent.GetStorePolicy(
+                CartStateEvent.GetStorePolicyEvent(
                     it.storeId
                 )
             )
@@ -530,13 +469,13 @@ constructor(
 
     private fun getUserInformation(){
         viewModel.setStateEvent(
-            CartStateEvent.GetUserInformation()
+            CartStateEvent.GetUserInformationEvent()
         )
     }
 
     @SuppressLint("SetTextI18n")
     private fun showOrderConfirmationDialog(){
-        val dialog = BottomSheetDialog(context!!,R.style.BottomSheetDialogTheme)
+        val dialog = BottomSheetDialog(requireContext(),R.style.BottomSheetDialogTheme)
         dialogView = layoutInflater.inflate(R.layout.dialog_order_confirmation, null)
         dialog.setCancelable(true)
         dialog.setContentView(dialogView)
@@ -557,7 +496,5 @@ constructor(
         }
 
         dialog.show()
-
-
     }
 }

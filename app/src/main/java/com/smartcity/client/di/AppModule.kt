@@ -13,7 +13,6 @@ import com.smartcity.client.persistence.AppDatabase
 import com.smartcity.client.persistence.AppDatabase.Companion.DATABASE_NAME
 import com.smartcity.client.persistence.AuthTokenDao
 import com.smartcity.client.util.Constants
-import com.smartcity.client.util.deleted.LiveDataCallAdapterFactory
 import com.smartcity.client.util.PreferenceKeys
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -63,7 +62,6 @@ object AppModule{
     fun provideRetrofitBuilder(gsonBuilder:  Gson): Retrofit.Builder{
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
-            .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create(gsonBuilder))
     }
 
@@ -107,5 +105,4 @@ object AppModule{
         return Glide.with(application)
             .setDefaultRequestOptions(requestOptions)
     }
-
 }

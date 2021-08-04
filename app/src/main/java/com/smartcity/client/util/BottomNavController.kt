@@ -14,7 +14,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.smartcity.client.R
 import com.smartcity.client.fragments.main.account.AccountNavHostFragment
-import com.smartcity.client.fragments.main.blog.BlogNavHostFragment
+import com.smartcity.client.fragments.main.product.ProductNavHostFragment
 
 import com.smartcity.client.util.BottomNavController.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -93,7 +93,7 @@ class BottomNavController(
             }
 
             R.id.menu_nav_blog -> {
-                BlogNavHostFragment.create(R.navigation.nav_blog)
+                ProductNavHostFragment.create(R.navigation.nav_product)
             }
 
             R.id.menu_nav_create_blog -> {
@@ -105,7 +105,7 @@ class BottomNavController(
             }
 
             else -> {
-                BlogNavHostFragment.create(R.navigation.nav_blog)
+                ProductNavHostFragment.create(R.navigation.nav_product)
             }
         }
     }

@@ -1,140 +1,154 @@
 package com.smartcity.client.ui.main.cart.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.repository.main.CartRepository
+import com.smartcity.client.repository.main.CartRepositoryImpl
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.deleted.BaseViewModel
-import com.smartcity.client.ui.deleted.DataState
-import com.smartcity.client.ui.deleted.Loading
-
-import com.smartcity.client.ui.main.cart.state.CartStateEvent
+import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.main.cart.state.CartStateEvent.*
 import com.smartcity.client.ui.main.cart.state.CartViewState
-import com.smartcity.client.util.deleted.AbsentLiveData
-
+import com.smartcity.client.util.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @MainScope
 class CartViewModel
 @Inject
 constructor(
-    val cartRepository: CartRepository,
+    val cartRepository: CartRepositoryImpl,
     val sessionManager: SessionManager
-): BaseViewModel<CartStateEvent, CartViewState>() {
+): BaseViewModel<CartViewState>() {
 
-    override fun handleStateEvent(stateEvent: CartStateEvent): LiveData<DataState<CartViewState>> {
-
-        when(stateEvent){
-            is GetUserCart ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    cartRepository.attemptUserCart(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is AddProductCartEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    cartRepository.attemptAddProductCart(
-                        authToken.account_pk!!.toLong(),
-                        stateEvent.variantId,
-                        stateEvent.quantity
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is DeleteProductCartEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    cartRepository.attemptDeleteProductCart(
-                        authToken.account_pk!!.toLong(),
-                        stateEvent.variantId
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is PlaceOrderEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    stateEvent.order.userId=authToken.account_pk!!.toLong()
-                    cartRepository.attemptPlaceOrder(
-                        stateEvent.order
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is GetStorePolicy ->{
-                return cartRepository.attemptStorePolicy(
-                    stateEvent.storeId
-                )
-            }
-
-            is GetTotalBill ->{
-                return cartRepository.attemptTotalBill(
-                    stateEvent.bill
-                )
-            }
-
-            is GetUserAddresses ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    cartRepository.attemptUserAddresses(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is SaveAddress ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    stateEvent.address.userId=authToken.account_pk!!.toLong()
-                    cartRepository.attemptCreateAddress(
-                        stateEvent.address
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is GetUserInformation ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    cartRepository.attemptGetUserInformation(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is None -> {
-                return liveData {
-                    emit(
-                        DataState<CartViewState>(
-                            null,
-                            Loading(false),
-                            null
-                        )
-                    )
-                }
+    override fun handleNewData(data: CartViewState) {
+        data.cartFields.let {cartFields ->
+            cartFields.cartList?.let { list ->
+                setCartList(list)
             }
         }
 
+        data.orderFields.let {orderFields ->
+            orderFields.storePolicy?.let {policy ->
+                setStorePolicy(policy)
+            }
+
+            orderFields.total?.let {total ->
+                setTotalBill(total)
+            }
+
+            orderFields.addressList?.let { list ->
+                setAddressList(list)
+            }
+
+            orderFields.userInformation?.let {userInformation ->
+                setUserInformation(userInformation)
+            }
+        }
+    }
+
+    override fun setStateEvent(stateEvent: StateEvent) {
+        if(!isJobAlreadyActive(stateEvent)) {
+            sessionManager.cachedToken.value?.let { authToken ->
+                val job: Flow<DataState<CartViewState>> = when (stateEvent) {
+
+                    is GetUserCartEvent ->{
+                        cartRepository.attemptUserCart(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is AddProductCartEvent ->{
+                        cartRepository.attemptAddProductCart(
+                            stateEvent,
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.variantId,
+                            stateEvent.quantity
+                        )
+                    }
+
+                    is DeleteProductCartEvent ->{
+                        cartRepository.attemptDeleteProductCart(
+                            stateEvent,
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.variantId
+                        )
+                    }
+
+                    is PlaceOrderEvent ->{
+                        stateEvent.order.userId=authToken.account_pk!!.toLong()
+                        cartRepository.attemptPlaceOrder(
+                            stateEvent,
+                            stateEvent.order
+                        )
+                    }
+
+                    is GetStorePolicyEvent ->{
+                         cartRepository.attemptStorePolicy(
+                            stateEvent,
+                            stateEvent.storeId
+                        )
+                    }
+
+                    is GetTotalBillEvent ->{
+                         cartRepository.attemptTotalBill(
+                            stateEvent,
+                            stateEvent.bill
+                        )
+                    }
+
+                    is GetUserAddressesEvent ->{
+                            cartRepository.attemptUserAddresses(
+                            stateEvent,
+                                authToken.account_pk!!.toLong()
+                            )
+                    }
+
+                    is SaveAddressEvent ->{
+                            stateEvent.address.userId=authToken.account_pk!!.toLong()
+                            cartRepository.attemptCreateAddress(
+                            stateEvent,
+                                stateEvent.address
+                            )
+                    }
+
+                    is GetUserInformationEvent ->{
+                            cartRepository.attemptGetUserInformation(
+                            stateEvent,
+                                authToken.account_pk!!.toLong()
+                            )
+                    }
+
+                    else -> {
+                        flow{
+                            emit(
+                                DataState.error<CartViewState>(
+                                    response = Response(
+                                        message = ErrorHandling.INVALID_STATE_EVENT,
+                                        uiComponentType = UIComponentType.None(),
+                                        messageType = MessageType.Error()
+                                    ),
+                                    stateEvent = stateEvent
+                                )
+                            )
+                        }
+                    }
+                }
+                launchJob(stateEvent, job)
+            }
+        }
     }
 
     override fun initNewViewState(): CartViewState {
         return CartViewState()
     }
 
-    fun cancelActiveJobs(){
-        cartRepository.cancelActiveJobs()
-        handlePendingData()
-    }
-
-    fun handlePendingData(){
-        setStateEvent(None())
-    }
-
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
-    }
-
-    override fun initRepositoryViewModel() {
-
     }
 }
 

@@ -3,40 +3,117 @@ package com.smartcity.client.ui.main.cart.state
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.BillTotal
 import com.smartcity.client.models.Order
+import com.smartcity.client.util.StateEvent
 
-sealed class CartStateEvent {
+sealed class CartStateEvent: StateEvent {
 
-     class GetUserCart():CartStateEvent()
+     class GetUserCartEvent():CartStateEvent() {
+         override fun errorInfo(): String {
+             return "Get cart attempt failed."
+         }
+
+         override fun toString(): String {
+             return "GetUserCartStateEvent"
+         }
+     }
 
     class AddProductCartEvent(
         val variantId: Long,
         val quantity: Int
-    ): CartStateEvent()
+    ): CartStateEvent(){
+         override fun errorInfo(): String {
+             return "Add product to cart attempt failed."
+         }
+
+         override fun toString(): String {
+             return "AddProductCartStateEvent"
+         }
+    }
 
     class DeleteProductCartEvent(
         val variantId: Long
-    ): CartStateEvent()
+    ): CartStateEvent(){
+         override fun errorInfo(): String {
+             return "Delete product from cart attempt failed."
+         }
+
+         override fun toString(): String {
+             return "DeleteProductCartStateEvent"
+         }
+    }
 
     class PlaceOrderEvent(
         val order: Order
-    ): CartStateEvent()
+    ): CartStateEvent(){
+         override fun errorInfo(): String {
+             return "Place order attempt failed."
+         }
 
-    class GetStorePolicy(
+         override fun toString(): String {
+             return "PlaceOrderStateEvent"
+         }
+    }
+
+    class GetStorePolicyEvent(
         val storeId:Long
-    ):CartStateEvent()
+    ):CartStateEvent(){
+         override fun errorInfo(): String {
+             return "Get store policy attempt failed."
+         }
 
-    class GetTotalBill(
+         override fun toString(): String {
+             return "GetStorePolicyStateEvent"
+         }
+    }
+
+    class GetTotalBillEvent(
         val bill:BillTotal
-    ):CartStateEvent()
+    ):CartStateEvent(){
+         override fun errorInfo(): String {
+             return "Get total price attempt failed."
+         }
 
-    class GetUserAddresses(): CartStateEvent()
+         override fun toString(): String {
+             return "GetTotalBillStateEvent"
+         }
+    }
 
-    class SaveAddress(
+    class GetUserAddressesEvent(): CartStateEvent(){
+         override fun errorInfo(): String {
+             return "Get address attempt failed."
+         }
+
+         override fun toString(): String {
+             return "GetUserAddressesStateEvent"
+         }
+    }
+
+    class SaveAddressEvent(
         var address: Address
-    ):CartStateEvent()
+    ):CartStateEvent(){
+         override fun errorInfo(): String {
+             return "Save address attempt failed."
+         }
 
-    class GetUserInformation(
-    ):CartStateEvent()
+         override fun toString(): String {
+             return "SaveAddressStateEvent"
+         }
+    }
 
-    class None: CartStateEvent()
+    class GetUserInformationEvent(
+    ):CartStateEvent(){
+         override fun errorInfo(): String {
+             return "Get information attempt failed."
+         }
+
+         override fun toString(): String {
+             return "GetUserInformationStateEvent"
+         }
+    }
+
+    class None: CartStateEvent(){
+         override fun errorInfo(): String {
+             return "None"
+         }
+    }
 }

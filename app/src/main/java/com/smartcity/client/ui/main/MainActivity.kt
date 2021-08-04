@@ -22,13 +22,9 @@ import com.smartcity.client.BaseApplication
 import com.smartcity.client.R
 import com.smartcity.client.models.AUTH_TOKEN_BUNDLE_KEY
 import com.smartcity.client.models.AuthToken
-import com.smartcity.client.ui.deleted.BaseActivity
+import com.smartcity.client.ui.BaseActivity
 import com.smartcity.client.ui.auth.AuthActivity
-import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.orders.notification.MyFirebaseMessagingService
-import com.smartcity.client.ui.main.blog.products.BaseBlogFragment
-import com.smartcity.client.ui.main.cart.BaseCartFragment
-import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFragment
 import com.smartcity.client.util.BOTTOM_NAV_BACKSTACK_KEY
 import com.smartcity.client.util.BottomNavController
 import com.smartcity.client.util.BottomNavController.*
@@ -49,8 +45,8 @@ class MainActivity : BaseActivity(),
     lateinit var accountFragmentFactory: FragmentFactory
 
     @Inject
-    @Named("BlogFragmentFactory")
-    lateinit var blogFragmentFactory: FragmentFactory
+    @Named("ProductFragmentFactory")
+    lateinit var productFragmentFactory: FragmentFactory
 
     @Inject
     @Named("CartFragmentFactory")
@@ -75,32 +71,7 @@ class MainActivity : BaseActivity(),
     }
 
     override fun onGraphChange() {
-        cancelActiveJobs()
         expandAppBar()
-    }
-
-    private fun cancelActiveJobs(){
-        val fragments = bottomNavController.fragmentManager
-            .findFragmentById(bottomNavController.containerId)
-            ?.childFragmentManager
-            ?.fragments
-        if(fragments != null){
-            for(fragment in fragments){
-                if(fragment is BaseAccountFragment){
-                    fragment.cancelActiveJobs()
-                }
-                if(fragment is BaseBlogFragment){
-                    fragment.cancelActiveJobs()
-                }
-                if(fragment is BaseCartFragment){
-                    fragment.cancelActiveJobs()
-                }
-                if(fragment is BaseFlashNotificationFragment){
-                    fragment.cancelActiveJobs()
-                }
-            }
-        }
-        displayProgressBar(false)
     }
 
     override fun onReselectNavItem(
@@ -282,22 +253,6 @@ class MainActivity : BaseActivity(),
         }
     }
 
-    override fun displayAppBar(bool: Boolean) {
-
-        if(bool){
-            tool_bar_fragment.visibility = View.VISIBLE
-        }
-        else{
-            tool_bar_fragment.visibility = View.GONE
-        }
-    }
-
-    override fun setAppBarLayout(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.tool_bar_fragment, fragment)
-            .commitAllowingStateLoss()
-    }
-
     @RequiresApi(Build.VERSION_CODES.M)
     override fun updateStatusBarColor(statusBarColor: Int,statusBarTextColor:Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -334,5 +289,4 @@ class MainActivity : BaseActivity(),
             progress_bar.visibility = View.GONE
         }
     }
-
 }

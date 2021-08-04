@@ -3,7 +3,6 @@ package com.smartcity.client.ui.main.account.orders
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -14,9 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.Order
-import com.smartcity.client.ui.deleted.AreYouSureCallback
-import com.smartcity.client.ui.deleted.UIMessage
-import com.smartcity.client.ui.deleted.UIMessageType
+import com.smartcity.client.ui.AreYouSureCallback
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.orders.OrderActionAdapter.Companion.getSelectedActionPositions
 import com.smartcity.client.ui.main.account.orders.OrderActionAdapter.Companion.setSelectedActionPositions
@@ -26,18 +23,20 @@ import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.account.viewmodel.*
-import com.smartcity.client.util.RightSpacingItemDecoration
-import com.smartcity.client.util.SuccessHandling
-import com.smartcity.client.util.TopSpacingItemDecoration
+import com.smartcity.client.util.*
 import kotlinx.android.synthetic.main.fragment_orders.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
+@FlowPreview
+@ExperimentalCoroutinesApi
 class OrdersFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseAccountFragment(R.layout.fragment_orders),
+): BaseAccountFragment(R.layout.fragment_orders,viewModelFactory),
     OrdersAdapter.Interaction,
     OrderActionAdapter.Interaction,
     SwipeRefreshLayout.OnRefreshListener{
@@ -50,10 +49,6 @@ constructor(
     private lateinit var recyclerOrderActionAdapter: OrderActionAdapter
     private lateinit var recyclerOrdersAdapter: OrdersAdapter
 
-    val viewModel: AccountViewModel by viewModels{
-        viewModelFactory
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
             ACCOUNT_VIEW_STATE_BUNDLE_KEY,
@@ -65,7 +60,6 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[ACCOUNT_VIEW_STATE_BUNDLE_KEY] as AccountViewState?)?.let { viewState ->
@@ -74,47 +68,22 @@ constructor(
         }
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
         swipe_refresh.setOnRefreshListener(this)
-        stateChangeListener.expandAppBar()
-        stateChangeListener.hideSoftKeyboard()
-        stateChangeListener.displayBottomNavigation(false)
-
-        subscribeOrderChangeEvent()
+        uiCommunicationListener.expandAppBar()
+        uiCommunicationListener.hideSoftKeyboard()
+        uiCommunicationListener.displayBottomNavigation(false)
 
         initOrderActionRecyclerView()
         initRecyclerView()
         subscribeObservers()
 
-
         setOrderAction()
 
-
         setEmptyListUi(viewModel.getOrdersList().isEmpty())
-    }
-
-    private fun subscribeOrderChangeEvent(){
-        viewModel.setStateEvent(
-            AccountStateEvent.SubscribeOrderChangeEvent()
-        )
-    }
-
-    private fun finishOrderChangeEvent(){
-        viewModel.setStateEvent(
-            AccountStateEvent.FinishOrderChangeEvent()
-        )
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        finishOrderChangeEvent()
     }
 
     private fun initData(actionPosition: Int) {
@@ -167,41 +136,33 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer{ dataState ->
-            stateChangeListener.onDataStateChange(dataState)
-            //set address list get it from network
-            dataState.data?.let { data ->
-                data.data?.let{
-                    it.getContentIfNotHandled()?.let{
-                        viewModel.setOrdersList(
-                            it.orderFields.ordersList
-                        )
-                        setEmptyListUi(it.orderFields.ordersList.isEmpty())
-                    }
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
+
+            stateMessage?.let {
+
+                if(stateMessage.response.message.equals(SuccessHandling.CUSTOM_CATEGORY_UPDATE_DONE)){
+                    initData(viewModel.getOrderActionRecyclerPosition())
                 }
-            }
 
-            if (dataState!=null){
-                dataState.data?.let { data ->
-                    data.response?.peekContent()?.let{ response ->
-                        if(response.message==SuccessHandling.CUSTOM_CATEGORY_UPDATE_DONE){
-                            initData(viewModel.getOrderActionRecyclerPosition())
-                        }
-
-                        if(response.message.equals(SuccessHandling.DONE_ORDER_EVENT_CHANGE)){
-                            initData(viewModel.getOrderActionRecyclerPosition())
-                        }
-
-                        if(response.message.equals(SuccessHandling.MUST_UPDATE_UI)){
-                            initData(viewModel.getOrderActionRecyclerPosition())
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
                         }
                     }
-                }
+                )
             }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
         })
 
         //submit list to recycler view
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            setEmptyListUi(viewModel.getOrdersList().isEmpty())
+
             recyclerOrdersAdapter.submitList(
                 viewModel.getOrdersList()
             )
@@ -212,8 +173,6 @@ constructor(
                 )
             }
         })
-
-
     }
 
     private fun setOrderAction(){
@@ -256,8 +215,7 @@ constructor(
 
 
     override fun confirmReceived(order: Order) {
-        val callback: AreYouSureCallback = object:
-            AreYouSureCallback {
+        val callback: AreYouSureCallback = object: AreYouSureCallback {
             override fun proceed() {
                 viewModel.setStateEvent(
                     AccountStateEvent.ConfirmOrderReceivedEvent(
@@ -265,17 +223,22 @@ constructor(
                     )
                 )
             }
+
             override fun cancel() {
                 // ignore
             }
         }
-        uiCommunicationListener.onUIMessageReceived(
-            UIMessage(
-                getString(R.string.are_you_sure_received_order),
-                UIMessageType.AreYouSureDialog(
-                    callback
-                )
-            )
+        uiCommunicationListener.onResponseReceived(
+            response = Response(
+                message = getString(R.string.are_you_sure_received_order),
+                uiComponentType = UIComponentType.AreYouSureDialog(callback),
+                messageType = MessageType.Info()
+            ),
+            stateMessageCallback = object: StateMessageCallback{
+                override fun removeMessageFromStack() {
+                    viewModel.clearStateMessage()
+                }
+            }
         )
     }
 
@@ -299,7 +262,7 @@ constructor(
 
     private  fun resetUI(){
         orders_recyclerview.smoothScrollToPosition(0)
-        stateChangeListener.hideSoftKeyboard()
+        uiCommunicationListener.hideSoftKeyboard()
         focusable_view.requestFocus()
     }
 

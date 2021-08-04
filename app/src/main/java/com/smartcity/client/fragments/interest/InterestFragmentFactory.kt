@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.ui.interest.*
-import com.smartcity.client.ui.main.blog.viewProduct.ViewProductFragment
 import javax.inject.Inject
 
 

@@ -38,7 +38,7 @@ fun CartViewModel.getOrderType(): OrderType? {
 
 fun CartViewModel.getAddressList(): List<Address> {
     getCurrentViewStateOrNew().let {
-        return it.orderFields.addressList
+        return it.orderFields.addressList?: listOf()
     }
 }
 

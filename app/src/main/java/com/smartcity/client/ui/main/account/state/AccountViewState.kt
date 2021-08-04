@@ -1,10 +1,10 @@
 package com.smartcity.client.ui.main.account.state
 
 import android.os.Parcelable
-import com.smartcity.client.models.*
-import com.smartcity.client.models.product.Cart
-import com.smartcity.client.models.product.Product
-import com.smartcity.provider.models.Policy
+import com.smartcity.client.models.Address
+import com.smartcity.client.models.Order
+import com.smartcity.client.models.Store
+import com.smartcity.client.models.UserInformation
 import kotlinx.android.parcel.Parcelize
 
 const val ACCOUNT_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.account.state.AccountViewState"
@@ -12,7 +12,7 @@ const val ACCOUNT_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.a
 @Parcelize
 class AccountViewState(
     var userInformation: UserInformation?=null,
-    var addressList:List<Address> = listOf(),
+    var addressList:List<Address>? = null,
     var orderFields:OrderFields=OrderFields(),
     var viewOrderFields: ViewOrderFields =ViewOrderFields(),
     var aroundStoresFields: AroundStoresFields= AroundStoresFields()
@@ -21,17 +21,17 @@ class AccountViewState(
 
     @Parcelize
     data class AroundStoresFields(
-        var centerLatitude:Double=0.0,
-        var centerLongitude:Double=0.0,
-        var radius:Double=20.0,
-        var stores:List<Store> = listOf()
+        var centerLatitude:Double?=null,
+        var centerLongitude:Double?=null,
+        var radius:Double?=null,
+        var stores:List<Store>? = null
     ) : Parcelable
 
     @Parcelize
     data class OrderFields(
-        var ordersList:List<Order> = ArrayList<Order>(),
-        var orderAction: List<Triple<String,Int,Int>> = listOf(),
-        var orderActionRecyclerPosition: Int =0
+        var ordersList:List<Order>? = null,
+        var orderAction: List<Triple<String,Int,Int>>? = null,
+        var orderActionRecyclerPosition: Int? =null
     ) : Parcelable
 
     @Parcelize

@@ -3,33 +3,30 @@ package com.smartcity.client.ui.main.account.address
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
-import com.smartcity.client.models.Address
+import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
-import com.smartcity.client.ui.main.account.viewmodel.setAddressList
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.SuccessHandling
-import kotlinx.android.synthetic.main.fragment_address_form.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class AddressFormFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseAccountFragment(R.layout.fragment_address_form){
-
-    val viewModel: AccountViewModel by viewModels{
-        viewModelFactory
-    }
+): BaseAccountFragment(R.layout.fragment_address_form,viewModelFactory){
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
@@ -42,7 +39,6 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[ACCOUNT_VIEW_STATE_BUNDLE_KEY] as AccountViewState?)?.let { viewState ->
@@ -51,23 +47,42 @@ constructor(
         }
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.expandAppBar()
-        stateChangeListener.displayBottomNavigation(false)
+        uiCommunicationListener.expandAppBar()
+        uiCommunicationListener.displayBottomNavigation(false)
 
         saveAddress()
         subscribeObservers()
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {dataState->
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
+
+            stateMessage?.let {
+
+                if(stateMessage.response.message.equals(SuccessHandling.CREATED_DONE)){
+                    updateAddressList()
+                }
+
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
+                        }
+                    }
+                )
+            }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
+        })
+
+        /*viewModel.dataState.observe(viewLifecycleOwner, androidx.lifecycle.Observer {dataState->
             stateChangeListener.onDataStateChange(dataState)
             if(dataState != null){
                 dataState.data?.let { data ->
@@ -90,7 +105,7 @@ constructor(
                     }
                 }
             }
-        })
+        })*/
     }
 
     private fun navAddress() {
@@ -116,7 +131,7 @@ constructor(
 
     private fun updateAddressList(){
         viewModel.setStateEvent(
-            AccountStateEvent.GetUserAddresses()
+            AccountStateEvent.GetUserAddressesEvent()
         )
     }
 }

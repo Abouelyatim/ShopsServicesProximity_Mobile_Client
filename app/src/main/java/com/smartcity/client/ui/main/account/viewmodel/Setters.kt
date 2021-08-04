@@ -3,14 +3,13 @@ package com.smartcity.client.ui.main.account.viewmodel
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.Order
 import com.smartcity.client.models.Store
+import com.smartcity.client.models.UserInformation
 
 fun AccountViewModel.setSelectedOrder(order: Order){
     val update = getCurrentViewStateOrNew()
     update.viewOrderFields.order=order
     setViewState(update)
 }
-
-
 
 fun AccountViewModel.setOrdersList(orders:List<Order>){
     val update = getCurrentViewStateOrNew()
@@ -43,31 +42,31 @@ fun AccountViewModel.clearOrderList(){
 }
 
 fun AccountViewModel.setCenterLatitude(value: Double) {
-
-        val update = getCurrentViewStateOrNew()
-        update.aroundStoresFields.centerLatitude= value
-        setViewState(update)
-
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.centerLatitude= value
+    setViewState(update)
 }
 
 fun AccountViewModel.setCenterLongitude(value: Double) {
-
-        val update = getCurrentViewStateOrNew()
-        update.aroundStoresFields.centerLongitude= value
-        setViewState(update)
-
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.centerLongitude= value
+    setViewState(update)
 }
 
 fun AccountViewModel.setRadius(value: Double) {
-
-        val update = getCurrentViewStateOrNew()
-        update.aroundStoresFields.radius= value
-        setViewState(update)
-
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.radius= value
+    setViewState(update)
 }
 
 fun AccountViewModel.setStoresAround(list: List<Store>) {
     val update = getCurrentViewStateOrNew()
     update.aroundStoresFields.stores=list
+    setViewState(update)
+}
+
+fun AccountViewModel.setUserInformation(infos: UserInformation?) {
+    val update = getCurrentViewStateOrNew()
+    update.userInformation=infos
     setViewState(update)
 }

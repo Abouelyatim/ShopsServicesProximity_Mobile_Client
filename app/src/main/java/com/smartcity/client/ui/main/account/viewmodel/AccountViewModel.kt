@@ -1,37 +1,35 @@
 package com.smartcity.client.ui.main.account.viewmodel
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.liveData
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.repository.main.AccountRepository
+import com.smartcity.client.repository.main.AccountRepositoryImpl
 import com.smartcity.client.session.SessionManager
-import com.smartcity.client.ui.deleted.BaseViewModel
-import com.smartcity.client.ui.deleted.DataState
-import com.smartcity.client.ui.deleted.Loading
-import com.smartcity.client.ui.main.account.state.AccountStateEvent
+import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.main.account.state.AccountStateEvent.*
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.util.deleted.AbsentLiveData
+import com.smartcity.client.util.*
 import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_LATITUDE
 import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_LONGITUDE
 import com.smartcity.client.util.PreferenceKeys.Companion.LOCATION_STORE_AROUND_RADIUS
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @MainScope
 class AccountViewModel
 @Inject
 constructor(
     val sessionManager: SessionManager,
-    val accountRepository: AccountRepository,
+    val accountRepository: AccountRepositoryImpl,
     private val sharedPreferences: SharedPreferences,
     private val editor: SharedPreferences.Editor
-)
-    : BaseViewModel<AccountStateEvent, AccountViewState>()
+) : BaseViewModel<AccountViewState>()
 {
     init {
-        initRepositoryViewModel()
-
         setCenterLatitude(
             sharedPreferences.getFloat(LOCATION_STORE_AROUND_LATITUDE,0.0F).toDouble()
         )
@@ -52,100 +50,116 @@ constructor(
         editor.apply()
     }
 
-    override fun handleStateEvent(stateEvent: AccountStateEvent): LiveData<DataState<AccountViewState>> {
-        when(stateEvent){
+    override fun handleNewData(data: AccountViewState) {
+        data.addressList?.let {list ->
+            setAddressList(list)
+        }
 
-            is SaveAddress ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    stateEvent.address.userId=authToken.account_pk!!.toLong()
-                    accountRepository.attemptCreateAddress(
-                        stateEvent.address
-                    )
-                }?: AbsentLiveData.create()
-            }
+        data.userInformation?.let {infos ->
+            setUserInformation(infos)
+        }
 
-            is GetUserAddresses ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    accountRepository.attemptUserAddresses(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
+        data.orderFields.let {orderFields ->
+            orderFields.ordersList?.let {list ->
+                setOrdersList(list)
             }
+        }
 
-            is DeleteAddress ->{
-                return accountRepository.attemptDeleteAddress(
-                    stateEvent.id
-                )
+        data.aroundStoresFields.let {aroundStoresFields ->
+            aroundStoresFields.stores?.let {list ->
+                setStoresAround(list)
             }
+        }
+    }
 
-            is SetUserInformation ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    stateEvent.userInformation.userId=authToken.account_pk!!.toLong()
-                    accountRepository.attemptSetUserInformation(
-                        stateEvent.userInformation
-                    )
+    override fun setStateEvent(stateEvent: StateEvent) {
+        if(!isJobAlreadyActive(stateEvent)){
+            sessionManager.cachedToken.value?.let { authToken ->
+                val job: Flow<DataState<AccountViewState>> = when(stateEvent){
 
-                }?: AbsentLiveData.create()
-            }
-
-            is GetUserInformation ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    accountRepository.attemptGetUserInformation(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is GetUserInProgressOrdersEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    accountRepository.attemptUserInProgressOrders(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is GetUserFinalizedOrdersEvent ->{
-                return sessionManager.cachedToken.value?.let { authToken ->
-                    accountRepository.attemptUserFinalizedOrders(
-                        authToken.account_pk!!.toLong()
-                    )
-                }?: AbsentLiveData.create()
-            }
-
-            is ConfirmOrderReceivedEvent ->{
-                return accountRepository.attemptConfirmOrderReceived(
-                    stateEvent.id
-                )
-            }
-
-            is SubscribeOrderChangeEvent ->{
-                return accountRepository.attemptSubscribeOrderChangeEvent()
-            }
-            is ResponseOrderChangeEvent ->{
-                return accountRepository.attemptResponseOrderChangeEvent()
-            }
-            is FinishOrderChangeEvent ->{
-                return accountRepository.attemptFinishOrderChangeEvent()
-            }
-
-            is GetStoresAround ->{
-                return accountRepository.attemptGetStoreAround(
-                    getCenterLatitude(),
-                    getCenterLongitude(),
-                    getRadius()
-                )
-            }
-
-            is None ->{
-                return liveData {
-                    emit(
-                        DataState<AccountViewState>(
-                            null,
-                            Loading(false),
-                            null
+                    is SaveAddressEvent ->{
+                        stateEvent.address.userId=authToken.account_pk!!.toLong()
+                        accountRepository.attemptCreateAddress(
+                            stateEvent,
+                            stateEvent.address
                         )
-                    )
+                    }
+
+                    is GetUserAddressesEvent ->{
+                        accountRepository.attemptUserAddresses(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is DeleteAddressEvent ->{
+                         accountRepository.attemptDeleteAddress(
+                            stateEvent,
+                            stateEvent.id
+                        )
+                    }
+
+                    is SetUserInformationEvent ->{
+                        stateEvent.userInformation.userId=authToken.account_pk!!.toLong()
+                        accountRepository.attemptSetUserInformation(
+                            stateEvent,
+                            stateEvent.userInformation
+                        )
+                    }
+
+                    is GetUserInformationEvent ->{
+                        accountRepository.attemptGetUserInformation(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is GetUserInProgressOrdersEvent ->{
+                        accountRepository.attemptUserInProgressOrders(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is GetUserFinalizedOrdersEvent ->{
+                        accountRepository.attemptUserFinalizedOrders(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is ConfirmOrderReceivedEvent ->{
+                        accountRepository.attemptConfirmOrderReceived(
+                            stateEvent,
+                            stateEvent.id
+                        )
+                    }
+
+                    is GetStoresAroundEvent ->{
+                         accountRepository.attemptGetStoreAround(
+                            stateEvent,
+                            getCenterLatitude(),
+                            getCenterLongitude(),
+                            getRadius()
+                        )
+                    }
+
+                    else -> {
+                        flow{
+                            emit(
+                                DataState.error<AccountViewState>(
+                                    response = Response(
+                                        message = ErrorHandling.INVALID_STATE_EVENT,
+                                        uiComponentType = UIComponentType.None(),
+                                        messageType = MessageType.Error()
+                                    ),
+                                    stateEvent = stateEvent
+                                )
+                            )
+                        }
+                    }
                 }
+                launchJob(stateEvent, job)
             }
         }
     }
@@ -154,22 +168,9 @@ constructor(
         return AccountViewState()
     }
 
-    fun cancelActiveJobs(){
-        accountRepository.cancelActiveJobs() // cancel active jobs
-        handlePendingData() // hide progress bar
-    }
-
-    fun handlePendingData(){
-        setStateEvent(None())
-    }
-
     override fun onCleared() {
         super.onCleared()
         cancelActiveJobs()
-    }
-
-    override fun initRepositoryViewModel() {
-        accountRepository.setCurrentViewModel(this)
     }
 }
 

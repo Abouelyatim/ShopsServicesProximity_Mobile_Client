@@ -3,7 +3,6 @@ package com.smartcity.client.ui.main.cart.address
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,34 +13,29 @@ import com.smartcity.client.models.Address
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.cart.state.CartViewState
-import com.smartcity.client.ui.main.cart.viewmodel.CartViewModel
 import com.smartcity.client.ui.main.cart.viewmodel.getAddressList
 import com.smartcity.client.ui.main.cart.viewmodel.setDeliveryAddress
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_pick_address.*
-import kotlinx.android.synthetic.main.fragment_pick_address.add_address_button
-import kotlinx.android.synthetic.main.fragment_pick_address.empty_list
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class PickAddressFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseCartFragment(R.layout.fragment_pick_address),
+): BaseCartFragment(R.layout.fragment_pick_address,viewModelFactory),
     PickAddressAdapter.Interaction
 {
 
     private lateinit var recyclerPickAddressAdapter: PickAddressAdapter
 
-    val viewModel: CartViewModel by viewModels{
-        viewModelFactory
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY] as CartViewState?)?.let { viewState ->
@@ -62,17 +56,13 @@ constructor(
         super.onSaveInstanceState(outState)
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.expandAppBar()
-        stateChangeListener.hideSoftKeyboard()
-        stateChangeListener.displayBottomNavigation(false)
+        uiCommunicationListener.expandAppBar()
+        uiCommunicationListener.hideSoftKeyboard()
+        uiCommunicationListener.displayBottomNavigation(false)
 
         initRecyclerView()
         add_address_button.setOnClickListener {

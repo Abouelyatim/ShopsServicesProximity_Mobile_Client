@@ -1,49 +1,43 @@
 package com.smartcity.client.ui.main.account.stores
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-
 import com.smartcity.client.R
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.account.viewmodel.*
+import com.smartcity.client.ui.main.account.viewmodel.getCenterLatitude
+import com.smartcity.client.ui.main.account.viewmodel.getCenterLongitude
+import com.smartcity.client.ui.main.account.viewmodel.getRadius
+import com.smartcity.client.ui.main.account.viewmodel.getStoresAround
+import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_around_stores.*
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
 
-
+@FlowPreview
+@ExperimentalCoroutinesApi
 class AroundStoresFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseAccountFragment(R.layout.fragment_around_stores){
-
-   // private lateinit var gpsTracker:GpsTracker
-   // private lateinit var  applicationInfo :ApplicationInfo
+): BaseAccountFragment(R.layout.fragment_around_stores,viewModelFactory){
 
     private lateinit var recyclerStoresAdapter: StoresAdapter
-
-    val viewModel: AccountViewModel by viewModels{
-        viewModelFactory
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
@@ -53,10 +47,8 @@ constructor(
         super.onSaveInstanceState(outState)
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[ACCOUNT_VIEW_STATE_BUNDLE_KEY] as AccountViewState?)?.let { viewState ->
@@ -65,21 +57,13 @@ constructor(
         }
     }
 
-    override fun cancelActiveJobs(){
-        viewModel.cancelActiveJobs()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
-        stateChangeListener.expandAppBar()
-        stateChangeListener.hideSoftKeyboard()
-        stateChangeListener.displayBottomNavigation(false)
-
-
-       // gpsTracker = GpsTracker(context!!)
-       // applicationInfo = activity!!.packageManager.getApplicationInfo(activity!!.packageName, PackageManager.GET_META_DATA)
+        uiCommunicationListener.expandAppBar()
+        uiCommunicationListener.hideSoftKeyboard()
+        uiCommunicationListener.displayBottomNavigation(false)
 
         change_location.setOnClickListener {
             getLocation()
@@ -123,7 +107,7 @@ constructor(
 
     private fun getStores(){
         viewModel.setStateEvent(
-            AccountStateEvent.GetStoresAround()
+            AccountStateEvent.GetStoresAroundEvent()
         )
     }
 
@@ -136,21 +120,23 @@ constructor(
     }
 
     private fun subscribeObservers() {
-        viewModel.dataState.observe(viewLifecycleOwner, Observer { dataState ->
-            stateChangeListener.onDataStateChange(dataState)
-            //set Offer list get it from network
-            dataState.data?.let { data ->
-                data.data?.let{
-                    it.getContentIfNotHandled()?.let{
-                        it.aroundStoresFields.stores.let {
-                            viewModel.setStoresAround(it)
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
+
+            stateMessage?.let {
+
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
                         }
-
                     }
-
-                }
-
+                )
             }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
         })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer{ viewState ->
@@ -168,7 +154,7 @@ constructor(
 
     private  fun resetUI(){
         stores_recyclerview.smoothScrollToPosition(0)
-        stateChangeListener.hideSoftKeyboard()
+        uiCommunicationListener.hideSoftKeyboard()
         focusable_view.requestFocus()
     }
 

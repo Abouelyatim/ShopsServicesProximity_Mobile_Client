@@ -1,10 +1,8 @@
 package com.smartcity.client.ui.main.cart.viewmodel
 
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.BillTotal
-import com.smartcity.client.models.OrderType
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
+import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.provider.models.Policy
 
 fun CartViewModel.getCartList(): Cart? {
@@ -45,6 +43,30 @@ fun CartViewModel.getAddressList(): List<Address> {
 fun CartViewModel.getDeliveryAddress(): Address? {
     getCurrentViewStateOrNew().let {
         return it.orderFields.deliveryAddress
+    }
+}
+
+fun CartViewModel.getApartmentNumber():String{
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.apartmentNumber?:""
+    }
+}
+
+fun CartViewModel.getBusinessName():String{
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.businessName?:""
+    }
+}
+
+fun CartViewModel.getDoorCodeName():String{
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.doorCodeName?:""
+    }
+}
+
+fun CartViewModel.getDefaultCity(): City?{
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.defaultCity
     }
 }
 

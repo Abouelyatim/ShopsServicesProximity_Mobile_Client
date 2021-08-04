@@ -43,6 +43,10 @@ constructor(
                 setAddressList(list)
             }
 
+            orderFields.defaultCity?.let { city ->
+                setDefaultCity(city)
+            }
+
             orderFields.userInformation?.let {userInformation ->
                 setUserInformation(userInformation)
             }
@@ -101,25 +105,32 @@ constructor(
                     }
 
                     is GetUserAddressesEvent ->{
-                            cartRepository.attemptUserAddresses(
+                        cartRepository.attemptUserAddresses(
                             stateEvent,
-                                authToken.account_pk!!.toLong()
-                            )
+                            authToken.account_pk!!.toLong()
+                        )
                     }
 
                     is SaveAddressEvent ->{
-                            stateEvent.address.userId=authToken.account_pk!!.toLong()
-                            cartRepository.attemptCreateAddress(
+                        stateEvent.address.userId=authToken.account_pk!!.toLong()
+                        cartRepository.attemptCreateAddress(
                             stateEvent,
-                                stateEvent.address
-                            )
+                            stateEvent.address
+                        )
                     }
 
                     is GetUserInformationEvent ->{
-                            cartRepository.attemptGetUserInformation(
+                        cartRepository.attemptGetUserInformation(
                             stateEvent,
-                                authToken.account_pk!!.toLong()
-                            )
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is GetUserDefaultCityEvent ->{
+                        cartRepository.attemptUserDefaultCity(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
                     }
 
                     else -> {
@@ -144,11 +155,6 @@ constructor(
 
     override fun initNewViewState(): CartViewState {
         return CartViewState()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        cancelActiveJobs()
     }
 }
 

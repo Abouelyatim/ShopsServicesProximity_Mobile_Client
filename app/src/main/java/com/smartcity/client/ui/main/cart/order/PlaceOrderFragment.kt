@@ -25,7 +25,7 @@ import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.ui.main.cart.viewmodel.*
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.StateMessageCallback
-import com.smartcity.client.util.SuccessHandling
+import com.smartcity.client.util.SuccessHandling.Companion.DONE_PLACE_ORDER
 import com.smartcity.client.util.TopSpacingItemDecoration
 import com.smartcity.provider.models.SelfPickUpOptions
 import kotlinx.android.synthetic.main.fragment_place_order.*
@@ -50,6 +50,7 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY] as CartViewState?)?.let { viewState ->
@@ -237,11 +238,7 @@ constructor(
 
             stateMessage?.let {
 
-                if(stateMessage.response.message.equals(SuccessHandling.DONE_PLACE_ORDER)){
-                    getUserCart()
-                }
-
-                if(stateMessage.response.message.equals(SuccessHandling.DONE_USER_CART)){
+                if(stateMessage.response.message.equals(DONE_PLACE_ORDER)){
                     findNavController().popBackStack()
                 }
 
@@ -260,8 +257,9 @@ constructor(
             uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
         })
 
-        setUpUi()
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            setUpUi()
+
             viewModel.getTotalBill()?.let { bill->
                 setTotalToPay(bill.total!!)
             }
@@ -278,12 +276,6 @@ constructor(
 
             }
         })
-    }
-
-    private fun getUserCart() {
-        viewModel.setStateEvent(
-            CartStateEvent.GetUserCartEvent()
-        )
     }
 
     private fun handelDeliveryAddressList(list: List<Address>){

@@ -3,6 +3,7 @@ package com.smartcity.client.ui.main.cart.state
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.BillTotal
 import com.smartcity.client.models.Order
+import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.util.StateEvent
 
 sealed class CartStateEvent: StateEvent {
@@ -109,6 +110,16 @@ sealed class CartStateEvent: StateEvent {
          override fun toString(): String {
              return "GetUserInformationStateEvent"
          }
+    }
+
+    class GetUserDefaultCityEvent: CartStateEvent(){
+        override fun errorInfo(): String {
+            return "Get default city attempt failed."
+        }
+
+        override fun toString(): String {
+            return "GetUserDefaultCityStateEvent"
+        }
     }
 
     class None: CartStateEvent(){

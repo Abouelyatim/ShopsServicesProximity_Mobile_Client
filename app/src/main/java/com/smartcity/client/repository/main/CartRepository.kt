@@ -4,6 +4,7 @@ import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.BillTotal
 import com.smartcity.client.models.Order
+import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.client.util.DataState
 import com.smartcity.client.util.StateEvent
@@ -60,5 +61,10 @@ interface CartRepository {
     fun attemptGetUserInformation(
         stateEvent: StateEvent,
         id:Long
+    ): Flow<DataState<CartViewState>>
+
+    fun attemptUserDefaultCity(
+        stateEvent: StateEvent,
+        id: Long
     ): Flow<DataState<CartViewState>>
 }

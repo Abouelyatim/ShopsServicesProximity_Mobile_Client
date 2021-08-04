@@ -43,6 +43,7 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY] as CartViewState?)?.let { viewState ->
@@ -70,15 +71,9 @@ constructor(
         swipe_refresh.setOnRefreshListener(this)
        // stateChangeListener.expandAppBar()
 
-
-
         initvRecyclerView()
         subscribeObservers()
         getUserCart()
-
-       /* place_order_button.setOnClickListener {
-            showOrderConfirmationDialog()
-        }*/
     }
 
     private fun getUserCart() {
@@ -116,14 +111,6 @@ constructor(
 
             stateMessage?.let {
 
-                if(stateMessage.response.message.equals(SuccessHandling.DELETE_DONE)){
-                    getUserCart()
-                }
-
-                if(stateMessage.response.message.equals(SuccessHandling.DONE_UPDATE_CART_QUANTITY)){
-                    getUserCart()
-                }
-
                 uiCommunicationListener.onResponseReceived(
                     response = it.response,
                     stateMessageCallback = object: StateMessageCallback {
@@ -132,6 +119,14 @@ constructor(
                         }
                     }
                 )
+
+                if(stateMessage.response.message.equals(SuccessHandling.DELETE_DONE)){
+                    getUserCart()
+                }
+
+                if(stateMessage.response.message.equals(SuccessHandling.DONE_UPDATE_CART_QUANTITY)){
+                    getUserCart()
+                }
             }
         })
 
@@ -155,16 +150,6 @@ constructor(
         })
     }
 
-    private fun calculateTotalPrice():Double{
-        viewModel.getCartList()?.let {
-            var total=0.0
-            it.cartProductVariants.map {
-                total += it.productVariant.price * it.unit
-            }
-            return total
-        }
-        return 0.0
-    }
     private fun generateProductCartList(cartList:List<CartProductVariant>):Set<Cart>{
         val map:MutableMap<Long,MutableList<CartProductVariant>> = mutableMapOf()
         cartList.map {productVariant->
@@ -182,8 +167,6 @@ constructor(
         }
         return result.toSet()
     }
-
-
 
     override fun onRefresh() {
         getUserCart()
@@ -250,20 +233,3 @@ constructor(
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

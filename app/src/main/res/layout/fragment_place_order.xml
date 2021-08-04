@@ -152,7 +152,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/address_"
-                            android:text="XXX"
+                            android:text=""
                             android:textSize="15sp"
                             android:textColor="#000"
                             />

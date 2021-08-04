@@ -5,10 +5,7 @@ import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.BillTotal
-import com.smartcity.client.models.Order
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
 import com.smartcity.client.persistence.BlogPostDao
 import com.smartcity.client.repository.safeApiCall
@@ -366,6 +363,40 @@ constructor(
                         stateEvent = stateEvent,
                         response = Response(
                             SuccessHandling.DONE_USER_INFORMATION,
+                            UIComponentType.None(),
+                            MessageType.None()
+                        )
+                    )
+                }
+            }.getResult()
+        )
+    }
+
+    override fun attemptUserDefaultCity(
+        stateEvent: StateEvent,
+        id: Long
+    ): Flow<DataState<CartViewState>> = flow {
+        val apiResult = safeApiCall(Dispatchers.IO){
+            openApiMainService.getDefaultCity(
+                id = id
+            )
+        }
+        emit(
+            object: ApiResponseHandler<CartViewState, City>(
+                response = apiResult,
+                stateEvent = stateEvent
+            ) {
+                override suspend fun handleSuccess(resultObj: City): DataState<CartViewState> {
+                    Log.d(TAG,"handleSuccess ${stateEvent}")
+                    return DataState.data(
+                        data = CartViewState(
+                            orderFields = CartViewState.OrderFields(
+                                defaultCity= resultObj
+                            )
+                        ),
+                        stateEvent = stateEvent,
+                        response = Response(
+                            stateEvent.toString(),
                             UIComponentType.None(),
                             MessageType.None()
                         )

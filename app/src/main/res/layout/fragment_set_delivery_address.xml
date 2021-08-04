@@ -98,7 +98,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="Select address on map or use your position"
-                        android:gravity="start"
                         android:textColor="#000"
                         android:textSize="22sp"
                         android:textStyle="bold"

@@ -3,6 +3,7 @@ package com.smartcity.client.ui.main.cart.address
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -10,11 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.Address
+import com.smartcity.client.ui.main.account.viewmodel.clearNewAddress
 import com.smartcity.client.ui.main.cart.BaseCartFragment
 import com.smartcity.client.ui.main.cart.state.CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY
+import com.smartcity.client.ui.main.cart.state.CartStateEvent
 import com.smartcity.client.ui.main.cart.state.CartViewState
-import com.smartcity.client.ui.main.cart.viewmodel.getAddressList
-import com.smartcity.client.ui.main.cart.viewmodel.setDeliveryAddress
+import com.smartcity.client.ui.main.cart.viewmodel.*
+import com.smartcity.client.util.StateMessageCallback
+import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_pick_address.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -36,6 +40,7 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[CUSTOM_CATEGORY_VIEW_STATE_BUNDLE_KEY] as CartViewState?)?.let { viewState ->
@@ -64,11 +69,48 @@ constructor(
         uiCommunicationListener.hideSoftKeyboard()
         uiCommunicationListener.displayBottomNavigation(false)
 
+        subscribeObservers()
+        getUserAddresses()
         initRecyclerView()
         add_address_button.setOnClickListener {
             navAddAddress()
         }
+    }
 
+    private fun subscribeObservers() {
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
+
+            stateMessage?.let {
+
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
+                        }
+                    }
+                )
+            }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
+        })
+
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            viewModel.getAddressList().apply {
+                recyclerPickAddressAdapter.submitList(
+                    this
+                )
+                setEmptyListUi(this.isEmpty())
+            }
+        })
+    }
+
+    private fun getUserAddresses(){
+        viewModel.setStateEvent(
+            CartStateEvent.GetUserAddressesEvent()
+        )
     }
 
     fun initRecyclerView(){
@@ -91,12 +133,6 @@ constructor(
             })
             adapter = recyclerPickAddressAdapter
         }
-        viewModel.getAddressList().apply {
-            recyclerPickAddressAdapter.submitList(
-                this
-            )
-            setEmptyListUi(this.isEmpty())
-        }
     }
 
     override fun selectedAddress(address: Address) {
@@ -109,6 +145,7 @@ constructor(
     }
 
     private fun navAddAddress(){
+        viewModel.clearNewAddress()
         findNavController().navigate(R.id.action_pickAddressFragment_to_addAddressFragment)
     }
 

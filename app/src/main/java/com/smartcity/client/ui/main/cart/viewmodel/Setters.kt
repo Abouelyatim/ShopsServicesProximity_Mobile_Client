@@ -1,10 +1,8 @@
 package com.smartcity.client.ui.main.cart.viewmodel
 
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.BillTotal
-import com.smartcity.client.models.OrderType
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
+import com.smartcity.client.ui.main.account.viewmodel.AccountViewModel
 import com.smartcity.client.ui.main.cart.state.CartViewState
 import com.smartcity.provider.models.Policy
 
@@ -53,7 +51,7 @@ fun CartViewModel.clearOrderFields(){
 fun CartViewModel.setAddressList(addresses:List<Address>){
     val update = getCurrentViewStateOrNew()
     update.orderFields.addressList=addresses
-    if(addresses.isNotEmpty()){
+    if(addresses.isNotEmpty() && update.orderFields.deliveryAddress==null){
         update.orderFields.deliveryAddress=addresses.first()
     }
     setViewState(update)
@@ -62,6 +60,39 @@ fun CartViewModel.setAddressList(addresses:List<Address>){
 fun CartViewModel.setDeliveryAddress(address: Address){
     val update = getCurrentViewStateOrNew()
     update.orderFields.deliveryAddress=address
+    setViewState(update)
+}
+
+fun CartViewModel.clearNewAddress() {
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.deliveryAddress=null
+    update.orderFields.apartmentNumber=null
+    update.orderFields.businessName=null
+    update.orderFields.doorCodeName=null
+    setViewState(update)
+}
+
+fun CartViewModel.setApartmentNumber(value :String){
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.apartmentNumber = value
+    setViewState(update)
+}
+
+fun CartViewModel.setBusinessName(value :String){
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.businessName = value
+    setViewState(update)
+}
+
+fun CartViewModel.setDoorCodeName(value :String){
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.doorCodeName = value
+    setViewState(update)
+}
+
+fun CartViewModel.setDefaultCity(city: City){
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.defaultCity = city
     setViewState(update)
 }
 

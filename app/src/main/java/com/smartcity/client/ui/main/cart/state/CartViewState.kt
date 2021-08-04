@@ -1,10 +1,7 @@
 package com.smartcity.client.ui.main.cart.state
 
 import android.os.Parcelable
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.BillTotal
-import com.smartcity.client.models.OrderType
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
 import com.smartcity.provider.models.Policy
 import kotlinx.android.parcel.Parcelize
@@ -30,6 +27,10 @@ class CartViewState(
         var orderType: OrderType?=null,
         var addressList:List<Address>? = null,
         var deliveryAddress:Address? =null,
+        var defaultCity : City? =null,
+        var apartmentNumber:String?=null,
+        var businessName:String?=null,
+        var doorCodeName:String?=null,
         var userInformation: UserInformation?=null
     ) : Parcelable
 }

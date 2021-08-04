@@ -8,12 +8,12 @@
 
     <fragment
             android:id="@+id/chooseInterestFragment"
-            android:name="com.smartcity.client.ui.interest.ChooseInterestFragment"
+            android:name="com.smartcity.client.ui.interest.interest.ChooseInterestFragment"
             android:label="fragment_choose_interest"
             tools:layout="@layout/fragment_choose_interest" />
     <fragment
             android:id="@+id/configureAddressFragment"
-            android:name="com.smartcity.client.ui.interest.ConfigureAddressFragment"
+            android:name="com.smartcity.client.ui.interest.city.ConfigureAddressFragment"
             android:label="fragment_configure_address"
             tools:layout="@layout/fragment_configure_address" >
         <action
@@ -22,7 +22,7 @@
     </fragment>
     <fragment
             android:id="@+id/selectCountryFragment"
-            android:name="com.smartcity.client.ui.interest.SelectCountryFragment"
+            android:name="com.smartcity.client.ui.interest.country.SelectCountryFragment"
             android:label="fragment_select_country"
             tools:layout="@layout/fragment_select_country" >
         <action
@@ -31,7 +31,7 @@
     </fragment>
     <fragment
             android:id="@+id/configureDeliveryAddressFragment"
-            android:name="com.smartcity.client.ui.interest.ConfigureDeliveryAddressFragment"
+            android:name="com.smartcity.client.ui.interest.delivery.ConfigureDeliveryAddressFragment"
             android:label="fragment_configure_delivery_address"
             tools:layout="@layout/fragment_configure_delivery_address" >
         <action
@@ -43,7 +43,7 @@
     </fragment>
     <fragment
             android:id="@+id/setDeliveryAddressFragment"
-            android:name="com.smartcity.client.ui.interest.SetDeliveryAddressFragment"
+            android:name="com.smartcity.client.ui.interest.setdelivery.SetDeliveryAddressFragment"
             android:label="fragment_set_delivery_address"
             tools:layout="@layout/fragment_set_delivery_address" />
 </navigation>

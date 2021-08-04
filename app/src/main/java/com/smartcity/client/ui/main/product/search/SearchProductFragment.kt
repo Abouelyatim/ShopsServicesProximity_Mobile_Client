@@ -145,6 +145,7 @@ constructor(
     }
 
     private fun searchEvent(){
+        viewModel.clearProductListDataSearch()
          viewModel.setStateEvent(
              ProductStateEvent.ProductSearchEvent()
          )

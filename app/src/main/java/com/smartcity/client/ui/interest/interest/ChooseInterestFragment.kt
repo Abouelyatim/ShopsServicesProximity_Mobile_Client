@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.interest
 
 import android.os.Bundle
 import android.view.View
@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
+import com.smartcity.client.ui.interest.BaseInterestFragment
+import com.smartcity.client.ui.interest.InterestActivity
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.viewmodel.getCategoryList
 import com.smartcity.client.ui.interest.viewmodel.getSelectedCategoriesList

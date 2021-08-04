@@ -5,6 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.ui.interest.*
+import com.smartcity.client.ui.interest.city.ConfigureAddressFragment
+import com.smartcity.client.ui.interest.country.SelectCountryFragment
+import com.smartcity.client.ui.interest.delivery.ConfigureDeliveryAddressFragment
+import com.smartcity.client.ui.interest.interest.ChooseInterestFragment
+import com.smartcity.client.ui.interest.setdelivery.SetDeliveryAddressFragment
 import javax.inject.Inject
 
 
@@ -22,27 +27,39 @@ constructor(
         when (className) {
 
             ChooseInterestFragment::class.java.name -> {
-                ChooseInterestFragment(viewModelFactory)
+                ChooseInterestFragment(
+                    viewModelFactory
+                )
             }
 
             ConfigureAddressFragment::class.java.name -> {
-                ConfigureAddressFragment(viewModelFactory)
+                ConfigureAddressFragment(
+                    viewModelFactory
+                )
             }
 
             SelectCountryFragment::class.java.name -> {
-                SelectCountryFragment(viewModelFactory)
+                SelectCountryFragment(
+                    viewModelFactory
+                )
             }
 
             ConfigureDeliveryAddressFragment::class.java.name -> {
-                ConfigureDeliveryAddressFragment(viewModelFactory)
+                ConfigureDeliveryAddressFragment(
+                    viewModelFactory
+                )
             }
 
             SetDeliveryAddressFragment::class.java.name -> {
-                SetDeliveryAddressFragment(viewModelFactory)
+                SetDeliveryAddressFragment(
+                    viewModelFactory
+                )
             }
 
             else -> {
-                ChooseInterestFragment(viewModelFactory)
+                ChooseInterestFragment(
+                    viewModelFactory
+                )
             }
         }
 

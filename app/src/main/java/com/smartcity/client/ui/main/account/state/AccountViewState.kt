@@ -1,10 +1,7 @@
 package com.smartcity.client.ui.main.account.state
 
 import android.os.Parcelable
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.Order
-import com.smartcity.client.models.Store
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
 import kotlinx.android.parcel.Parcelize
 
 const val ACCOUNT_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.account.state.AccountViewState"
@@ -12,12 +9,22 @@ const val ACCOUNT_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.a
 @Parcelize
 class AccountViewState(
     var userInformation: UserInformation?=null,
-    var addressList:List<Address>? = null,
+    var addressFields:AddressFields = AddressFields(),
     var orderFields:OrderFields=OrderFields(),
     var viewOrderFields: ViewOrderFields =ViewOrderFields(),
     var aroundStoresFields: AroundStoresFields= AroundStoresFields()
 
 ) : Parcelable{
+
+    @Parcelize
+    data class AddressFields(
+        var addressList:List<Address>? = null,
+        var newAddress: Address? =null,
+        var defaultCity :City? =null,
+        var apartmentNumber:String?=null,
+        var businessName:String?=null,
+        var doorCodeName:String?=null
+    ) : Parcelable
 
     @Parcelize
     data class AroundStoresFields(

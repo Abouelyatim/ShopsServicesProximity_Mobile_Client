@@ -6,7 +6,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
         android:background="@color/white"
-        tools:context=".ui.interest.ConfigureAddressFragment">
+        tools:context=".ui.interest.city.ConfigureAddressFragment">
 
     <LinearLayout
             android:id="@+id/pick_date_search_flash_container"

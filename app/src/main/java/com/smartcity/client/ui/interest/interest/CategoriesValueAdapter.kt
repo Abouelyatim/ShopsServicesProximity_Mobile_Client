@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.interest
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -99,7 +99,8 @@ class CategoriesValueAdapter (
                     if(selectedPositionMap[category]!!.count { it == position } > 1){
                         itemView.category_value_container.background=ResourcesCompat.getDrawable(resources,R.drawable.raduis_selector_white,null)
                         itemView.category_value_name.setTextColor(Color.parseColor("#000000"))
-                        val list=selectedPositionMap[category]!!.toMutableList()
+                        val list=
+                            selectedPositionMap[category]!!.toMutableList()
                         list.removeAll { it==position }
                         list.remove(position)
                         selectedPositionMap.put(category,list)
@@ -121,7 +122,8 @@ class CategoriesValueAdapter (
                         val list= listOf<Int>(position)
                         selectedPositionMap.put(category,list)
                     }else{
-                        val list=selectedPositionMap[category]!!.toMutableList()
+                        val list=
+                            selectedPositionMap[category]!!.toMutableList()
                         list.add(position)
                         selectedPositionMap.put(category,list)
                     }

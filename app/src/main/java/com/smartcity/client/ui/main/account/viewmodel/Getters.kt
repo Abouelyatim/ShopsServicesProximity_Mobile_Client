@@ -1,9 +1,7 @@
 package com.smartcity.client.ui.main.account.viewmodel
 
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.Order
-import com.smartcity.client.models.Store
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
+import com.smartcity.client.ui.interest.viewmodel.InterestViewModel
 
 fun AccountViewModel.getSelectedOrder(): Order? {
     getCurrentViewStateOrNew().let {
@@ -24,7 +22,37 @@ fun AccountViewModel.getOrderActionRecyclerPosition():Int{
 
 fun AccountViewModel.getAddressList(): List<Address> {
     getCurrentViewStateOrNew().let {
-        return it.addressList?: listOf()
+        return it.addressFields.addressList?: listOf()
+    }
+}
+
+fun AccountViewModel.getNewAddress(): Address? {
+    getCurrentViewStateOrNew().let {
+        return it.addressFields.newAddress
+    }
+}
+
+fun AccountViewModel.getApartmentNumber():String{
+    getCurrentViewStateOrNew().let {
+        return it.addressFields.apartmentNumber?:""
+    }
+}
+
+fun AccountViewModel.getBusinessName():String{
+    getCurrentViewStateOrNew().let {
+        return it.addressFields.businessName?:""
+    }
+}
+
+fun AccountViewModel.getDoorCodeName():String{
+    getCurrentViewStateOrNew().let {
+        return it.addressFields.doorCodeName?:""
+    }
+}
+
+fun AccountViewModel.getDefaultCity():City?{
+    getCurrentViewStateOrNew().let {
+        return it.addressFields.defaultCity
     }
 }
 

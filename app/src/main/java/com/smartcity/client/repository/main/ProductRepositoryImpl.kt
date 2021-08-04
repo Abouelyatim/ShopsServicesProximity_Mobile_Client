@@ -37,9 +37,6 @@ constructor(
         page: Int,
         userId: Long
     ): Flow<DataState<ProductViewState>> = flow {
-        Log.d("ii","attemptSearchProducts")
-
-
         val apiResult = safeApiCall(Dispatchers.IO){
             openApiMainService.searchListProduct(
                 query = query,
@@ -47,7 +44,7 @@ constructor(
                 userId =userId
             )
         }
-        Log.d("ii","apiResult")
+
         emit(
             object: ApiResponseHandler<ProductViewState, ListProductResponse>(
                 response = apiResult,

@@ -48,6 +48,7 @@ constructor(
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        viewModel.cancelActiveJobs()
         super.onCreate(savedInstanceState)
         // Restore state after process death
         savedInstanceState?.let { inState ->

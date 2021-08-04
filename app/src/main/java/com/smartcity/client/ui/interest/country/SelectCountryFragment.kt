@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.country
 
 import android.os.Bundle
 import android.view.View
@@ -7,6 +7,8 @@ import androidx.navigation.fragment.findNavController
 import com.hbb20.CountryCodePicker
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
+import com.smartcity.client.ui.interest.BaseInterestFragment
+import com.smartcity.client.ui.interest.InterestActivity
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.viewmodel.setCountry
 import com.smartcity.client.util.RetryToHandelNetworkError

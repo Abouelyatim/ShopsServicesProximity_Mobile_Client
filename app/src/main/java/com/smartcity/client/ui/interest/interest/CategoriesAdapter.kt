@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.interest
 
 import android.view.LayoutInflater
 import android.view.View
@@ -91,7 +91,7 @@ class CategoriesAdapter (
         private val interaction: Interaction?,
         private var categoryValuesRecyclerAdapter: CategoriesValueAdapter?
     ) : RecyclerView.ViewHolder(itemView),
-        CategoriesValueAdapter.Interaction{
+        CategoriesValueAdapter.Interaction {
 
         fun initOptionsRecyclerView(recyclerview:RecyclerView){
             recyclerview.apply {

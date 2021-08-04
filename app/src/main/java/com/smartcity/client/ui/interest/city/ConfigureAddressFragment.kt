@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.city
 
 import android.app.Activity
 import android.app.SearchManager
@@ -21,6 +21,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.models.City
+import com.smartcity.client.ui.interest.BaseInterestFragment
+import com.smartcity.client.util.GpsTracker
+import com.smartcity.client.ui.interest.InterestActivity
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.viewmodel.*
 import com.smartcity.client.util.RetryToHandelNetworkError
@@ -67,7 +70,8 @@ constructor(
     private fun selectMyPosition() {
         val applicationInfo = requireActivity().packageManager.getApplicationInfo( activity?.packageName, PackageManager.GET_META_DATA)
         my_position_button.setOnClickListener {
-            val gpsTracker = GpsTracker(requireContext())
+            val gpsTracker =
+                GpsTracker(requireContext())
             if(uiCommunicationListener.isFineLocationPermissionGranted()){
                 gpsTracker.getCurrentLocation()
                 val latitude: Double = gpsTracker.getLatitude()
@@ -210,9 +214,10 @@ constructor(
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
 
-            cityRecyclerAdapter = CityAdapter(
-                this@ConfigureAddressFragment
-            )
+            cityRecyclerAdapter =
+                CityAdapter(
+                    this@ConfigureAddressFragment
+                )
             addOnScrollListener(object: RecyclerView.OnScrollListener(){
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

@@ -1,6 +1,5 @@
 package com.smartcity.client.ui.main.product.viewmodel
 
-import android.util.Log
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.repository.main.ProductRepositoryImpl
 import com.smartcity.client.session.SessionManager
@@ -8,7 +7,6 @@ import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.main.product.state.ProductStateEvent.*
 import com.smartcity.client.ui.main.product.state.ProductViewState
 import com.smartcity.client.util.*
-import com.smartcity.client.util.SuccessHandling.Companion.DONE_Product_Layout_Change_Event
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow

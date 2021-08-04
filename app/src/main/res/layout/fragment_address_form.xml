@@ -1,127 +1,181 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/new_default_background_color"
         android:orientation="vertical"
         tools:context=".ui.main.account.address.AddressFormFragment">
 
-    <LinearLayout
-            android:background="@color/white"
+    <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            >
-
-
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/input_city"
-                    android:textColor="#000"
-                    android:hint="City"
-                    android:inputType="textAutoComplete"
-                    android:backgroundTint="@color/grey0"
-                    />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/input_street"
-                    android:textColor="#000"
-                    android:hint="Street"
-                    android:inputType="textAutoComplete"
-                    android:backgroundTint="@color/grey0"
-                    />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/input_zip_code"
-                    android:textColor="#000"
-                    android:hint="Zip Code"
-                    android:inputType="numberDecimal"
-                    android:backgroundTint="@color/grey0"
-                    />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/input_house_number"
-                    android:textColor="#000"
-                    android:hint="House Number"
-                    android:inputType="numberDecimal"
-                    android:backgroundTint="@color/grey0"
-                    />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-
-    </LinearLayout>
-    </LinearLayout>
-
-
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center|bottom"
-            >
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="16dp">
-            <Button
-                    android:id="@+id/save_address_button"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <RelativeLayout
+                    android:id="@+id/map_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@drawable/radius_button_blue"
-                    android:text="Save"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="20sp"
-                    android:layout_gravity="bottom"/>
+                    android:layout_height="200dp">
+                <com.google.android.gms.maps.MapView
+                        android:id="@+id/delivery_map_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:name="com.google.android.gms.maps.MapFragment"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/ic_marker_bleu"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:layout_marginBottom="45dp"/>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_alignParentBottom="true"
+                        android:gravity="center"
+                        android:padding="10dp">
+                    <TextView
+                            android:id="@+id/move_marker_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/main_button_drawable_white"
+                            android:text="Move the marker"
+                            android:textColor="@color/dark"
+                            android:textSize="14sp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:layout_marginEnd="5dp"
+                            android:elevation="3dp"
+                            />
+
+                    <TextView
+                            android:id="@+id/my_position_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/main_button_drawable_white"
+                            android:text="My position"
+                            android:textAllCaps="false"
+                            android:textColor="@color/dark"
+                            android:textSize="14sp"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="15dp"
+                            android:paddingTop="8dp"
+                            android:paddingBottom="8dp"
+                            android:elevation="3dp"
+                            />
+                </LinearLayout>
+            </RelativeLayout>
+
+
+            <LinearLayout
+                    android:id="@+id/pick_date_search_flash_container"
+                    android:layout_margin="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/address_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Choose a city to find products and offers around you"
+                        android:textColor="#000"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/apartment_number"
+                            android:textColor="#000"
+                            android:hint="Apartment number, door, floor"
+                            android:inputType="textAutoComplete"
+                            android:backgroundTint="@color/grey0"
+                            />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/business_name"
+                            android:textColor="#000"
+                            android:hint="Name of the business or building"
+                            android:inputType="textAutoComplete"
+                            android:backgroundTint="@color/grey0"
+                            />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/door_code_name"
+                            android:textColor="#000"
+                            android:hint="Door code and family name"
+                            android:inputType="textAutoComplete"
+                            android:backgroundTint="@color/grey0"
+                            />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp">
+                <Button
+                        android:id="@+id/save_delivery_address_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/radius_button_blue"
+                        android:text="Save"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:layout_gravity="bottom"/>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+
+    </ScrollView>
+
 
 </LinearLayout>

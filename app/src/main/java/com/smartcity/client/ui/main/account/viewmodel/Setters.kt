@@ -1,9 +1,7 @@
 package com.smartcity.client.ui.main.account.viewmodel
 
-import com.smartcity.client.models.Address
-import com.smartcity.client.models.Order
-import com.smartcity.client.models.Store
-import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.*
+import com.smartcity.client.ui.interest.viewmodel.InterestViewModel
 
 fun AccountViewModel.setSelectedOrder(order: Order){
     val update = getCurrentViewStateOrNew()
@@ -31,7 +29,46 @@ fun AccountViewModel.setOrderActionRecyclerPosition(postion:Int){
 
 fun AccountViewModel.setAddressList(addresses:List<Address>){
     val update = getCurrentViewStateOrNew()
-    update.addressList=addresses
+    update.addressFields.addressList=addresses
+    setViewState(update)
+}
+
+fun AccountViewModel.setNewAddress(address: Address) {
+    val update = getCurrentViewStateOrNew()
+    update.addressFields.newAddress=address
+    setViewState(update)
+}
+
+fun AccountViewModel.clearNewAddress() {
+    val update = getCurrentViewStateOrNew()
+    update.addressFields.newAddress=null
+    update.addressFields.apartmentNumber=null
+    update.addressFields.businessName=null
+    update.addressFields.doorCodeName=null
+    setViewState(update)
+}
+
+fun AccountViewModel.setApartmentNumber(value :String){
+    val update = getCurrentViewStateOrNew()
+    update.addressFields.apartmentNumber = value
+    setViewState(update)
+}
+
+fun AccountViewModel.setBusinessName(value :String){
+    val update = getCurrentViewStateOrNew()
+    update.addressFields.businessName = value
+    setViewState(update)
+}
+
+fun AccountViewModel.setDoorCodeName(value :String){
+    val update = getCurrentViewStateOrNew()
+    update.addressFields.doorCodeName = value
+    setViewState(update)
+}
+
+fun AccountViewModel.setDefaultCity(city: City){
+    val update = getCurrentViewStateOrNew()
+    update.addressFields.defaultCity = city
     setViewState(update)
 }
 

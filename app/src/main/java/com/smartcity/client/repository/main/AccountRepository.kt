@@ -60,4 +60,9 @@ interface AccountRepository {
         centerLongitude:Double,
         radius:Double
     ): Flow<DataState<AccountViewState>>
+
+    fun attemptUserDefaultCity(
+        stateEvent: StateEvent,
+        id: Long
+    ): Flow<DataState<AccountViewState>>
 }

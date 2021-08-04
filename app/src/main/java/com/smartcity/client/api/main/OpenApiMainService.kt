@@ -142,6 +142,11 @@ interface OpenApiMainService {
         @Query("page") page: Int,
         @Query("id") userId: Long,
     ): ListProductResponse
+
+    @GET("user/default-city")
+    suspend fun getDefaultCity(
+        @Query("id") id: Long
+    ): City
 }
 
 

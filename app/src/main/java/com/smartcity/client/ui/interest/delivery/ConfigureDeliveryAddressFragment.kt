@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.delivery
 
 import android.os.Bundle
 import android.view.View
@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
+import com.smartcity.client.ui.interest.BaseInterestFragment
+import com.smartcity.client.ui.interest.InterestActivity
 import com.smartcity.client.ui.interest.viewmodel.getSavedHomeAddress
 import com.smartcity.client.util.RetryToHandelNetworkError
 import kotlinx.android.synthetic.main.fragment_configure_delivery_address.*

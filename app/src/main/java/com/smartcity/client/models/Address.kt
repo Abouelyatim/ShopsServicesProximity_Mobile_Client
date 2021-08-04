@@ -13,27 +13,27 @@ data class Address(
 
     @SerializedName("streetNumber")
     @Expose
-    var streetNumber:String,
+    var streetNumber:String?,
 
     @SerializedName("admin")
     @Expose
-    var admin:String,
+    var admin:String?,
 
     @SerializedName("subAdmin")
     @Expose
-    var subAdmin:String,
+    var subAdmin:String?,
 
     @SerializedName("locality")
     @Expose
-    var locality:String,
+    var locality:String?,
 
     @SerializedName("streetName")
     @Expose
-    var streetName:String,
+    var streetName:String?,
 
     @SerializedName("postalCode")
     @Expose
-    var postalCode:String,
+    var postalCode:String?,
 
     @SerializedName("countryCode")
     @Expose

@@ -7,6 +7,7 @@ import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
+import com.smartcity.client.models.City
 import com.smartcity.client.models.Store
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.persistence.AccountPropertiesDao
@@ -81,7 +82,9 @@ constructor(
                     Log.d(TAG,"handleSuccess ${stateEvent}")
                     return DataState.data(
                         data = AccountViewState(
-                            addressList=resultObj.results
+                            addressFields = AccountViewState.AddressFields(
+                                addressList=resultObj.results
+                            )
                         ),
                         stateEvent = stateEvent,
                         response = null
@@ -342,6 +345,40 @@ constructor(
                         stateEvent = stateEvent,
                         response = Response(
                             SuccessHandling.DONE_STORE_AROUND,
+                            UIComponentType.None(),
+                            MessageType.None()
+                        )
+                    )
+                }
+            }.getResult()
+        )
+    }
+
+    override fun attemptUserDefaultCity(
+        stateEvent: StateEvent,
+        id: Long
+    ): Flow<DataState<AccountViewState>> = flow {
+        val apiResult = safeApiCall(Dispatchers.IO){
+            openApiMainService.getDefaultCity(
+                id = id
+            )
+        }
+        emit(
+            object: ApiResponseHandler<AccountViewState, City>(
+                response = apiResult,
+                stateEvent = stateEvent
+            ) {
+                override suspend fun handleSuccess(resultObj: City): DataState<AccountViewState> {
+                    Log.d(TAG,"handleSuccess ${stateEvent}")
+                    return DataState.data(
+                        data = AccountViewState(
+                            addressFields = AccountViewState.AddressFields(
+                                defaultCity= resultObj
+                            )
+                        ),
+                        stateEvent = stateEvent,
+                        response = Response(
+                            stateEvent.toString(),
                             UIComponentType.None(),
                             MessageType.None()
                         )

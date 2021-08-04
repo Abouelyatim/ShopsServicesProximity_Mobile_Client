@@ -15,6 +15,7 @@ import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
+import com.smartcity.client.ui.main.account.viewmodel.clearNewAddress
 import com.smartcity.client.ui.main.account.viewmodel.getAddressList
 import com.smartcity.client.util.*
 import kotlinx.android.synthetic.main.fragment_address.*
@@ -45,6 +46,7 @@ constructor(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.cancelActiveJobs()
         // Restore state after process death
         savedInstanceState?.let { inState ->
             (inState[ACCOUNT_VIEW_STATE_BUNDLE_KEY] as AccountViewState?)?.let { viewState ->
@@ -63,6 +65,7 @@ constructor(
 
         initRecyclerView()
         add_address_button.setOnClickListener {
+            viewModel.clearNewAddress()
             navAddAddress()
         }
 
@@ -74,11 +77,6 @@ constructor(
         viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
 
             stateMessage?.let {
-
-                if(stateMessage.response.message.equals(SuccessHandling.DELETE_DONE)){
-                    getAddresses()
-                }
-
                 uiCommunicationListener.onResponseReceived(
                     response = it.response,
                     stateMessageCallback = object: StateMessageCallback {
@@ -87,6 +85,10 @@ constructor(
                         }
                     }
                 )
+
+                if(stateMessage.response.message.equals(SuccessHandling.DELETE_DONE)){
+                    getAddresses()
+                }
             }
         })
 

@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.city
 
 import android.view.LayoutInflater
 import android.view.View

@@ -104,6 +104,16 @@ sealed class AccountStateEvent: StateEvent {
         }
     }
 
+    class GetUserDefaultCityEvent: AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Get default city attempt failed."
+        }
+
+        override fun toString(): String {
+            return "GetUserDefaultCityStateEvent"
+        }
+    }
+
     class None: AccountStateEvent(){
         override fun errorInfo(): String {
             return "None"

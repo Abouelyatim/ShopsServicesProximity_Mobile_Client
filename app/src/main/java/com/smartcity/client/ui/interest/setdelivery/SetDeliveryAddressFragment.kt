@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest
+package com.smartcity.client.ui.interest.setdelivery
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -21,6 +21,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.smartcity.client.R
 import com.smartcity.client.di.interest.InterestScope
+import com.smartcity.client.ui.interest.BaseInterestFragment
+import com.smartcity.client.util.GpsTracker
+import com.smartcity.client.ui.interest.InterestActivity
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.viewmodel.*
 import com.smartcity.client.util.RetryToHandelNetworkError
@@ -135,7 +138,8 @@ constructor(
 
     private fun myPosition() {
         my_position_button.setOnClickListener {
-            val gpsTracker = GpsTracker(requireContext())
+            val gpsTracker =
+                GpsTracker(requireContext())
             if(uiCommunicationListener.isFineLocationPermissionGranted()){
                 gpsTracker.getCurrentLocation()
                 val latitude: Double = gpsTracker.getLatitude()

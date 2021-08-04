@@ -51,8 +51,14 @@ constructor(
     }
 
     override fun handleNewData(data: AccountViewState) {
-        data.addressList?.let {list ->
-            setAddressList(list)
+        data.addressFields.let {addressFields ->
+            addressFields.addressList?.let {list ->
+                setAddressList(list)
+            }
+
+            addressFields.defaultCity?.let { city ->
+                setDefaultCity(city)
+            }
         }
 
         data.userInformation?.let {infos ->
@@ -144,6 +150,13 @@ constructor(
                         )
                     }
 
+                    is GetUserDefaultCityEvent ->{
+                        accountRepository.attemptUserDefaultCity(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
                     else -> {
                         flow{
                             emit(
@@ -166,11 +179,6 @@ constructor(
 
     override fun initNewViewState(): AccountViewState {
         return AccountViewState()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        cancelActiveJobs()
     }
 }
 

@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".ui.interest.SetDeliveryAddressFragment">
+        tools:context=".ui.interest.setdelivery.SetDeliveryAddressFragment">
 
     <ScrollView
             android:layout_width="match_parent"
@@ -97,7 +97,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Choose a city to find products and offers around you"
+                        android:text="Select address on map or use your position"
+                        android:gravity="start"
                         android:textColor="#000"
                         android:textSize="22sp"
                         android:textStyle="bold"

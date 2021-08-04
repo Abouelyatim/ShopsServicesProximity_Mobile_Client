@@ -38,12 +38,21 @@
                 android:id="@+id/action_configureDeliveryAddressFragment_to_setDeliveryAddressFragment"
                 app:destination="@id/setDeliveryAddressFragment" />
         <action
-                android:id="@+id/action_configureDeliveryAddressFragment_to_chooseInterestFragment"
-                app:destination="@id/chooseInterestFragment" />
+                android:id="@+id/action_configureDeliveryAddressFragment_to_userInformationFragment"
+                app:destination="@id/userInformationFragment" />
     </fragment>
     <fragment
             android:id="@+id/setDeliveryAddressFragment"
             android:name="com.smartcity.client.ui.interest.setdelivery.SetDeliveryAddressFragment"
             android:label="fragment_set_delivery_address"
             tools:layout="@layout/fragment_set_delivery_address" />
+    <fragment
+            android:id="@+id/userInformationFragment"
+            android:name="com.smartcity.client.ui.interest.information.UserInformationFragment"
+            android:label="fragment_user_information"
+            tools:layout="@layout/fragment_user_information" >
+        <action
+                android:id="@+id/action_userInformationFragment_to_chooseInterestFragment"
+                app:destination="@id/chooseInterestFragment" />
+    </fragment>
 </navigation>

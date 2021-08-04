@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        tools:context=".ui.interest.information.UserInformationFragment">
+
+    <RelativeLayout
+            android:layout_margin="32dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+        <LinearLayout
+                android:id="@+id/text"
+                android:layout_alignParentTop="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+            <TextView
+                    android:id="@+id/skip_button"
+                    android:padding="5dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:text="Skip"
+                    android:textColor="@color/grey5"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    />
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="What is your full name?"
+                    android:textColor="#000"
+                    android:textSize="26sp"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:background="@drawable/radius_button_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_above="@+id/container"
+                android:layout_below="@+id/text">
+            <TextView
+                    android:layout_marginTop="10dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="You will need this information on order creation"
+                    />
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="5dp"
+                    >
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/grey0_light"
+                        android:layout_marginEnd="10dp"
+                        >
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/input_first_name"
+                            android:textColor="#000"
+                            android:hint="First Name"
+                            android:inputType="textAutoComplete"
+                            android:backgroundTint="@color/grey0"
+                            android:gravity="center"
+                            />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/grey0_light"
+                        >
+
+                    <EditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/input_last_name"
+                            android:textColor="#000"
+                            android:hint="Last Name"
+                            android:inputType="textAutoComplete"
+                            android:backgroundTint="@color/grey0"
+                            android:gravity="center"
+                            />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/text_input_birthday"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/grey0_light"
+                    android:layout_marginTop="10dp"
+                    >
+
+                <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/input_birthday"
+                        android:textColor="#000"
+                        android:hint="Birth day"
+                        android:inputType="none"
+                        android:backgroundTint="@color/grey0"
+                        android:focusableInTouchMode="false"
+                        android:focusable="false"
+                        android:gravity="center"
+                        />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:gravity="center">
+            <Button
+                    android:id="@+id/user_information_next_button"
+                    android:layout_width="220dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/main_button_drawable"
+                    android:text="Next"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
+                    />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

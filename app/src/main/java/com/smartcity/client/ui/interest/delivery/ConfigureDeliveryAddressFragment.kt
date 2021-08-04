@@ -48,18 +48,18 @@ constructor(
 
     private fun next() {
         delivery_address_next_button.setOnClickListener {
-            navInterest()
+            navInformation()
         }
     }
 
     private fun skip() {
         skip_button.setOnClickListener {
-            navInterest()
+            navInformation()
         }
     }
 
-    private fun navInterest(){
-        findNavController().navigate(R.id.action_configureDeliveryAddressFragment_to_chooseInterestFragment)
+    private fun navInformation(){
+        findNavController().navigate(R.id.action_configureDeliveryAddressFragment_to_userInformationFragment)
     }
 
     private fun setDeliveryAddressText() {

@@ -39,7 +39,6 @@ import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-@InterestScope
 class SetDeliveryAddressFragment
 @Inject
 constructor(

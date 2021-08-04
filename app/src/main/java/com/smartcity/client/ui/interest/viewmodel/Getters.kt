@@ -93,3 +93,21 @@ fun InterestViewModel.getDoorCodeName():String{
         return it.configurationFields.doorCodeName?:""
     }
 }
+
+fun InterestViewModel.getFirstName():String{
+    getCurrentViewStateOrNew().let {
+        return it.userInformationFields.firstName?:""
+    }
+}
+
+fun InterestViewModel.getLastName():String{
+    getCurrentViewStateOrNew().let {
+        return it.userInformationFields.lastName?:""
+    }
+}
+
+fun InterestViewModel.getBirthDay():String{
+    getCurrentViewStateOrNew().let {
+        return it.userInformationFields.birthDay?:""
+    }
+}

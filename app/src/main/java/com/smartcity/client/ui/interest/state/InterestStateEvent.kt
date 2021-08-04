@@ -2,6 +2,8 @@ package com.smartcity.client.ui.interest.state
 
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.City
+import com.smartcity.client.models.UserInformation
+import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.util.StateEvent
 
 sealed class InterestStateEvent: StateEvent {
@@ -69,6 +71,18 @@ sealed class InterestStateEvent: StateEvent {
 
         override fun toString(): String {
             return "CreateAddressStateEvent"
+        }
+    }
+
+    class SetUserInformationEvent(
+        var userInformation: UserInformation?=null
+    ): InterestStateEvent(){
+        override fun errorInfo(): String {
+            return "Save information attempt failed."
+        }
+
+        override fun toString(): String {
+            return "SetUserInformationStateEvent"
         }
     }
 

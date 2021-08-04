@@ -8,6 +8,7 @@ import com.smartcity.client.ui.interest.*
 import com.smartcity.client.ui.interest.city.ConfigureAddressFragment
 import com.smartcity.client.ui.interest.country.SelectCountryFragment
 import com.smartcity.client.ui.interest.delivery.ConfigureDeliveryAddressFragment
+import com.smartcity.client.ui.interest.information.UserInformationFragment
 import com.smartcity.client.ui.interest.interest.ChooseInterestFragment
 import com.smartcity.client.ui.interest.setdelivery.SetDeliveryAddressFragment
 import javax.inject.Inject
@@ -52,6 +53,12 @@ constructor(
 
             SetDeliveryAddressFragment::class.java.name -> {
                 SetDeliveryAddressFragment(
+                    viewModelFactory
+                )
+            }
+
+            UserInformationFragment::class.java.name -> {
+                UserInformationFragment(
                     viewModelFactory
                 )
             }

@@ -11,6 +11,7 @@ import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.AuthToken
 import com.smartcity.client.models.City
+import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Category
 import com.smartcity.client.persistence.AuthTokenDao
 import com.smartcity.client.repository.buildError
@@ -19,6 +20,7 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.interest.state.CategoryFields
 import com.smartcity.client.ui.interest.state.ConfigurationFields
 import com.smartcity.client.ui.interest.state.InterestViewState
+import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -319,5 +321,48 @@ constructor(
 
             }.getResult()
         )
+    }
+
+    override fun attemptSetUserInformation(
+        stateEvent: StateEvent,
+        userInformation: UserInformation
+    ): Flow<DataState<InterestViewState>> = flow {
+
+        val createUserInformationError=userInformation.isValidForCreation()
+        if(createUserInformationError.equals(UserInformation.CreateUserInformationError.none())){
+            val apiResult = safeApiCall(Dispatchers.IO){
+                openApiInterestService.setUserInformation(
+                    userInformation = userInformation
+                )
+            }
+
+            emit(
+                object: ApiResponseHandler<InterestViewState, GenericResponse>(
+                    response = apiResult,
+                    stateEvent = stateEvent
+                ) {
+                    override suspend fun handleSuccess(resultObj: GenericResponse): DataState<InterestViewState> {
+                        Log.d(TAG,"handleSuccess ${stateEvent}")
+                        return DataState.data(
+                            data = null,
+                            stateEvent = stateEvent,
+                            response = Response(
+                                stateEvent.toString(),
+                                UIComponentType.None(),
+                                MessageType.None()
+                            )
+                        )
+                    }
+                }.getResult()
+            )
+        }else{
+            emit(
+                buildError<InterestViewState>(
+                    createUserInformationError,
+                    UIComponentType.Dialog(),
+                    stateEvent
+                )
+            )
+        }
     }
 }

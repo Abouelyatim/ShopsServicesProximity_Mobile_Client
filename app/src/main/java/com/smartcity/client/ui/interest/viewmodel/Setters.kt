@@ -101,3 +101,21 @@ fun InterestViewModel.setDoorCodeName(value :String){
     update.configurationFields.doorCodeName = value
     setViewState(update)
 }
+
+fun InterestViewModel.setFirstName(value:String){
+    val update = getCurrentViewStateOrNew()
+    update.userInformationFields.firstName = value
+    setViewState(update)
+}
+
+fun InterestViewModel.setLastName(value:String){
+    val update = getCurrentViewStateOrNew()
+    update.userInformationFields.lastName = value
+    setViewState(update)
+}
+
+fun InterestViewModel.setBirthDay(value:String){
+    val update = getCurrentViewStateOrNew()
+    update.userInformationFields.birthDay = value
+    setViewState(update)
+}

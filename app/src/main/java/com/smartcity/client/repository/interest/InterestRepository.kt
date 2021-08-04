@@ -3,6 +3,7 @@ package com.smartcity.client.repository.interest
 import com.smartcity.client.di.auth.AuthScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.City
+import com.smartcity.client.models.UserInformation
 import com.smartcity.client.ui.interest.state.InterestViewState
 import com.smartcity.client.util.DataState
 import com.smartcity.client.util.StateEvent
@@ -42,5 +43,10 @@ interface InterestRepository {
     fun attemptSetUserDefaultCity(
         stateEvent: StateEvent,
         city: City
+    ): Flow<DataState<InterestViewState>>
+
+    fun attemptSetUserInformation(
+        stateEvent: StateEvent,
+        userInformation: UserInformation
     ): Flow<DataState<InterestViewState>>
 }

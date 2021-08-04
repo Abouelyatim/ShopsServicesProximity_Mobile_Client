@@ -87,8 +87,11 @@ constructor(
         pickAddressListener()
         addUserInformationListener()
         getUserAddresses()
-        getUserInformation()
 
+        if(viewModel.getUserInformation()==null){
+            getUserInformation()
+        }
+        
         place_order_button.setOnClickListener {
             showOrderConfirmationDialog()
         }

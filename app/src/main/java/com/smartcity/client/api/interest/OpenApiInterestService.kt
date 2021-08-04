@@ -7,6 +7,7 @@ import com.smartcity.client.api.interest.dto.CityDto
 import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.City
+import com.smartcity.client.models.UserInformation
 import com.smartcity.client.models.product.Category
 import retrofit2.http.*
 
@@ -41,4 +42,9 @@ interface OpenApiInterestService {
     suspend fun setUserDefaultCity(
         @Body city: City
     ):GenericResponse
+
+    @POST("user/Information")
+    suspend fun setUserInformation(
+        @Body userInformation: UserInformation
+    ): GenericResponse
 }

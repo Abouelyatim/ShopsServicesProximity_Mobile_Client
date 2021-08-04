@@ -6,6 +6,7 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.interest.state.InterestStateEvent
 import com.smartcity.client.ui.interest.state.InterestViewState
+import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -86,6 +87,14 @@ constructor(
                         interestRepository.attemptCreateAddress(
                             stateEvent,
                             stateEvent.address
+                        )
+                    }
+
+                    is InterestStateEvent.SetUserInformationEvent ->{
+                        stateEvent.userInformation!!.userId=authToken.account_pk!!.toLong()
+                        interestRepository.attemptSetUserInformation(
+                            stateEvent,
+                            stateEvent.userInformation!!
                         )
                     }
 

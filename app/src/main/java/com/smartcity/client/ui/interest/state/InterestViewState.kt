@@ -10,9 +10,17 @@ const val INTEREST_VIEW_STATE_BUNDLE_KEY = "com.smartcity.client.ui.interest.sta
 
 @Parcelize
 data class InterestViewState(
+    var userInformationFields:UserInformationFields = UserInformationFields(),
     var categoryFields: CategoryFields = CategoryFields(),
     var configurationFields: ConfigurationFields =ConfigurationFields()
 
+) : Parcelable
+
+@Parcelize
+data class UserInformationFields(
+    var firstName:String ?= null,
+    var lastName:String?= null,
+    var birthDay:String?=null
 ) : Parcelable
 
 @Parcelize

@@ -14,7 +14,8 @@ class FlashViewState(
 
     @Parcelize
     data class FlashFields(
-        var flashDealsList: List<FlashDeal>? = null,
+        var flashDealsMap: MutableMap<String,List<FlashDeal>> = mutableMapOf(),
+        var networkFlashDealsPair : Pair<String,List<FlashDeal>>? =null,
         var offerAction: List<Triple<String,Int,Int>>? = null,
         var offerActionRecyclerPosition: Int? =null,
 

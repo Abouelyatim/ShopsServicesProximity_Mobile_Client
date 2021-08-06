@@ -29,7 +29,15 @@ data class FlashDeal(
 
     @SerializedName("storeAddress")
     @Expose
-    var storeAddress:String?
+    var storeAddress:String?,
+
+    @SerializedName("latitude")
+    @Expose
+    var latitude:Double?,
+
+    @SerializedName("longitude")
+    @Expose
+    var longitude:Double?
 
 ) : Parcelable {
     override fun toString(): String {
@@ -37,7 +45,10 @@ data class FlashDeal(
                 "title=$title," +
                 "content=$content," +
                 "storeName=$storeName," +
-                "storeAddress=$storeAddress)"
+                "storeAddress=$storeAddress" +
+                "latitude=$latitude" +
+                "longitude=$longitude" +
+                ")"
     }
 
     class CreateFlashError {

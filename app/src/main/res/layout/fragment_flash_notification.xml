@@ -32,13 +32,10 @@
         </LinearLayout>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/flash_recyclerview"
-            android:scrollbars="vertical"
-            android:background="@color/white"
-            />
+            android:layout_height="match_parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

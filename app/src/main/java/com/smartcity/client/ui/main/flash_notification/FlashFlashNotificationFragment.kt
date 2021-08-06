@@ -1,7 +1,10 @@
 package com.smartcity.client.ui.main.flash_notification
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -9,8 +12,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.RequestManager
+import com.google.android.gms.maps.MapView
 import com.smartcity.client.R
+import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.getSelectedActionPositions
 import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.setSelectedActionPositions
@@ -25,7 +31,10 @@ import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_flash_notification.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+
 
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -36,12 +45,21 @@ constructor(
     private val requestManager: RequestManager
 ): BaseFlashNotificationFragment(R.layout.fragment_flash_notification,viewModelFactory),
     ProductListAdapter.Interaction,
-    OfferActionAdapter.Interaction
+    OfferActionAdapter.Interaction,
+    FlashDealsAdapter.Interaction
 {
+    private lateinit var dialogView: View
+
+    private lateinit var mMapView:MapView
+
+    private val days= mutableListOf<Pair<String,FlashDealsAdapter>>()
+    private lateinit var pager :ViewPager
+    private lateinit var pagerAdapter :MainPagerAdapter
+    private val pagesNumber=15
 
     private lateinit var recyclerOfferActionAdapter: OfferActionAdapter
-    private lateinit var flashRecyclerAdapter: FlashDealsAdapter
     private lateinit var productRecyclerAdapter: ProductListAdapter
+
 
     object ActionOffer {
         val FLASH = Pair<String,Int>("Flash",0)
@@ -76,22 +94,97 @@ constructor(
         setHasOptionsMenu(true)
         uiCommunicationListener.displayBadgeBottomNavigationFlash(false)
 
-        initRecyclerView()
+        initDays()
+        initPager()
+
         initProductRecyclerView()
         initOfferActionRecyclerView()
         subscribeObservers()
         setOfferAction()
         initData(viewModel.getOfferActionRecyclerPosition())
+
+    }
+
+    private fun displayViewPager(boolean: Boolean){
+        if(boolean){
+            view_pager.visibility=View.VISIBLE
+        }else{
+            view_pager.visibility=View.GONE
+        }
+    }
+
+    private fun displayProductDiscount(boolean: Boolean){
+        if (boolean){
+            discount_recyclerview.visibility=View.VISIBLE
+        }else{
+            discount_recyclerview.visibility=View.GONE
+        }
+    }
+
+    private fun initPager() {
+        pagerAdapter = MainPagerAdapter()
+        pager = view_pager as ViewPager
+        pager.adapter = pagerAdapter
+
+        val inflater: LayoutInflater = requireActivity().layoutInflater
+        (0 .. pagesNumber).map {
+            val layout = inflater.inflate(R.layout.layout_flash_day_page, null) as FrameLayout
+            pagerAdapter.addView(layout, it)
+            val title=layout.findViewById<TextView>(R.id.flash_day)
+            title.text = days[it].first
+            val recyclerView = layout.findViewById<RecyclerView>(R.id.flash_recyclerview)
+            initRecyclerView(recyclerView, days[it].second)
+        }
+
+        pager.currentItem = days.size
+        pagerAdapter.notifyDataSetChanged()
+
+        pager.addOnPageChangeListener(object :ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {}
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+
+            override fun onPageSelected(position: Int) {
+                getFlashBehavior(position)
+            }
+        })
+    }
+
+    private fun getFlashBehavior(position: Int){
+        if(position==pagesNumber){//all ways get from network today flash because we still receive new flashes
+            getFlashDeals(days[position].first)
+        }else{
+            if(viewModel.getFlashDealsMap()[days[position].first]==null){
+                getFlashDeals(days[position].first)
+            }else{
+                viewModel.getFlashDealsMap()[days[pager.currentItem].first]?.let {
+                    days[pager.currentItem].second.submitList(it)
+                }
+            }
+        }
+    }
+
+    private fun initDays() {
+        val calendar = Calendar.getInstance()
+        val formatter  = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
+        formatter.format(calendar.time)
+        (0 .. pagesNumber).map {
+            days.add(Pair(formatter.format(calendar.time),FlashDealsAdapter(this@FlashFlashNotificationFragment)))
+            calendar.add(Calendar.DAY_OF_YEAR, -1)
+        }
+        days.reverse()
     }
 
     private fun initData(actionPosition: Int) {
         when(actionPosition){
             ActionOffer.FLASH.second ->{
-                viewModel.clearProductList()
-                getFlashDeals()
+                displayViewPager(true)
+                displayProductDiscount(false)
+                getFlashDeals(days[pager.currentItem].first)
             }
             ActionOffer.DISCOUNT.second ->{
-                viewModel.clearFlashList()
+                displayViewPager(false)
+                displayProductDiscount(true)
                 getDiscountOrders()
             }
         }
@@ -155,9 +248,11 @@ constructor(
         }
     }
 
-    private fun getFlashDeals() {
+    private fun getFlashDeals(date:String) {
         viewModel.setStateEvent(
-            FlashStateEvent.GetUserFlashDealsEvent()
+            FlashStateEvent.GetUserFlashDealsEvent(
+                date
+            )
         )
     }
 
@@ -190,7 +285,11 @@ constructor(
 
         //submit list to recycler view
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            flashRecyclerAdapter.submitList(viewModel.getFlashDealsList())
+
+            viewModel.getFlashDealsMap()[days[pager.currentItem].first]?.let {
+                days[pager.currentItem].second.submitList(it)
+            }
+
             productRecyclerAdapter.submitList(viewModel.getDiscountProductList(),false)
 
             recyclerOfferActionAdapter.apply {
@@ -201,17 +300,13 @@ constructor(
         })
     }
 
-    private fun initRecyclerView() {
-        flash_recyclerview.apply {
+    private fun initRecyclerView(recyclerView: RecyclerView,flashRecyclerAdapter:FlashDealsAdapter) {
+        recyclerView.apply {
             layoutManager = LinearLayoutManager(this@FlashFlashNotificationFragment.context)
             val topSpacingDecorator = TopSpacingItemDecoration(0)
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
 
-            flashRecyclerAdapter =
-                FlashDealsAdapter(
-
-                )
             addOnScrollListener(object: RecyclerView.OnScrollListener(){
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -230,11 +325,13 @@ constructor(
 
         when(item){
             ActionOffer.FLASH.first ->{
-                viewModel.clearProductList()
-                getFlashDeals()
+                displayViewPager(true)
+                displayProductDiscount(false)
+                getFlashBehavior(pager.currentItem)
             }
             ActionOffer.DISCOUNT.first ->{
-                viewModel.clearFlashList()
+                displayViewPager(false)
+                displayProductDiscount(true)
                 getDiscountOrders()
             }
         }
@@ -244,6 +341,7 @@ constructor(
         super.onDestroy()
         viewModel.setOfferActionRecyclerPosition(getSelectedActionPositions())
         recyclerOfferActionAdapter.resetSelectedActionPosition()
+
     }
 
     override fun onResume() {
@@ -252,7 +350,7 @@ constructor(
     }
 
     private  fun resetUI(){
-        flash_recyclerview.smoothScrollToPosition(0)
+       // flash_recyclerview.smoothScrollToPosition(0)
         discount_recyclerview.smoothScrollToPosition(0)
         uiCommunicationListener.hideSoftKeyboard()
     }
@@ -263,4 +361,14 @@ constructor(
     }
 
     override fun restoreListPosition() {}
+
+
+    override fun onItemSelected(item: FlashDeal) {
+        showOrderConfirmationDialog(item)
+    }
+
+    private fun showOrderConfirmationDialog(flash: FlashDeal){
+        val dialog=StoreBottomSheetDialog(flash)
+        dialog.show(childFragmentManager,"dialog_store_bottom_sheet")
+    }
 }

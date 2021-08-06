@@ -1,8 +1,6 @@
 package com.smartcity.client.ui.main.flash_notification
 
 import android.annotation.SuppressLint
-import android.transition.AutoTransition
-import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +11,7 @@ import com.smartcity.client.util.DateUtils
 import kotlinx.android.synthetic.main.layout_flash_deal_list_item.view.*
 
 class FlashDealsAdapter (
+    private val interaction: Interaction? = null
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<FlashDeal>() {
 
@@ -59,7 +58,8 @@ class FlashDealsAdapter (
     ): FlashDealHolder {
         return FlashDealHolder(
             LayoutInflater.from(parent.context)
-                .inflate(R.layout.layout_flash_deal_list_item, parent, false)
+                .inflate(R.layout.layout_flash_deal_list_item, parent, false),
+            interaction=interaction
         )
     }
 
@@ -81,36 +81,22 @@ class FlashDealsAdapter (
     }
 
     class FlashDealHolder(
-        itemView: View
+        itemView: View,
+        private val interaction: Interaction?
     ) : RecyclerView.ViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
         fun bind(item: FlashDeal) = with(itemView) {
             itemView.flash_title.text=item.title
             itemView.flash_content.text=item.content
-            itemView.flash_store_name.text=item.storeName
-            itemView.flash_store_address.text=item.storeAddress
             itemView.flash_date.text= DateUtils.convertStringToStringDateSimpleFormat(item.createAt!!)
 
-
-            itemView.expand_button.setOnClickListener {
-                expandBehavior(itemView)
-            }
-
             itemView.setOnClickListener {
-                expandBehavior(itemView)
+                interaction?.onItemSelected(item)
             }
         }
+    }
 
-        private fun expandBehavior(itemView: View){
-            if (itemView.flash_expanded.visibility==View.GONE){
-                TransitionManager.beginDelayedTransition(itemView.container, AutoTransition())
-                itemView.flash_expanded.visibility=View.VISIBLE
-                itemView.expand_button.setBackgroundResource(R.drawable.ic_baseline_keyboard_arrow_up_24)
-            }else{
-                TransitionManager.beginDelayedTransition(itemView.container, AutoTransition())
-                itemView.flash_expanded.visibility=View.GONE
-                itemView.expand_button.setBackgroundResource(R.drawable.ic_baseline_keyboard_arrow_down_24)
-            }
-        }
+    interface Interaction{
+        fun onItemSelected(item:FlashDeal)
     }
 }

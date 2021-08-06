@@ -91,7 +91,7 @@ constructor(
         if(viewModel.getUserInformation()==null){
             getUserInformation()
         }
-        
+
         place_order_button.setOnClickListener {
             showOrderConfirmationDialog()
         }

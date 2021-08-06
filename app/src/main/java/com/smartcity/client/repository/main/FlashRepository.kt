@@ -13,12 +13,15 @@ interface FlashRepository {
 
     fun attemptUserFlashDeals(
         stateEvent: StateEvent,
-        id: Long
+        id: Long,
+        date :String
     ): Flow<DataState<FlashViewState>>
+
     fun attemptUserDiscountProduct(
         stateEvent: StateEvent,
         id: Long
     ): Flow<DataState<FlashViewState>>
+
     fun attemptAddProductCart(
         stateEvent: StateEvent,
         userId: Long,

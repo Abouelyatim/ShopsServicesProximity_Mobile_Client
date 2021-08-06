@@ -29,11 +29,13 @@ constructor(
 
     override fun attemptUserFlashDeals(
         stateEvent: StateEvent,
-        id: Long
+        id: Long,
+        date :String
     ): Flow<DataState<FlashViewState>> = flow {
         val apiResult = safeApiCall(Dispatchers.IO){
             openApiMainService.getUserFlashDeals(
-                id = id
+                id = id,
+                date = date
             )
         }
 
@@ -48,7 +50,7 @@ constructor(
                     return DataState.data(
                         data = FlashViewState(
                             flashFields = FlashViewState.FlashFields(
-                                flashDealsList = resultObj.results
+                                networkFlashDealsPair = Pair(date,resultObj.results)
                             )
                         ),
                         stateEvent = stateEvent,

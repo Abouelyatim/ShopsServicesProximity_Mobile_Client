@@ -75,73 +75,8 @@
 
             </LinearLayout>
 
-
-            <LinearLayout
-                    android:id="@+id/flash_expanded"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    >
-                <LinearLayout
-
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                    <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:background="@drawable/ic_baseline_storefront_24"
-                            android:layout_gravity="center"/>
-                    <TextView
-                            android:id="@+id/flash_store_name"
-                            android:layout_marginStart="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Donghan Overseas Store"
-                            android:textSize="14sp"
-                            android:layout_gravity="center"
-
-                            />
-
-                </LinearLayout>
-
-                <LinearLayout
-                        android:id="@+id/order_store_address_container"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                    <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/ic_outline_location_on_24"/>
-                    <TextView
-                            android:id="@+id/flash_store_address"
-                            android:layout_marginStart="3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Donghan Overseas Store"
-                            android:textSize="14sp"
-                            android:layout_gravity="center"
-
-                            />
-
-                </LinearLayout>
-            </LinearLayout>
-
         </LinearLayout>
 
-
-        <ImageView
-                android:id="@+id/expand_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_baseline_keyboard_arrow_down_24"
-                android:layout_gravity="top"
-                />
     </LinearLayout>
 
 

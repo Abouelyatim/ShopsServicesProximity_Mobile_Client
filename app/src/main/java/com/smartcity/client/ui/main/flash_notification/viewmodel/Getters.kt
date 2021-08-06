@@ -3,9 +3,9 @@ package com.smartcity.client.ui.main.flash_notification.viewmodel
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
 
-fun FlashViewModel.getFlashDealsList(): List<FlashDeal> {
+fun FlashViewModel.getFlashDealsMap(): Map<String,List<FlashDeal>> {
     getCurrentViewStateOrNew().let {
-        return it.flashFields.flashDealsList?: listOf()
+        return it.flashFields.flashDealsMap
     }
 }
 

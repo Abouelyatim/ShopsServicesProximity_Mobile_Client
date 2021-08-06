@@ -4,7 +4,7 @@ class Constants {
 
     companion object{
 
-        const val BASE="http://192.168.42.119:8085"
+        const val BASE="http://192.168.42.126:8085"
         const val BASE_URL = "$BASE/api/"
         const val BASE_SSE_URL = "$BASE/sse/flux"
         const val PRODUCT_IMAGE_URL=BASE_URL+"product/image/"
@@ -13,7 +13,7 @@ class Constants {
 
         const val LOCAL_STORAGE_DIRECTORY="ImagePicker"
 
-        const val NETWORK_TIMEOUT = 3000L
+        const val NETWORK_TIMEOUT = 30000L
         const val CACHE_TIMEOUT = 2000L
         const val TESTING_NETWORK_DELAY = 0L // fake network delay for testing
         const val TESTING_CACHE_DELAY = 0L // fake cache delay for testing

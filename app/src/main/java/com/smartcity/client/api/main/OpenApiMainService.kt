@@ -93,9 +93,10 @@ interface OpenApiMainService {
         @Path(value = "id") id:Long
     ): GenericResponse
 
-    @GET("user/flash/{id}")
+    @GET("user/flash")
     suspend fun getUserFlashDeals(
-        @Path(value = "id") id:Long
+        @Query(value = "id") id:Long,
+        @Query(value = "date") date:String
     ): ListGenericResponse<FlashDeal>
 
     @GET("user/offer/{id}")

@@ -3,9 +3,9 @@ package com.smartcity.client.ui.main.flash_notification.viewmodel
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
 
-fun FlashViewModel.setFlashDealsList(list: List<FlashDeal>) {
+fun FlashViewModel.setFlashDealsList(pair: Pair<String,List<FlashDeal>>) {
     val update = getCurrentViewStateOrNew()
-    update.flashFields.flashDealsList=list
+    update.flashFields.flashDealsMap.put(pair.first,pair.second)
     setViewState(update)
 }
 
@@ -24,18 +24,6 @@ fun FlashViewModel.setOfferActionList(orderActionList: List<Triple<String,Int,In
 fun FlashViewModel.setOfferActionRecyclerPosition(postion:Int){
     val update = getCurrentViewStateOrNew()
     update.flashFields.offerActionRecyclerPosition=postion
-    setViewState(update)
-}
-
-fun FlashViewModel.clearFlashList(){
-    val update = getCurrentViewStateOrNew()
-    update.flashFields.flashDealsList= listOf()
-    setViewState(update)
-}
-
-fun FlashViewModel.clearProductList(){
-    val update = getCurrentViewStateOrNew()
-    update.flashFields.productDiscountList= listOf()
     setViewState(update)
 }
 

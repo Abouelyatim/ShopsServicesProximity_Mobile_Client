@@ -4,7 +4,9 @@ import com.smartcity.client.util.StateEvent
 
 sealed class FlashStateEvent: StateEvent {
 
-    class GetUserFlashDealsEvent: FlashStateEvent() {
+    class GetUserFlashDealsEvent(
+        val date:String
+    ): FlashStateEvent() {
         override fun errorInfo(): String {
             return "Get flashes attempt failed."
         }

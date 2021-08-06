@@ -36,8 +36,8 @@ constructor(
 
     override fun handleNewData(data: FlashViewState) {
         data.flashFields.let { flashFields ->
-            flashFields.flashDealsList?.let {list ->
-                setFlashDealsList(list)
+            flashFields.networkFlashDealsPair?.let {pair ->
+                setFlashDealsList(pair)
             }
 
             flashFields.productDiscountList?.let { list ->
@@ -54,7 +54,8 @@ constructor(
                     is FlashStateEvent.GetUserFlashDealsEvent ->{
                         flashRepository.attemptUserFlashDeals(
                             stateEvent,
-                            authToken.account_pk!!.toLong()
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.date
                         )
                     }
 

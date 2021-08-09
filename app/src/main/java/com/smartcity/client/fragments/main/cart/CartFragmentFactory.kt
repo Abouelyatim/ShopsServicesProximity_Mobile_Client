@@ -4,15 +4,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
-
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.ui.main.cart.address.AddAddressFragment
-
-import com.smartcity.client.ui.main.cart.cart.CartFragment
 import com.smartcity.client.ui.main.cart.address.PickAddressFragment
+import com.smartcity.client.ui.main.cart.cart.CartFragment
 import com.smartcity.client.ui.main.cart.information.AddUserInformationFragment
 import com.smartcity.client.ui.main.cart.order.PlaceOrderFragment
-
 import javax.inject.Inject
 
 @MainScope

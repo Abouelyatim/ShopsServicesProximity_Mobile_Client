@@ -25,7 +25,8 @@ class CityDto(
             lat = lat,
             lon = lon,
             name = name,
-            userId = -1
+            userId = -1,
+            displayName = ""
         )
     }
 

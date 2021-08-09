@@ -28,4 +28,9 @@ interface FlashRepository {
         variantId: Long,
         quantity: Int
     ): Flow<DataState<FlashViewState>>
+
+    fun attemptUserDefaultCity(
+        stateEvent: StateEvent,
+        id: Long
+    ): Flow<DataState<FlashViewState>>
 }

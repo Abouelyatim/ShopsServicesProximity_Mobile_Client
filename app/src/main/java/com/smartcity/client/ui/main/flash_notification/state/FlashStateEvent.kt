@@ -1,5 +1,6 @@
 package com.smartcity.client.ui.main.flash_notification.state
 
+import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.util.StateEvent
 
 sealed class FlashStateEvent: StateEvent {
@@ -36,6 +37,16 @@ sealed class FlashStateEvent: StateEvent {
 
         override fun toString(): String {
             return "AddProductCartStateEvent"
+        }
+    }
+
+    class GetUserDefaultCityEvent: FlashStateEvent(){
+        override fun errorInfo(): String {
+            return "Get default city attempt failed."
+        }
+
+        override fun toString(): String {
+            return "GetUserDefaultCityStateEvent"
         }
     }
 

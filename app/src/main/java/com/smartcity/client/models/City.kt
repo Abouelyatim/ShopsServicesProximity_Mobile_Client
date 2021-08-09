@@ -21,11 +21,17 @@ data class City (
 
     @SerializedName("userId")
     @Expose
-    var userId: Long
+    var userId: Long,
+
+    @SerializedName("displayName")
+    @Expose
+    var displayName: String
 ) : Parcelable {
     override fun toString(): String {
         return "City(lat=$lat, " +
                 "lon='$lon', " +
-                "city='$name') "
+                "city='$name'," +
+                "displayName='$displayName'," +
+                ") "
     }
 }

@@ -1,5 +1,6 @@
 package com.smartcity.client.ui.main.flash_notification.viewmodel
 
+import com.smartcity.client.models.City
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
 
@@ -36,5 +37,11 @@ fun FlashViewModel.getSelectedProduct(): Product? {
 fun FlashViewModel.getChoicesMap(): MutableMap<String, String> {
     getCurrentViewStateOrNew().let {
         return it.flashFields.choicesMap?: mutableMapOf()
+    }
+}
+
+fun FlashViewModel.getDefaultCity(): City? {
+    getCurrentViewStateOrNew().let {
+        return it.flashFields.defaultCity
     }
 }

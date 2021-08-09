@@ -115,7 +115,8 @@ constructor(
                     it.latitude,
                     it.longitude,
                     it.getAddressLine(0),
-                    -1
+                    -1,
+                    ""
                 )
 
                 viewModel.setCity("")

@@ -1,5 +1,6 @@
 package com.smartcity.client.ui.main.flash_notification.viewmodel
 
+import com.smartcity.client.models.City
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
 
@@ -42,5 +43,11 @@ fun FlashViewModel.setChoicesMap(map: MutableMap<String, String>) {
 fun FlashViewModel.clearChoicesMap(){
     val update = getCurrentViewStateOrNew()
     update.flashFields.choicesMap= mutableMapOf()
+    setViewState(update)
+}
+
+fun FlashViewModel.setDefaultCity(city : City) {
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.defaultCity= city
     setViewState(update)
 }

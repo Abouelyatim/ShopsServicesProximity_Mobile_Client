@@ -48,10 +48,6 @@ constructor(
     OfferActionAdapter.Interaction,
     FlashDealsAdapter.Interaction
 {
-    private lateinit var dialogView: View
-
-    private lateinit var mMapView:MapView
-
     private val days= mutableListOf<Pair<String,FlashDealsAdapter>>()
     private lateinit var pager :ViewPager
     private lateinit var pagerAdapter :MainPagerAdapter
@@ -102,7 +98,13 @@ constructor(
         subscribeObservers()
         setOfferAction()
         initData(viewModel.getOfferActionRecyclerPosition())
+        getDefaultCity()
+    }
 
+    private fun getDefaultCity(){
+        viewModel.setStateEvent(
+            FlashStateEvent.GetUserDefaultCityEvent()
+        )
     }
 
     private fun displayViewPager(boolean: Boolean){
@@ -285,6 +287,9 @@ constructor(
 
         //submit list to recycler view
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            viewModel.getDefaultCity()?.let {
+                setCityText(it.displayName)
+            }
 
             viewModel.getFlashDealsMap()[days[pager.currentItem].first]?.let {
                 days[pager.currentItem].second.submitList(it)
@@ -298,6 +303,10 @@ constructor(
                 )
             }
         })
+    }
+
+    private fun setCityText(value:String){
+        offers_city_name.text=value
     }
 
     private fun initRecyclerView(recyclerView: RecyclerView,flashRecyclerAdapter:FlashDealsAdapter) {

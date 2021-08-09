@@ -4,10 +4,12 @@ import android.util.Log
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.di.main.MainScope
+import com.smartcity.client.models.City
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.repository.safeApiCall
 import com.smartcity.client.session.SessionManager
+import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.*
 import kotlinx.coroutines.Dispatchers
@@ -134,6 +136,40 @@ constructor(
                             )
                         )
                     }
+                }
+            }.getResult()
+        )
+    }
+
+    override fun attemptUserDefaultCity(
+        stateEvent: StateEvent,
+        id: Long
+    ): Flow<DataState<FlashViewState>> = flow {
+        val apiResult = safeApiCall(Dispatchers.IO){
+            openApiMainService.getDefaultCity(
+                id = id
+            )
+        }
+        emit(
+            object: ApiResponseHandler<FlashViewState, City>(
+                response = apiResult,
+                stateEvent = stateEvent
+            ) {
+                override suspend fun handleSuccess(resultObj: City): DataState<FlashViewState> {
+                    Log.d(TAG,"handleSuccess ${stateEvent}")
+                    return DataState.data(
+                        data = FlashViewState(
+                            flashFields = FlashViewState.FlashFields(
+                                defaultCity= resultObj
+                            )
+                        ),
+                        stateEvent = stateEvent,
+                        response = Response(
+                            stateEvent.toString(),
+                            UIComponentType.None(),
+                            MessageType.None()
+                        )
+                    )
                 }
             }.getResult()
         )

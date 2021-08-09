@@ -5,6 +5,7 @@ import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.repository.main.FlashRepositoryImpl
 import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
+import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.*
@@ -43,6 +44,10 @@ constructor(
             flashFields.productDiscountList?.let { list ->
                 setDiscountProductList(list)
             }
+
+            flashFields.defaultCity?.let { city ->
+                setDefaultCity(city)
+            }
         }
     }
 
@@ -74,6 +79,14 @@ constructor(
                             stateEvent.quantity
                         )
                     }
+
+                    is FlashStateEvent.GetUserDefaultCityEvent ->{
+                        flashRepository.attemptUserDefaultCity(
+                            stateEvent,
+                            authToken.account_pk!!.toLong()
+                        )
+                    }
+
                     else -> {
                         flow{
                             emit(

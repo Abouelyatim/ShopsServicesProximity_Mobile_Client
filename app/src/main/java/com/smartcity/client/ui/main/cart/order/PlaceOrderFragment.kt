@@ -475,10 +475,6 @@ constructor(
         dialog.setCancelable(true)
         dialog.setContentView(dialogView)
 
-
-        val total=dialogView.findViewById<TextView>(R.id.order_total)
-        //total.text=calculateTotalPrice().toString()+Constants.DINAR_ALGERIAN
-
         val backButton=dialogView.findViewById<Button>(R.id.back_order)
         backButton.setOnClickListener {
             dialog.dismiss()

@@ -7,6 +7,47 @@
         android:orientation="vertical"
         tools:context=".ui.main.flash_notification.FlashFlashNotificationFragment">
 
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:gravity="start">
+
+
+        <TextView
+                android:id="@+id/offers_city_name"
+                android:paddingStart="16dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="City"
+                android:textColor="#000"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                />
+
+        <LinearLayout
+                android:id="@+id/offers_search"
+                android:paddingStart="10dp"
+                android:paddingEnd="20dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/ic_baseline_manage_search_24"
+                    />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
             android:layout_width="match_parent"

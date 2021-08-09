@@ -5,7 +5,6 @@ import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.repository.main.FlashRepositoryImpl
 import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
-import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.*
@@ -41,12 +40,26 @@ constructor(
                 setFlashDealsList(pair)
             }
 
+            flashFields.searchNetworkFlashDealsPair?.let {pair ->
+                setSearchFlashDealsList(pair)
+            }
+
+
             flashFields.productDiscountList?.let { list ->
                 setDiscountProductList(list)
             }
 
+            flashFields.searchProductDiscountList?.let { list ->
+                setSearchDiscountProductList(list)
+            }
+
+
             flashFields.defaultCity?.let { city ->
                 setDefaultCity(city)
+            }
+
+            flashFields.cityList?.let {list ->
+                setCityList(list)
             }
         }
     }
@@ -84,6 +97,31 @@ constructor(
                         flashRepository.attemptUserDefaultCity(
                             stateEvent,
                             authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is FlashStateEvent.ResolveUserAddressEvent ->{
+                        flashRepository.attemptResolveUserAddress(
+                            stateEvent,
+                            getDefaultCity()!!.country,
+                            getCityQuery()
+                        )
+                    }
+
+                    is FlashStateEvent.SearchFlashDealsEvent ->{
+                        flashRepository.attemptSearchFlashDeals(
+                            stateEvent,
+                            getSearchCity()!!.lat,
+                            getSearchCity()!!.lon,
+                            stateEvent.date
+                        )
+                    }
+
+                    is FlashStateEvent.SearchDiscountProductEvent ->{
+                        flashRepository.attemptSearchDiscountProduct(
+                            stateEvent,
+                            getSearchCity()!!.lat,
+                            getSearchCity()!!.lon
                         )
                     }
 

@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.interest.city
+package com.smartcity.client.ui.main.flash_notification.address
 
 import android.app.Activity
 import android.app.SearchManager
@@ -12,64 +12,104 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
-import com.smartcity.client.di.interest.InterestScope
 import com.smartcity.client.models.City
-import com.smartcity.client.ui.interest.BaseInterestFragment
+import com.smartcity.client.ui.interest.city.CityAdapter
+import com.smartcity.client.ui.interest.viewmodel.setCity
+import com.smartcity.client.ui.interest.viewmodel.setCityList
+import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFragment
+import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
+import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
+import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
+import com.smartcity.client.ui.main.flash_notification.viewmodel.*
 import com.smartcity.client.util.GpsTracker
-import com.smartcity.client.ui.interest.InterestActivity
-import com.smartcity.client.ui.interest.state.InterestStateEvent
-import com.smartcity.client.ui.interest.viewmodel.*
-import com.smartcity.client.util.RetryToHandelNetworkError
 import com.smartcity.client.util.StateMessageCallback
-import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
 import com.sucho.placepicker.AddressData
 import com.sucho.placepicker.MapType
 import com.sucho.placepicker.PlacePicker
-import kotlinx.android.synthetic.main.fragment_configure_address.*
+import kotlinx.android.synthetic.main.fragment_config_search_address.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-@InterestScope
-class ConfigureAddressFragment
+class ConfigSearchAddressFragment
 @Inject
 constructor(
-    private val viewModelFactory: ViewModelProvider.Factory
-): BaseInterestFragment(R.layout.fragment_configure_address,viewModelFactory),
-    RetryToHandelNetworkError,
+    private val viewModelFactory: ViewModelProvider.Factory,
+    private val requestManager: RequestManager
+): BaseFlashNotificationFragment(R.layout.fragment_config_search_address,viewModelFactory),
     CityAdapter.Interaction
 {
     private lateinit var cityRecyclerAdapter: CityAdapter
 
     private lateinit var citySearchView: SearchView
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(
+            CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY,
+            viewModel.viewState.value
+        )
+        super.onSaveInstanceState(outState)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        viewModel.cancelActiveJobs()
+        // Restore state after process death
+        savedInstanceState?.let { inState ->
+            (inState[CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY] as FlashViewState?)?.let { viewState ->
+                viewModel.setViewState(viewState)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as InterestActivity).initHandelNetworkError(this)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        setHasOptionsMenu(true)
+        uiCommunicationListener.expandAppBar()
+        uiCommunicationListener.displayBottomNavigation(false)
+
         subscribeObservers()
         initSearchView()
         initCityRecyclerView()
         selectMyPosition()
+        defaultPosition()
+        backProceed()
+    }
+
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun defaultPosition() {
+        flash_default_position_button.setOnClickListener {
+            viewModel.setCityQuery("")
+            viewModel.setCityList(
+                listOf(
+                    viewModel.getDefaultCity()!!
+                )
+            )
+        }
     }
 
     private fun selectMyPosition() {
         val applicationInfo = requireActivity().packageManager.getApplicationInfo( activity?.packageName, PackageManager.GET_META_DATA)
-        my_position_button.setOnClickListener {
+        flash_my_position_button.setOnClickListener {
             val gpsTracker =
                 GpsTracker(requireContext())
             if(uiCommunicationListener.isFineLocationPermissionGranted()){
@@ -120,7 +160,7 @@ constructor(
                     ""
                 )
 
-                viewModel.setCity("")
+                viewModel.setCityQuery("")
                 viewModel.setCityList(
                     listOf(city)
                 )
@@ -128,10 +168,32 @@ constructor(
         }
     }
 
-    private fun initSearchView(){
+    private fun initCityRecyclerView() {
+        flash_address_recyclerview.apply {
+            layoutManager = LinearLayoutManager(this@ConfigSearchAddressFragment.context)
+            val topSpacingDecorator = TopSpacingItemDecoration(0)
+            removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
+            addItemDecoration(topSpacingDecorator)
+
+            cityRecyclerAdapter =
+                CityAdapter(
+                    this@ConfigSearchAddressFragment
+                )
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+
+                }
+            })
+            adapter = cityRecyclerAdapter
+        }
+    }
+
+    private fun initSearchView() {
         activity?.apply {
             val searchManager: SearchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-            citySearchView = city_search_view
+            citySearchView = flash_city_search_view
             citySearchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))
             citySearchView.maxWidth = Integer.MAX_VALUE
             citySearchView.setIconifiedByDefault(false)
@@ -142,7 +204,7 @@ constructor(
 
         // ENTER ON COMPUTER KEYBOARD OR ARROW ON VIRTUAL KEYBOARD
         val searchPlate = citySearchView.findViewById(R.id.search_src_text) as EditText
-        searchPlate.setText(viewModel.getCity())
+        searchPlate.setText(viewModel.getCityQuery())
 
         val backgroundView = citySearchView.findViewById(R.id.search_plate) as View
         backgroundView.background = null
@@ -152,9 +214,10 @@ constructor(
                 || actionId == EditorInfo.IME_ACTION_SEARCH ) {
                 val searchQuery = v.text.toString()
                 Log.e(TAG, "SearchView: (keyboard or arrow) executing search...: ${searchQuery}")
-                viewModel.setCity(
+                viewModel.setCityQuery(
                     searchQuery
                 )
+                resolveAddress()
             }
             true
         }
@@ -164,7 +227,7 @@ constructor(
         searchButton.setOnClickListener {
             val searchQuery = searchPlate.text.toString()
             Log.e(TAG, "SearchView: (button) executing search...: ${searchQuery}")
-            viewModel.setCity(
+            viewModel.setCityQuery(
                 searchQuery
             )
             resolveAddress()
@@ -173,7 +236,7 @@ constructor(
 
     private fun resolveAddress(){
         viewModel.setStateEvent(
-            InterestStateEvent.ResolveUserAddressEvent()
+            FlashStateEvent.ResolveUserAddressEvent()
         )
     }
 
@@ -181,9 +244,6 @@ constructor(
         viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
             stateMessage?.let {
 
-                if(stateMessage.response.message.equals(SuccessHandling.DONE_User_Default_City)){
-                    navDeliveryAddress()
-                }
 
                 uiCommunicationListener.onResponseReceived(
                     response = it.response,
@@ -205,44 +265,9 @@ constructor(
         })
     }
 
-    override fun resendNetworkRequest() {
-
-    }
-
-    private fun initCityRecyclerView(){
-        address_recyclerview.apply {
-            layoutManager = LinearLayoutManager(this@ConfigureAddressFragment.context)
-            val topSpacingDecorator = TopSpacingItemDecoration(0)
-            removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
-            addItemDecoration(topSpacingDecorator)
-
-            cityRecyclerAdapter =
-                CityAdapter(
-                    this@ConfigureAddressFragment
-                )
-            addOnScrollListener(object: RecyclerView.OnScrollListener(){
-
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-
-                }
-            })
-            adapter = cityRecyclerAdapter
-        }
-    }
-
     override fun onItemSelected(city: City) {
-        viewModel.setSelectedCity(
-            city
-        )
-        viewModel.setStateEvent(
-            InterestStateEvent.SetUserDefaultCityEvent(
-                city
-            )
-        )
+        viewModel.setSearchCity(city)
+        findNavController().popBackStack()
     }
 
-    private fun navDeliveryAddress(){
-        findNavController().navigate(R.id.action_configureAddressFragment_to_configureDeliveryAddressFragment)
-    }
 }

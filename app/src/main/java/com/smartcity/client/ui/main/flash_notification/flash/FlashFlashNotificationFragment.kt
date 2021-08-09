@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.flash_notification
+package com.smartcity.client.ui.main.flash_notification.flash
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,12 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.RequestManager
-import com.google.android.gms.maps.MapView
 import com.smartcity.client.R
 import com.smartcity.client.models.FlashDeal
 import com.smartcity.client.models.product.Product
-import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.getSelectedActionPositions
-import com.smartcity.client.ui.main.flash_notification.OfferActionAdapter.Companion.setSelectedActionPositions
+import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFragment
+import com.smartcity.client.ui.main.flash_notification.flash.OfferActionAdapter.Companion.getSelectedActionPositions
+import com.smartcity.client.ui.main.flash_notification.flash.OfferActionAdapter.Companion.setSelectedActionPositions
 import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
@@ -48,9 +48,9 @@ constructor(
     OfferActionAdapter.Interaction,
     FlashDealsAdapter.Interaction
 {
-    private val days= mutableListOf<Pair<String,FlashDealsAdapter>>()
+    private val days= mutableListOf<Pair<String, FlashDealsAdapter>>()
     private lateinit var pager :ViewPager
-    private lateinit var pagerAdapter :MainPagerAdapter
+    private lateinit var pagerAdapter : MainPagerAdapter
     private val pagesNumber=15
 
     private lateinit var recyclerOfferActionAdapter: OfferActionAdapter
@@ -89,6 +89,7 @@ constructor(
         (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
         setHasOptionsMenu(true)
         uiCommunicationListener.displayBadgeBottomNavigationFlash(false)
+        uiCommunicationListener.displayBottomNavigation(true)
 
         initDays()
         initPager()
@@ -99,6 +100,13 @@ constructor(
         setOfferAction()
         initData(viewModel.getOfferActionRecyclerPosition())
         getDefaultCity()
+        navSearch()
+    }
+
+    private fun navSearch() {
+        offers_search.setOnClickListener {
+            findNavController().navigate(R.id.action_flashFlashNotificationFragment_to_searchFlashFragment)
+        }
     }
 
     private fun getDefaultCity(){
@@ -124,7 +132,8 @@ constructor(
     }
 
     private fun initPager() {
-        pagerAdapter = MainPagerAdapter()
+        pagerAdapter =
+            MainPagerAdapter()
         pager = view_pager as ViewPager
         pager.adapter = pagerAdapter
 
@@ -171,7 +180,11 @@ constructor(
         val formatter  = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         formatter.format(calendar.time)
         (0 .. pagesNumber).map {
-            days.add(Pair(formatter.format(calendar.time),FlashDealsAdapter(this@FlashFlashNotificationFragment)))
+            days.add(Pair(formatter.format(calendar.time),
+                FlashDealsAdapter(
+                    this@FlashFlashNotificationFragment
+                )
+            ))
             calendar.add(Calendar.DAY_OF_YEAR, -1)
         }
         days.reverse()
@@ -194,8 +207,12 @@ constructor(
 
     private fun setOfferAction() {
         val list= mutableListOf<Triple<String,Int,Int>>()
-        list.add(ActionOffer.FLASH.second,Triple(ActionOffer.FLASH.first, R.drawable.ic_outline_local_offer_white, R.drawable.ic_outline_local_offer_black))
-        list.add(ActionOffer.DISCOUNT.second,Triple(ActionOffer.DISCOUNT.first,R.drawable.ic_outline_local_play_white, R.drawable.ic_outline_local_play_black))
+        list.add(
+            ActionOffer.FLASH.second,Triple(
+                ActionOffer.FLASH.first, R.drawable.ic_outline_local_offer_white, R.drawable.ic_outline_local_offer_black))
+        list.add(
+            ActionOffer.DISCOUNT.second,Triple(
+                ActionOffer.DISCOUNT.first,R.drawable.ic_outline_local_play_white, R.drawable.ic_outline_local_play_black))
         viewModel.setOfferActionList(
             list
         )
@@ -309,7 +326,7 @@ constructor(
         offers_city_name.text=value
     }
 
-    private fun initRecyclerView(recyclerView: RecyclerView,flashRecyclerAdapter:FlashDealsAdapter) {
+    private fun initRecyclerView(recyclerView: RecyclerView,flashRecyclerAdapter: FlashDealsAdapter) {
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@FlashFlashNotificationFragment.context)
             val topSpacingDecorator = TopSpacingItemDecoration(0)
@@ -359,7 +376,6 @@ constructor(
     }
 
     private  fun resetUI(){
-       // flash_recyclerview.smoothScrollToPosition(0)
         discount_recyclerview.smoothScrollToPosition(0)
         uiCommunicationListener.hideSoftKeyboard()
     }
@@ -373,11 +389,14 @@ constructor(
 
 
     override fun onItemSelected(item: FlashDeal) {
-        showOrderConfirmationDialog(item)
+        showStoreDetailsDialog(item)
     }
 
-    private fun showOrderConfirmationDialog(flash: FlashDeal){
-        val dialog=StoreBottomSheetDialog(flash)
+    private fun showStoreDetailsDialog(flash: FlashDeal){
+        val dialog=
+            StoreBottomSheetDialog(
+                flash
+            )
         dialog.show(childFragmentManager,"dialog_store_bottom_sheet")
     }
 }

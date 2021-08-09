@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.flash_notification
+package com.smartcity.client.ui.main.flash_notification.viewproduct
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -26,6 +26,7 @@ import com.smartcity.client.models.product.AttributeValue
 import com.smartcity.client.models.product.OfferType
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.models.product.ProductVariants
+import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFragment
 import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState

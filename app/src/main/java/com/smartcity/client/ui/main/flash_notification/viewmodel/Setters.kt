@@ -10,9 +10,21 @@ fun FlashViewModel.setFlashDealsList(pair: Pair<String,List<FlashDeal>>) {
     setViewState(update)
 }
 
+fun FlashViewModel.setSearchFlashDealsList(pair: Pair<String,List<FlashDeal>>) {
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.searchFlashDealsMap.put(pair.first,pair.second)
+    setViewState(update)
+}
+
 fun FlashViewModel.setDiscountProductList(list: List<Product>) {
     val update = getCurrentViewStateOrNew()
     update.flashFields.productDiscountList=list
+    setViewState(update)
+}
+
+fun FlashViewModel.setSearchDiscountProductList(list: List<Product>) {
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.searchProductDiscountList=list
     setViewState(update)
 }
 
@@ -25,6 +37,12 @@ fun FlashViewModel.setOfferActionList(orderActionList: List<Triple<String,Int,In
 fun FlashViewModel.setOfferActionRecyclerPosition(postion:Int){
     val update = getCurrentViewStateOrNew()
     update.flashFields.offerActionRecyclerPosition=postion
+    setViewState(update)
+}
+
+fun FlashViewModel.setSearchOfferActionRecyclerPosition(postion:Int){
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.searchOfferActionRecyclerPosition=postion
     setViewState(update)
 }
 
@@ -49,5 +67,34 @@ fun FlashViewModel.clearChoicesMap(){
 fun FlashViewModel.setDefaultCity(city : City) {
     val update = getCurrentViewStateOrNew()
     update.flashFields.defaultCity= city
+    setViewState(update)
+}
+fun FlashViewModel.setSearchCity(city : City) {
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.searchCity= city
+    setViewState(update)
+}
+
+fun FlashViewModel.setCityList(list: List<City>) {
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.cityList= list
+    setViewState(update)
+}
+
+fun FlashViewModel.setCityQuery(value: String ){
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.cityQuery= value
+    setViewState(update)
+}
+
+fun FlashViewModel.clearSearchFlashDealsMap(){
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.searchFlashDealsMap= mutableMapOf()
+    setViewState(update)
+}
+
+fun FlashViewModel.clearSearchProductDiscountList(){
+    val update = getCurrentViewStateOrNew()
+    update.flashFields.searchProductDiscountList= listOf()
     setViewState(update)
 }

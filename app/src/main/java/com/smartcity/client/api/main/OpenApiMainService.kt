@@ -1,6 +1,8 @@
 package com.smartcity.client.api.main
 
 import com.smartcity.client.api.GenericResponse
+import com.smartcity.client.api.ListGenericDto
+import com.smartcity.client.api.interest.dto.CityDto
 import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
 import com.smartcity.client.api.main.responses.ListProductResponse
@@ -148,6 +150,25 @@ interface OpenApiMainService {
     suspend fun getDefaultCity(
         @Query("id") id: Long
     ): City
+
+    @GET("nominatim/search")
+    suspend fun resolveUserCity(
+        @Query(value = "country") country: String,
+        @Query(value = "city") city: String
+    ): ListGenericDto<City, CityDto>
+
+    @GET("flashDeal/search-flash")
+    suspend fun searchUserFlashDeals(
+        @Query(value = "latitude") latitude:Double,
+        @Query(value = "longitude") longitude:Double,
+        @Query(value = "date") date:String
+    ): ListGenericResponse<FlashDeal>
+
+    @GET("offer/search-offer")
+    suspend fun searchUserDiscountProduct(
+        @Query(value = "latitude") latitude:Double,
+        @Query(value = "longitude") longitude:Double
+    ): ListGenericResponse<Product>
 }
 
 

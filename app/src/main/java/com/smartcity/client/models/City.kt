@@ -25,13 +25,18 @@ data class City (
 
     @SerializedName("displayName")
     @Expose
-    var displayName: String
+    var displayName: String,
+
+    @SerializedName("country")
+    @Expose
+    var country: String
 ) : Parcelable {
     override fun toString(): String {
         return "City(lat=$lat, " +
                 "lon='$lon', " +
                 "city='$name'," +
                 "displayName='$displayName'," +
+                "country='$country'," +
                 ") "
     }
 }

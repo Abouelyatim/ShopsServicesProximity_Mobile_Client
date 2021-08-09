@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.flash_notification
+package com.smartcity.client.ui.main.flash_notification.flash
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
@@ -59,7 +59,7 @@ class FlashDealsAdapter (
         return FlashDealHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.layout_flash_deal_list_item, parent, false),
-            interaction=interaction
+            interaction = interaction
         )
     }
 

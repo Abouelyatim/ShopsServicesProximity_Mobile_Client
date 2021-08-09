@@ -7,15 +7,40 @@
 
     <fragment
             android:id="@+id/flashFlashNotificationFragment"
-            android:name="com.smartcity.client.ui.main.flash_notification.FlashFlashNotificationFragment"
+            android:name="com.smartcity.client.ui.main.flash_notification.flash.FlashFlashNotificationFragment"
             android:label="fragment_flash_notification"
             tools:layout="@layout/fragment_flash_notification" >
         <action
                 android:id="@+id/action_flashFlashNotificationFragment_to_viewProductFlashFragment"
                 app:destination="@id/viewProductFlashFragment" />
+        <action
+                android:id="@+id/action_flashFlashNotificationFragment_to_searchFlashFragment"
+                app:destination="@id/searchFlashFragment" />
     </fragment>
     <fragment
             android:id="@+id/viewProductFlashFragment"
-            android:name="com.smartcity.client.ui.main.flash_notification.ViewProductFlashFragment"
+            android:name="com.smartcity.client.ui.main.flash_notification.viewproduct.ViewProductFlashFragment"
             android:label="ViewProductFlashFragment" />
+    <fragment
+            android:id="@+id/searchFlashFragment"
+            android:name="com.smartcity.client.ui.main.flash_notification.search.SearchFlashFragment"
+            android:label="fragment_search_flash"
+            tools:layout="@layout/fragment_search_flash" >
+        <action
+                android:id="@+id/action_searchFlashFragment_to_configSearchAddressFragment"
+                app:destination="@id/configSearchAddressFragment" />
+        <action
+                android:id="@+id/action_searchFlashFragment_to_viewSearchFlashFragment"
+                app:destination="@id/viewSearchFlashFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/configSearchAddressFragment"
+            android:name="com.smartcity.client.ui.main.flash_notification.address.ConfigSearchAddressFragment"
+            android:label="fragment_config_search_address"
+            tools:layout="@layout/fragment_config_search_address" />
+    <fragment
+            android:id="@+id/viewSearchFlashFragment"
+            android:name="com.smartcity.client.ui.main.flash_notification.search.ViewSearchFlashFragment"
+            android:label="fragment_view_search_flash"
+            tools:layout="@layout/fragment_view_search_flash" />
 </navigation>

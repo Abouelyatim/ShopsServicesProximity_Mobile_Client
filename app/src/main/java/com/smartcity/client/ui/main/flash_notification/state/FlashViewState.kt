@@ -15,14 +15,24 @@ class FlashViewState(
 
     @Parcelize
     data class FlashFields(
-        var flashDealsMap: MutableMap<String,List<FlashDeal>> = mutableMapOf(),
-        var networkFlashDealsPair : Pair<String,List<FlashDeal>>? =null,
         var offerAction: List<Triple<String,Int,Int>>? = null,
+
+        var searchNetworkFlashDealsPair : Pair<String,List<FlashDeal>>? =null,
+        var searchFlashDealsMap: MutableMap<String,List<FlashDeal>> = mutableMapOf(),
+        var searchOfferActionRecyclerPosition: Int? =null,
+
+        var networkFlashDealsPair : Pair<String,List<FlashDeal>>? =null,
+        var flashDealsMap: MutableMap<String,List<FlashDeal>> = mutableMapOf(),
         var offerActionRecyclerPosition: Int? =null,
 
         var defaultCity:City? =null,
+        var searchCity:City? =null,
+        var cityList: List<City>? = null,
+        var cityQuery:String ?=null,
 
+        var searchProductDiscountList: List<Product>? = null,
         var productDiscountList: List<Product>? = null,
+
         var selectedProduct: Product? = null,
         var choicesMap:MutableMap<String, String>? = null
     ) : Parcelable

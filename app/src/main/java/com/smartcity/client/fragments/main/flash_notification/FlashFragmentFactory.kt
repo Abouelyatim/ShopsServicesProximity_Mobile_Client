@@ -5,8 +5,11 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.di.main.MainScope
-import com.smartcity.client.ui.main.flash_notification.FlashFlashNotificationFragment
-import com.smartcity.client.ui.main.flash_notification.ViewProductFlashFragment
+import com.smartcity.client.ui.main.flash_notification.address.ConfigSearchAddressFragment
+import com.smartcity.client.ui.main.flash_notification.flash.FlashFlashNotificationFragment
+import com.smartcity.client.ui.main.flash_notification.search.SearchFlashFragment
+import com.smartcity.client.ui.main.flash_notification.search.ViewSearchFlashFragment
+import com.smartcity.client.ui.main.flash_notification.viewproduct.ViewProductFlashFragment
 import javax.inject.Inject
 
 @MainScope
@@ -35,7 +38,28 @@ constructor(
                 )
             }
 
-            else -> {
+            SearchFlashFragment::class.java.name -> {
+                SearchFlashFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+            ConfigSearchAddressFragment::class.java.name -> {
+                ConfigSearchAddressFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+            ViewSearchFlashFragment::class.java.name -> {
+                ViewSearchFlashFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+                else -> {
                 FlashFlashNotificationFragment(
                     viewModelFactory,
                     requestManager

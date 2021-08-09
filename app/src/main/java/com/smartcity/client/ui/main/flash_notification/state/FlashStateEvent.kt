@@ -1,6 +1,5 @@
 package com.smartcity.client.ui.main.flash_notification.state
 
-import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.util.StateEvent
 
 sealed class FlashStateEvent: StateEvent {
@@ -49,6 +48,39 @@ sealed class FlashStateEvent: StateEvent {
             return "GetUserDefaultCityStateEvent"
         }
     }
+
+    class ResolveUserAddressEvent: FlashStateEvent() {
+        override fun errorInfo(): String {
+            return "Resolve address attempt failed."
+        }
+
+        override fun toString(): String {
+            return "ResolveUserAddressStateEvent"
+        }
+    }
+
+    class SearchFlashDealsEvent(
+        val date:String
+    ): FlashStateEvent() {
+        override fun errorInfo(): String {
+            return "Search flashes attempt failed."
+        }
+
+        override fun toString(): String {
+            return "SearchFlashDealsStateEvent"
+        }
+    }
+
+    class SearchDiscountProductEvent: FlashStateEvent(){
+        override fun errorInfo(): String {
+            return "Search discounts attempt failed."
+        }
+
+        override fun toString(): String {
+            return "SearchDiscountProductStateEvent"
+        }
+    }
+
 
     class None: FlashStateEvent(){
         override fun errorInfo(): String {

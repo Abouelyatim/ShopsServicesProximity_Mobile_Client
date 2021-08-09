@@ -10,9 +10,21 @@ fun FlashViewModel.getFlashDealsMap(): Map<String,List<FlashDeal>> {
     }
 }
 
+fun FlashViewModel.getSearchFlashDealsMap(): Map<String,List<FlashDeal>> {
+    getCurrentViewStateOrNew().let {
+        return it.flashFields.searchFlashDealsMap
+    }
+}
+
 fun FlashViewModel.getDiscountProductList(): List<Product> {
     getCurrentViewStateOrNew().let {
             return it.flashFields.productDiscountList?: listOf()
+    }
+}
+
+fun FlashViewModel.getSearchDiscountProductList(): List<Product> {
+    getCurrentViewStateOrNew().let {
+        return it.flashFields.searchProductDiscountList?: listOf()
     }
 }
 
@@ -21,6 +33,13 @@ fun FlashViewModel.getOfferActionRecyclerPosition():Int{
         return it.flashFields.offerActionRecyclerPosition?:0
     }
 }
+
+fun FlashViewModel.getSearchOfferActionRecyclerPosition():Int{
+    getCurrentViewStateOrNew().let {
+        return it.flashFields.searchOfferActionRecyclerPosition?:0
+    }
+}
+
 
 fun FlashViewModel.getOfferAction(): List<Triple<String,Int,Int>> {
     getCurrentViewStateOrNew().let {
@@ -43,5 +62,23 @@ fun FlashViewModel.getChoicesMap(): MutableMap<String, String> {
 fun FlashViewModel.getDefaultCity(): City? {
     getCurrentViewStateOrNew().let {
         return it.flashFields.defaultCity
+    }
+}
+
+fun FlashViewModel.getSearchCity(): City? {
+    getCurrentViewStateOrNew().let {
+        return it.flashFields.searchCity
+    }
+}
+
+fun FlashViewModel.getCityList(): List<City> {
+    getCurrentViewStateOrNew().let {
+        return it.flashFields.cityList?: listOf()
+    }
+}
+
+fun FlashViewModel.getCityQuery(): String {
+    getCurrentViewStateOrNew().let {
+        return it.flashFields.cityQuery?:""
     }
 }

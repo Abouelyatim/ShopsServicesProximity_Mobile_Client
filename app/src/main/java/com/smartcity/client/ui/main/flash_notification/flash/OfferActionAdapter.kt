@@ -1,4 +1,4 @@
-package com.smartcity.client.ui.main.flash_notification
+package com.smartcity.client.ui.main.flash_notification.flash
 
 import android.view.LayoutInflater
 import android.view.View

@@ -118,7 +118,6 @@ class OrdersAdapter (
                 OrderType.DELIVERY ->{
                     itemView.order_type.text="Delivery"
                     itemView.order_type_delivery.visibility=View.VISIBLE
-                    order_store_address.visibility=View.GONE
                 }
 
                 OrderType.SELFPICKUP ->{

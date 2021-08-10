@@ -3,6 +3,7 @@ package com.smartcity.client.ui.main.account
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
@@ -10,7 +11,10 @@ import com.smartcity.client.R
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.account.viewmodel.clearOrderList
+import com.smartcity.client.ui.main.account.viewmodel.getOrderActionRecyclerPosition
 import com.smartcity.client.ui.main.account.viewmodel.setOrderActionRecyclerPosition
+import com.smartcity.client.util.StateMessageCallback
+import com.smartcity.client.util.SuccessHandling
 import kotlinx.android.synthetic.main.fragment_account.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -32,7 +36,6 @@ constructor(
         )
         super.onSaveInstanceState(outState)
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +77,24 @@ constructor(
     }
 
     private fun subscribeObservers() {
+        viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
 
+            stateMessage?.let {
+
+                uiCommunicationListener.onResponseReceived(
+                    response = it.response,
+                    stateMessageCallback = object: StateMessageCallback {
+                        override fun removeMessageFromStack() {
+                            viewModel.clearStateMessage()
+                        }
+                    }
+                )
+            }
+        })
+
+        viewModel.numActiveJobs.observe(viewLifecycleOwner, Observer { jobCounter ->//must
+            uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
+        })
     }
 
     private fun navOrders(){

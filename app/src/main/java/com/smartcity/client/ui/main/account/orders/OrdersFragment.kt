@@ -83,7 +83,7 @@ constructor(
         subscribeObservers()
 
         setOrderAction()
-
+        initData(viewModel.getOrderActionRecyclerPosition())
         setEmptyListUi(viewModel.getOrdersList().isEmpty())
     }
 

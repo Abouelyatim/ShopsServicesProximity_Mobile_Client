@@ -123,14 +123,21 @@ constructor(
                     is GetUserInProgressOrdersEvent ->{
                         accountRepository.attemptUserInProgressOrders(
                             stateEvent,
-                            authToken.account_pk!!.toLong()
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.date,
+                            stateEvent.amount,
+                            stateEvent.type
                         )
                     }
 
                     is GetUserFinalizedOrdersEvent ->{
                         accountRepository.attemptUserFinalizedOrders(
                             stateEvent,
-                            authToken.account_pk!!.toLong()
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.date,
+                            stateEvent.amount,
+                            stateEvent.type,
+                            stateEvent.status
                         )
                     }
 

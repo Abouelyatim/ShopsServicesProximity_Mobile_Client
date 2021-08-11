@@ -62,7 +62,11 @@ sealed class AccountStateEvent: StateEvent {
         }
     }
 
-    class GetUserInProgressOrdersEvent():AccountStateEvent(){
+    class GetUserInProgressOrdersEvent(
+        val date:String,
+        val amount:String,
+        val type:String
+    ):AccountStateEvent(){
         override fun errorInfo(): String {
             return "Get orders attempt failed."
         }
@@ -72,7 +76,12 @@ sealed class AccountStateEvent: StateEvent {
         }
     }
 
-    class GetUserFinalizedOrdersEvent():AccountStateEvent(){
+    class GetUserFinalizedOrdersEvent(
+        val date:String,
+        val amount:String,
+        val type:String,
+        val status:String
+    ):AccountStateEvent(){
         override fun errorInfo(): String {
             return "Get orders attempt failed."
         }

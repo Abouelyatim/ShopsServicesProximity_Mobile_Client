@@ -2,6 +2,8 @@ package com.smartcity.client.ui.main.account.orders
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.RequestManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.smartcity.client.R
 import com.smartcity.client.models.Order
 import com.smartcity.client.ui.AreYouSureCallback
@@ -39,6 +42,7 @@ constructor(
 ): BaseAccountFragment(R.layout.fragment_orders,viewModelFactory),
     OrdersAdapter.Interaction,
     OrderActionAdapter.Interaction,
+    OrderFilterAdapter.Interaction,
     SwipeRefreshLayout.OnRefreshListener{
 
     object ActionOrder {
@@ -48,6 +52,11 @@ constructor(
 
     private lateinit var recyclerOrderActionAdapter: OrderActionAdapter
     private lateinit var recyclerOrdersAdapter: OrdersAdapter
+
+    private var sortRecyclerOrdersAdapter: OrderFilterAdapter? = null
+    private var typeRecyclerOrdersAdapter: OrderFilterAdapter? = null
+    private var statusRecyclerOrdersAdapter: OrderFilterAdapter? = null
+    private lateinit var dialogView: View
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
@@ -85,28 +94,53 @@ constructor(
         setOrderAction()
         initData(viewModel.getOrderActionRecyclerPosition())
         setEmptyListUi(viewModel.getOrdersList().isEmpty())
+        setOrderFilter()
     }
 
     private fun initData(actionPosition: Int) {
         when(actionPosition){
             IN_PROGRESS.second ->{
-                getInProgressOrders()
+                viewModel.setSelectedSortFilter(null)
+                viewModel.setSelectedTypeFilter(null)
+                viewModel.setSelectedStatusFilter(null)
+                getInProgressOrders(
+                    "DESC",
+                    "",
+                    ""
+                )
             }
             FINALIZED.second ->{
-                getFinalizedOrders()
+                viewModel.setSelectedSortFilter(null)
+                viewModel.setSelectedTypeFilter(null)
+                viewModel.setSelectedStatusFilter(null)
+                getFinalizedOrders(
+                    "DESC",
+                    "",
+                    "",
+                    ""
+                )
             }
         }
     }
 
-    private fun getInProgressOrders(){
+    private fun getInProgressOrders(date:String,amount:String,type:String){
         viewModel.setStateEvent(
-            AccountStateEvent.GetUserInProgressOrdersEvent()
+            AccountStateEvent.GetUserInProgressOrdersEvent(
+                date,
+                amount,
+                type
+            )
         )
     }
 
-    private fun getFinalizedOrders(){
+    private fun getFinalizedOrders(date:String,amount:String,type:String,status:String){
         viewModel.setStateEvent(
-            AccountStateEvent.GetUserFinalizedOrdersEvent()
+            AccountStateEvent.GetUserFinalizedOrdersEvent(
+                date,
+                amount,
+                type,
+                status
+            )
         )
     }
 
@@ -173,6 +207,21 @@ constructor(
                     viewModel.getOrderAction()
                 )
             }
+
+            sortRecyclerOrdersAdapter?.submitList(
+                sortFilter.map { it.first },
+                if (viewModel.getSelectedSortFilter() == null) "" else viewModel.getSelectedSortFilter()!!.first
+            )
+
+            typeRecyclerOrdersAdapter?.submitList(
+                typeFilter.map { it.first },
+                if (viewModel.getSelectedTypeFilter() == null) "" else viewModel.getSelectedTypeFilter()!!.first
+            )
+
+            statusRecyclerOrdersAdapter?.submitList(
+                statusFilter.map { it.first },
+                if (viewModel.getSelectedStatusFilter() == null) "" else viewModel.getSelectedStatusFilter()!!.first
+            )
         })
     }
 
@@ -275,10 +324,25 @@ constructor(
 
         when(item){
             IN_PROGRESS.first ->{
-                getInProgressOrders()
+                viewModel.setSelectedSortFilter(null)
+                viewModel.setSelectedTypeFilter(null)
+                viewModel.setSelectedStatusFilter(null)
+                getInProgressOrders(
+                    "DESC",
+                    "",
+                    ""
+                )
             }
             FINALIZED.first ->{
-                getFinalizedOrders()
+                viewModel.setSelectedSortFilter(null)
+                viewModel.setSelectedTypeFilter(null)
+                viewModel.setSelectedStatusFilter(null)
+                getFinalizedOrders(
+                    "DESC",
+                    "",
+                    "",
+                    ""
+                )
             }
         }
     }
@@ -291,8 +355,151 @@ constructor(
         }
     }
 
+    private fun initFilterOrderRecyclerView(recyclerView: RecyclerView,recyclerAdapter:OrderFilterAdapter) {
+        recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@OrdersFragment.context,LinearLayoutManager.HORIZONTAL,false)
+
+            val rightSpacingDecorator = RightSpacingItemDecoration(0)
+            removeItemDecoration(rightSpacingDecorator) // does nothing if not applied already
+            addItemDecoration(rightSpacingDecorator)
+
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val lastPosition = layoutManager.findLastVisibleItemPosition()
+
+                }
+            })
+            recyclerOrderActionAdapter.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+            adapter = recyclerAdapter
+        }
+    }
+
+    private fun setOrderFilter() {
+        filter_button.setOnClickListener {
+            showFilterDialog()
+        }
+    }
+
+    private val sortFilter= listOf(
+        Triple("Date : Oldest first","date","ASC"),
+        Triple("Date : Recent first","date","DESC"),
+        Triple("Total : Lowest first","amount","ASC"),
+        Triple("Total : Highest first","amount","DESC"),
+    )
+
+    private val typeFilter = listOf(
+        Triple("Pick up","type","SELFPICKUP"),
+        Triple("delivery","type","DELIVERY")
+    )
+
+    private val statusFilter = listOf(
+        Triple("Accepted","status","ACCEPTED"),
+        Triple("Rejected","status","REJECTED")
+    )
+
+    private fun showFilterDialog(){
+        val dialog = BottomSheetDialog(requireContext(),R.style.BottomSheetDialogTheme)
+        dialogView = layoutInflater.inflate(R.layout.dialog_filter_order, null)
+        dialog.setCancelable(true)
+        dialog.setContentView(dialogView)
+
+        val position = getSelectedActionPositions()
+
+        val sortRecyclerView = dialogView.findViewById<RecyclerView>(R.id.filter_sort_orders)
+        sortRecyclerOrdersAdapter = OrderFilterAdapter(this@OrdersFragment)
+        initFilterOrderRecyclerView(sortRecyclerView,sortRecyclerOrdersAdapter!!)
+        sortRecyclerOrdersAdapter!!.submitList(
+            sortFilter.map { it.first },
+            if (viewModel.getSelectedSortFilter() == null) "" else viewModel.getSelectedSortFilter()!!.first
+        )
+
+        val typeRecyclerView = dialogView.findViewById<RecyclerView>(R.id.filter_type_orders)
+        typeRecyclerOrdersAdapter = OrderFilterAdapter(this@OrdersFragment)
+        initFilterOrderRecyclerView(typeRecyclerView,typeRecyclerOrdersAdapter!!)
+        typeRecyclerOrdersAdapter!!.submitList(
+            typeFilter.map { it.first },
+            if (viewModel.getSelectedTypeFilter() == null) "" else viewModel.getSelectedTypeFilter()!!.first
+        )
+
+        val statusRecyclerView = dialogView.findViewById<RecyclerView>(R.id.filter_status_orders)
+        statusRecyclerOrdersAdapter = OrderFilterAdapter(this@OrdersFragment)
+        initFilterOrderRecyclerView(statusRecyclerView,statusRecyclerOrdersAdapter!!)
+        statusRecyclerOrdersAdapter!!.submitList(
+            statusFilter.map { it.first },
+            if (viewModel.getSelectedStatusFilter() == null) "" else viewModel.getSelectedStatusFilter()!!.first
+        )
+
+        val statusFilterContainer = dialogView.findViewById<LinearLayout>(R.id.status_filter_container)
+        when(position) {
+            IN_PROGRESS.second -> {
+                statusFilterContainer.visibility = View.GONE
+            }
+
+            FINALIZED.second ->{
+                statusFilterContainer.visibility = View.VISIBLE
+            }
+        }
+
+        val viewOrdersButton = dialogView.findViewById<Button>(R.id.view_orders_button)
+        viewOrdersButton.setOnClickListener {
+
+            when(position){
+                IN_PROGRESS.second ->{
+                    getInProgressOrders(
+                        if (viewModel.getSelectedSortFilter() == null) "DESC" else (if(viewModel.getSelectedSortFilter()!!.second == "date") viewModel.getSelectedSortFilter()!!.third else ""),
+                        if (viewModel.getSelectedSortFilter() == null) "" else (if(viewModel.getSelectedSortFilter()!!.second == "amount") viewModel.getSelectedSortFilter()!!.third else ""),
+                        if (viewModel.getSelectedTypeFilter() == null) "" else viewModel.getSelectedTypeFilter()!!.third
+                    )
+                }
+                FINALIZED.second ->{
+                    getFinalizedOrders(
+                        if (viewModel.getSelectedSortFilter() == null) "DESC" else (if(viewModel.getSelectedSortFilter()!!.second == "date") viewModel.getSelectedSortFilter()!!.third else ""),
+                        if (viewModel.getSelectedSortFilter() == null) "" else (if(viewModel.getSelectedSortFilter()!!.second == "amount") viewModel.getSelectedSortFilter()!!.third else ""),
+                        if (viewModel.getSelectedTypeFilter() == null) "" else viewModel.getSelectedTypeFilter()!!.third,
+                        if (viewModel.getSelectedStatusFilter() == null) "" else viewModel.getSelectedStatusFilter()!!.third
+                    )
+                }
+            }
+            dialog.dismiss()
+        }
+        dialog.show()
+    }
+
     override fun onRefresh() {
         initData(viewModel.getOrderActionRecyclerPosition())
         swipe_refresh.isRefreshing = false
+    }
+
+    override fun onItemSelected(item: String) {
+        if(item in sortFilter.map { it.first }){
+            viewModel.setSelectedSortFilter(sortFilter.find { it.first == item }!!)
+            sortRecyclerOrdersAdapter!!.notifyDataSetChanged()
+        }
+        if(item in typeFilter.map { it.first }){
+            viewModel.setSelectedTypeFilter(typeFilter.find { it.first == item }!!)
+            typeRecyclerOrdersAdapter!!.notifyDataSetChanged()
+        }
+        if(item in statusFilter.map { it.first }){
+            viewModel.setSelectedStatusFilter(statusFilter.find { it.first == item }!!)
+            statusRecyclerOrdersAdapter!!.notifyDataSetChanged()
+        }
+    }
+
+    override fun onItemDeSelected(item: String) {
+        if(item in sortFilter.map { it.first }){
+            viewModel.setSelectedSortFilter(null)
+            sortRecyclerOrdersAdapter!!.notifyDataSetChanged()
+        }
+        if(item in typeFilter.map { it.first }){
+            viewModel.setSelectedTypeFilter(null)
+            typeRecyclerOrdersAdapter!!.notifyDataSetChanged()
+        }
+        if(item in statusFilter.map { it.first }){
+            viewModel.setSelectedStatusFilter(null)
+            statusRecyclerOrdersAdapter!!.notifyDataSetChanged()
+        }
     }
 }

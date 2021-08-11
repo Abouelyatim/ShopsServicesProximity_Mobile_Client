@@ -36,6 +36,9 @@ class AccountViewState(
 
     @Parcelize
     data class OrderFields(
+        var selectedSortFilter:Triple<String,String,String> ?=null,
+        var selectedTypeFilter:Triple<String,String,String> ?=null,
+        var selectedStatusFilter:Triple<String,String,String> ?=null,
         var ordersList:List<Order>? = null,
         var orderAction: List<Triple<String,Int,Int>>? = null,
         var orderActionRecyclerPosition: Int? =null

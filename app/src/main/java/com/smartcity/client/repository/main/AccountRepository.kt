@@ -41,12 +41,19 @@ interface AccountRepository {
 
     fun attemptUserInProgressOrders(
         stateEvent: StateEvent,
-        id: Long
+        id: Long,
+        date:String,
+        amount:String,
+        type:String
     ): Flow<DataState<AccountViewState>>
 
     fun attemptUserFinalizedOrders(
         stateEvent: StateEvent,
-        id: Long
+        id: Long,
+        date:String,
+        amount:String,
+        type:String,
+        status:String
     ): Flow<DataState<AccountViewState>>
 
     fun attemptConfirmOrderReceived(

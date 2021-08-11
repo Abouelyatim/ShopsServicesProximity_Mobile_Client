@@ -213,11 +213,17 @@ constructor(
 
     override fun attemptUserInProgressOrders(
         stateEvent: StateEvent,
-        id: Long
+        id: Long,
+        date:String,
+        amount:String,
+        type:String
     ): Flow<DataState<AccountViewState>> = flow {
         val apiResult = safeApiCall(Dispatchers.IO){
             openApiMainService.getUserInProgressOrders(
-                id = id
+                id = id,
+                date = date,
+                amount = amount,
+                type = type
             )
         }
 
@@ -249,11 +255,19 @@ constructor(
 
     override fun attemptUserFinalizedOrders(
         stateEvent: StateEvent,
-        id: Long
+        id: Long,
+        date:String,
+        amount:String,
+        type:String,
+        status:String
     ): Flow<DataState<AccountViewState>> = flow {
         val apiResult = safeApiCall(Dispatchers.IO){
             openApiMainService.getUserFinalizedOrders(
-                id = id
+                id = id,
+                date = date,
+                amount = amount,
+                type = type,
+                status = status
             )
         }
 

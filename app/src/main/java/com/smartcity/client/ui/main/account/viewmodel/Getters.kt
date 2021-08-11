@@ -91,3 +91,21 @@ fun AccountViewModel.getUserInformation(): UserInformation? {
         return it.userInformation
     }
 }
+
+fun AccountViewModel.getSelectedSortFilter(): Triple<String,String,String>? {
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.selectedSortFilter
+    }
+}
+
+fun AccountViewModel.getSelectedTypeFilter(): Triple<String,String,String>? {
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.selectedTypeFilter
+    }
+}
+
+fun AccountViewModel.getSelectedStatusFilter(): Triple<String,String,String>? {
+    getCurrentViewStateOrNew().let {
+        return it.orderFields.selectedStatusFilter
+    }
+}

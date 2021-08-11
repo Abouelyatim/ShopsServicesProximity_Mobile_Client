@@ -107,3 +107,21 @@ fun AccountViewModel.setUserInformation(infos: UserInformation?) {
     update.userInformation=infos
     setViewState(update)
 }
+
+fun AccountViewModel.setSelectedSortFilter(value: Triple<String,String,String>?) {
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.selectedSortFilter=value
+    setViewState(update)
+}
+
+fun AccountViewModel.setSelectedTypeFilter(value: Triple<String,String,String>?) {
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.selectedTypeFilter=value
+    setViewState(update)
+}
+
+fun AccountViewModel.setSelectedStatusFilter(value: Triple<String,String,String>?) {
+    val update = getCurrentViewStateOrNew()
+    update.orderFields.selectedStatusFilter=value
+    setViewState(update)
+}

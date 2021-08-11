@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+    <View
+            android:layout_marginTop="3dp"
+            android:layout_width="50dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/dialog_rectangle"
+            />
+    
+    <TextView
+            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Filters"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:textColor="@color/dark"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            />
+
+    <View
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/next_container"
+            android:background="@color/default_background_color" />
+
+
+    <LinearLayout
+            android:layout_marginLeft="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sort by"
+                android:textSize="20sp"
+                android:textColor="@color/dark"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"
+                />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/filter_sort_orders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="10dp"/>
+
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type"
+                android:textSize="20sp"
+                android:padding="5dp"
+                android:textColor="@color/dark"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"
+                />
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/filter_type_orders"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:layout_marginBottom="10dp"/>
+
+        <LinearLayout
+                android:id="@+id/status_filter_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status"
+                    android:textSize="20sp"
+                    android:padding="5dp"
+                    android:textColor="@color/dark"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="10dp"
+                    />
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/filter_status_orders"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:layout_marginBottom="10dp"/>
+        </LinearLayout>
+
+
+        <View
+                android:layout_marginEnd="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_above="@+id/next_container"
+                android:background="@color/default_background_color" />
+
+        <Button
+                android:id="@+id/view_orders_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/next_interest_button_height"
+                android:background="@drawable/radius_button_blue"
+                android:text="View orders"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="17sp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"/>
+
+
+
+    </LinearLayout>
+</LinearLayout>

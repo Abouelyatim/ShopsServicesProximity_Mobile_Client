@@ -80,14 +80,21 @@ interface OpenApiMainService {
         @Path(value = "id") id:Long
     ): UserInformation
 
-    @GET("order/current-user/{id}/inProgress")
+    @GET("order/current-user/inProgress")
     suspend fun getUserInProgressOrders(
-        @Path(value = "id") id:Long
+        @Query(value = "id") id:Long,
+        @Query(value = "date") date:String,
+        @Query(value = "amount") amount:String,
+        @Query(value = "type") type:String
     ): ListOrderResponse
 
-    @GET("order/current-user/{id}/finalized")
+    @GET("order/current-user/finalized")
     suspend fun getUserFinalizedOrders(
-        @Path(value = "id") id:Long
+        @Query(value = "id") id:Long,
+        @Query(value = "date") date:String,
+        @Query(value = "amount") amount:String,
+        @Query(value = "type") type:String,
+        @Query(value = "status") status:String
     ): ListOrderResponse
 
     @PUT("order/current-user/{id}/received")

@@ -12,7 +12,9 @@ import com.smartcity.client.ui.main.flash_notification.BaseFlashNotificationFrag
 import com.smartcity.client.ui.main.flash_notification.state.CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.ui.main.flash_notification.viewmodel.*
+import kotlinx.android.synthetic.main.fragment_orders.*
 import kotlinx.android.synthetic.main.fragment_search_flash.*
+import kotlinx.android.synthetic.main.fragment_search_flash.back_button
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -56,6 +58,13 @@ constructor(
         setSearchAddress()
         navConfigAddress()
         navSearch()
+        backProceed()
+    }
+
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun navSearch() {

@@ -95,6 +95,14 @@ constructor(
         initData(viewModel.getOrderActionRecyclerPosition())
         setEmptyListUi(viewModel.getOrdersList().isEmpty())
         setOrderFilter()
+
+        backProceed()
+    }
+
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun initData(actionPosition: Int) {

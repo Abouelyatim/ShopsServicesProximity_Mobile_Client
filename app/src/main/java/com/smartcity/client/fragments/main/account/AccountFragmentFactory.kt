@@ -11,6 +11,9 @@ import com.smartcity.client.ui.main.account.information.InformationFragment
 import com.smartcity.client.ui.main.account.orders.OrdersFragment
 import com.smartcity.client.ui.main.account.orders.ViewOrderFragment
 import com.smartcity.client.ui.main.account.stores.AroundStoresFragment
+import com.smartcity.client.ui.main.account.stores.search.SearchStoresConfigAddressFragment
+import com.smartcity.client.ui.main.account.stores.search.SearchStoresFragment
+import com.smartcity.client.ui.main.account.stores.search.ViewSearchStoresFragment
 
 
 import javax.inject.Inject
@@ -67,6 +70,27 @@ constructor(
                 AroundStoresFragment(
                     viewModelFactory,
                     requestManager)
+            }
+
+            SearchStoresFragment::class.java.name -> {
+                SearchStoresFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+            SearchStoresConfigAddressFragment::class.java.name -> {
+                SearchStoresConfigAddressFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+            ViewSearchStoresFragment::class.java.name -> {
+                ViewSearchStoresFragment(
+                    viewModelFactory,
+                    requestManager
+                )
             }
 
             else -> {

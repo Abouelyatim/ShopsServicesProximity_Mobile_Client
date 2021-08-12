@@ -97,3 +97,42 @@ fun AccountViewModel.getSelectedStatusFilter(): Triple<String,String,String>? {
         return it.orderFields.selectedStatusFilter
     }
 }
+
+fun AccountViewModel.getSearchCity(): City? {
+    getCurrentViewStateOrNew().let {
+        return it.aroundStoresFields.searchCity
+    }
+}
+
+fun AccountViewModel.getCityList(): List<City> {
+    getCurrentViewStateOrNew().let {
+        return it.aroundStoresFields.cityList?: listOf()
+    }
+}
+
+fun AccountViewModel.getCityQuery(): String {
+    getCurrentViewStateOrNew().let {
+        return it.aroundStoresFields.cityQuery?:""
+    }
+}
+
+fun AccountViewModel.getSearchRadius(): Double {
+    getCurrentViewStateOrNew().let {
+        return it.aroundStoresFields.searchRadius?:12.0
+    }
+}
+
+fun AccountViewModel.checkSearchRadius(): Boolean {
+    getCurrentViewStateOrNew().let {
+        it.aroundStoresFields.searchRadius?.let {
+            return true
+        }
+        return false
+    }
+}
+
+fun AccountViewModel.getSearchStores(): List<Store> {
+    getCurrentViewStateOrNew().let {
+        return it.aroundStoresFields.searchStores?: listOf()
+    }
+}

@@ -113,3 +113,33 @@ fun AccountViewModel.setSelectedStatusFilter(value: Triple<String,String,String>
     update.orderFields.selectedStatusFilter=value
     setViewState(update)
 }
+
+fun AccountViewModel.setSearchCity(city: City?){
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.searchCity=city
+    setViewState(update)
+}
+
+fun AccountViewModel.setCityList(list: List<City>) {
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.cityList = list
+    setViewState(update)
+}
+
+fun AccountViewModel.setCityQuery(value: String) {
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.cityQuery = value
+    setViewState(update)
+}
+
+fun AccountViewModel.setSearchRadius(value: Double) {
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.searchRadius = value
+    setViewState(update)
+}
+
+fun AccountViewModel.setSearchStores(list : List<Store>) {
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.searchStores = list
+    setViewState(update)
+}

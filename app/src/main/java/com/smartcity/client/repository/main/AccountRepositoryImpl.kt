@@ -2,6 +2,8 @@ package com.smartcity.client.repository.main
 
 import android.util.Log
 import com.smartcity.client.api.GenericResponse
+import com.smartcity.client.api.ListGenericDto
+import com.smartcity.client.api.interest.dto.CityDto
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
@@ -15,6 +17,7 @@ import com.smartcity.client.repository.buildError
 import com.smartcity.client.repository.safeApiCall
 import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.main.account.state.AccountViewState
+import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -368,6 +371,45 @@ constructor(
         )
     }
 
+    override fun attemptSearchStoreAround(
+        stateEvent: StateEvent,
+        centerLatitude: Double,
+        centerLongitude: Double,
+        radius: Double
+    ): Flow<DataState<AccountViewState>> = flow {
+    val apiResult = safeApiCall(Dispatchers.IO){
+        openApiMainService.getStoresAround(
+            distance = radius,
+            latitude = centerLatitude,
+            longitude = centerLongitude
+        )
+    }
+
+    emit(
+        object: ApiResponseHandler<AccountViewState, ListGenericResponse<Store>>(
+            response = apiResult,
+            stateEvent = stateEvent
+        ) {
+            override suspend fun handleSuccess(resultObj: ListGenericResponse<Store>): DataState<AccountViewState> {
+                Log.d(TAG,"handleSuccess ${stateEvent}")
+                return DataState.data(
+                    data =   AccountViewState(
+                        aroundStoresFields = AccountViewState.AroundStoresFields(
+                            searchStores = resultObj.results
+                        )
+                    ),
+                    stateEvent = stateEvent,
+                    response = Response(
+                        SuccessHandling.DONE_STORE_AROUND,
+                        UIComponentType.None(),
+                        MessageType.None()
+                    )
+                )
+            }
+        }.getResult()
+    )
+}
+
     override fun attemptUserDefaultCity(
         stateEvent: StateEvent,
         id: Long
@@ -398,6 +440,45 @@ constructor(
                         )
                     )
                 }
+            }.getResult()
+        )
+    }
+
+    override fun attemptResolveUserAddress(
+        stateEvent: StateEvent,
+        country: String,
+        city: String
+    ): Flow<DataState<AccountViewState>> = flow {
+        val apiResult = safeApiCall(Dispatchers.IO){
+            openApiMainService.resolveUserCity(
+                country = country,
+                city = city
+            )
+        }
+        emit(
+            object: ApiResponseHandler<AccountViewState, ListGenericDto<City, CityDto>>(
+                response = apiResult,
+                stateEvent = stateEvent
+            ) {
+                override suspend fun handleSuccess(resultObj: ListGenericDto<City, CityDto>): DataState<AccountViewState> {
+                    Log.d(TAG,"handleSuccess ${stateEvent}")
+                    Log.d(TAG,"handleSuccess result ${resultObj}")
+                    val cityList = resultObj.toList()
+                    return DataState.data(
+                        data = AccountViewState(
+                            aroundStoresFields = AccountViewState.AroundStoresFields(
+                                cityList = cityList
+                            )
+                        ),
+                        stateEvent = stateEvent,
+                        response = Response(
+                            SuccessHandling.DONE_Resolve_User_Address,
+                            UIComponentType.None(),
+                            MessageType.None()
+                        )
+                    )
+                }
+
             }.getResult()
         )
     }

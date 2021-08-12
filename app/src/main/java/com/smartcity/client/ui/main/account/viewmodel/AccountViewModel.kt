@@ -65,6 +65,14 @@ constructor(
             aroundStoresFields.stores?.let {list ->
                 setStoresAround(list)
             }
+
+            aroundStoresFields.cityList?.let {list ->
+                setCityList(list)
+            }
+
+            aroundStoresFields.searchStores?.let { list ->
+                setSearchStores(list)
+            }
         }
     }
 
@@ -147,10 +155,27 @@ constructor(
                         )
                     }
 
+                    is SearchStoresAroundEvent ->{
+                        accountRepository.attemptSearchStoreAround(
+                            stateEvent,
+                            stateEvent.lat,
+                            stateEvent.lon,
+                            stateEvent.radius
+                        )
+                    }
+
                     is GetUserDefaultCityEvent ->{
                         accountRepository.attemptUserDefaultCity(
                             stateEvent,
                             authToken.account_pk!!.toLong()
+                        )
+                    }
+
+                    is ResolveUserAddressEvent ->{
+                        accountRepository.attemptResolveUserAddress(
+                            stateEvent,
+                            getDefaultCity()!!.country,
+                            getCityQuery()
                         )
                     }
 

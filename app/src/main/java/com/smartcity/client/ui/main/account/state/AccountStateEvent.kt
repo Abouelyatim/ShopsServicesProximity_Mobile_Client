@@ -2,6 +2,7 @@ package com.smartcity.client.ui.main.account.state
 
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.UserInformation
+import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.util.StateEvent
 
 sealed class AccountStateEvent: StateEvent {
@@ -117,6 +118,20 @@ sealed class AccountStateEvent: StateEvent {
         }
     }
 
+    class SearchStoresAroundEvent(
+        val lat:Double,
+        val lon:Double,
+        val radius:Double
+    ): AccountStateEvent(){
+        override fun errorInfo(): String {
+            return "Search stores attempt failed."
+        }
+
+        override fun toString(): String {
+            return "SearchStoresAroundStateEvent"
+        }
+    }
+
     class GetUserDefaultCityEvent: AccountStateEvent(){
         override fun errorInfo(): String {
             return "Get default city attempt failed."
@@ -124,6 +139,16 @@ sealed class AccountStateEvent: StateEvent {
 
         override fun toString(): String {
             return "GetUserDefaultCityStateEvent"
+        }
+    }
+
+    class ResolveUserAddressEvent: AccountStateEvent() {
+        override fun errorInfo(): String {
+            return "Resolve address attempt failed."
+        }
+
+        override fun toString(): String {
+            return "ResolveUserAddressStateEvent"
         }
     }
 

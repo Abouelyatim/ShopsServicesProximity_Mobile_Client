@@ -29,7 +29,12 @@ class AccountViewState(
     @Parcelize
     data class AroundStoresFields(
         var radius:Double?=null,
-        var stores:List<Store>? = null
+        var stores:List<Store>? = null,
+        var searchCity:City? =null,
+        var searchRadius:Double? =null,
+        var cityList: List<City>? = null,
+        var cityQuery:String ?=null,
+        var searchStores :List<Store>? = null
     ) : Parcelable
 
     @Parcelize

@@ -85,6 +85,13 @@ constructor(
         changeRadius()
         getDefaultCity()
         backProceed()
+        navSearch()
+    }
+
+    private fun navSearch() {
+        stores_search.setOnClickListener {
+            findNavController().navigate(R.id.action_aroundStoresFragment_to_searchStoresFragment)
+        }
     }
 
     private fun backProceed() {

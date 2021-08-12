@@ -60,7 +60,33 @@
             android:id="@+id/aroundStoresFragment"
             android:name="com.smartcity.client.ui.main.account.stores.AroundStoresFragment"
             android:label="fragment_around_stores"
-            tools:layout="@layout/fragment_around_stores" />
+            tools:layout="@layout/fragment_around_stores" >
+        <action
+                android:id="@+id/action_aroundStoresFragment_to_searchStoresFragment"
+                app:destination="@id/searchStoresFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/searchStoresFragment"
+            android:name="com.smartcity.client.ui.main.account.stores.search.SearchStoresFragment"
+            android:label="fragment_search_stores"
+            tools:layout="@layout/fragment_search_stores" >
+        <action
+                android:id="@+id/action_searchStoresFragment_to_searchStoresConfigAddressFragment"
+                app:destination="@id/searchStoresConfigAddressFragment" />
+        <action
+                android:id="@+id/action_searchStoresFragment_to_viewSearchStoresFragment"
+                app:destination="@id/viewSearchStoresFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/searchStoresConfigAddressFragment"
+            android:name="com.smartcity.client.ui.main.account.stores.search.SearchStoresConfigAddressFragment"
+            android:label="fragment_search_stores_config_address"
+            tools:layout="@layout/fragment_search_stores_config_address" />
+    <fragment
+            android:id="@+id/viewSearchStoresFragment"
+            android:name="com.smartcity.client.ui.main.account.stores.search.ViewSearchStoresFragment"
+            android:label="fragment_view_search_stores"
+            tools:layout="@layout/fragment_view_search_stores" />
 
 
 </navigation>

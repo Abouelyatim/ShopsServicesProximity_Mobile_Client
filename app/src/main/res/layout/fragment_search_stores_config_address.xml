@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        tools:context=".ui.main.account.stores.search.SearchStoresConfigAddressFragment">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:gravity="start">
+
+        <LinearLayout
+                android:id="@+id/back_button"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_baseline_arrow_back_ios_dark"
+                    />
+
+        </LinearLayout>
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Choose an address"
+                android:textColor="#000"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                />
+
+    </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="16dp">
+
+        <androidx.appcompat.widget.SearchView
+                android:id="@+id/stores_city_search_view"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:background="@drawable/round_corner_grey"
+                android:queryBackground="@android:color/transparent"/>
+
+        <LinearLayout
+                android:id="@+id/stores_my_position_button"
+                android:layout_marginBottom="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="5dp">
+            <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/ic_baseline_my_location_24"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="My position"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textColor="@color/dark"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/stores_default_position_button"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
+                android:padding="5dp">
+            <ImageButton
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/ic_cursor__outlined"
+                    android:layout_marginEnd="10dp"
+                    android:layout_gravity="center"
+                    />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Default position"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:textColor="@color/dark"/>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stores_address_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none" />
+    </LinearLayout>
+
+</LinearLayout>

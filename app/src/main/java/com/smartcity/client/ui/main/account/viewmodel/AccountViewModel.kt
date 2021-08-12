@@ -30,22 +30,12 @@ constructor(
 ) : BaseViewModel<AccountViewState>()
 {
     init {
-        setCenterLatitude(
-            sharedPreferences.getFloat(LOCATION_STORE_AROUND_LATITUDE,0.0F).toDouble()
-        )
-
-        setCenterLongitude(
-            sharedPreferences.getFloat(LOCATION_STORE_AROUND_LONGITUDE,0.0F).toDouble()
-        )
-
         setRadius(
             sharedPreferences.getFloat(LOCATION_STORE_AROUND_RADIUS,20.0F).toDouble()
         )
     }
 
-    fun saveLocationInformation(centerLatitude: Double, centerLongitude: Double,radius :Double){
-        editor.putFloat(LOCATION_STORE_AROUND_LATITUDE,centerLatitude.toFloat())
-        editor.putFloat(LOCATION_STORE_AROUND_LONGITUDE,centerLongitude.toFloat())
+    fun saveLocationInformation(radius :Double){
         editor.putFloat(LOCATION_STORE_AROUND_RADIUS,radius.toFloat())
         editor.apply()
     }
@@ -151,9 +141,9 @@ constructor(
                     is GetStoresAroundEvent ->{
                          accountRepository.attemptGetStoreAround(
                             stateEvent,
-                            getCenterLatitude(),
-                            getCenterLongitude(),
-                            getRadius()
+                             stateEvent.lat,
+                             stateEvent.lon,
+                             stateEvent.radius
                         )
                     }
 

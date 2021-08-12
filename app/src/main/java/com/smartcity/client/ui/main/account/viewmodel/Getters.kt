@@ -62,18 +62,6 @@ fun AccountViewModel.getOrderAction(): List<Triple<String,Int,Int>> {
     }
 }
 
-fun AccountViewModel.getCenterLatitude(): Double {
-    getCurrentViewStateOrNew().let {
-        return it.aroundStoresFields.centerLatitude?:0.0
-    }
-}
-
-fun AccountViewModel.getCenterLongitude(): Double {
-    getCurrentViewStateOrNew().let {
-        return it.aroundStoresFields.centerLongitude?:0.0
-    }
-}
-
 fun AccountViewModel.getRadius(): Double {
     getCurrentViewStateOrNew().let {
         return it.aroundStoresFields.radius?:20.0

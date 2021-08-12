@@ -103,7 +103,11 @@ sealed class AccountStateEvent: StateEvent {
         }
     }
 
-    class GetStoresAroundEvent: AccountStateEvent(){
+    class GetStoresAroundEvent(
+        val lat:Double,
+        val lon:Double,
+        val radius:Double
+    ): AccountStateEvent(){
         override fun errorInfo(): String {
             return "Get stores attempt failed."
         }

@@ -28,8 +28,6 @@ class AccountViewState(
 
     @Parcelize
     data class AroundStoresFields(
-        var centerLatitude:Double?=null,
-        var centerLongitude:Double?=null,
         var radius:Double?=null,
         var stores:List<Store>? = null
     ) : Parcelable

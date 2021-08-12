@@ -1,27 +1,36 @@
 package com.smartcity.client.ui.main.account.stores
 
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.app.Activity
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.map.locationpicker.CircleData
+import com.map.locationpicker.Constants
+import com.map.locationpicker.LocationPicker
+import com.map.locationpicker.MapType
 import com.smartcity.client.R
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.account.viewmodel.getCenterLatitude
-import com.smartcity.client.ui.main.account.viewmodel.getCenterLongitude
-import com.smartcity.client.ui.main.account.viewmodel.getRadius
-import com.smartcity.client.ui.main.account.viewmodel.getStoresAround
+import com.smartcity.client.ui.main.account.viewmodel.*
 import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_around_stores.*
+import kotlinx.android.synthetic.main.fragment_around_stores.back_button
+import kotlinx.android.synthetic.main.fragment_around_stores.focusable_view
+import kotlinx.android.synthetic.main.fragment_for_you.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
@@ -38,6 +47,8 @@ constructor(
 ): BaseAccountFragment(R.layout.fragment_around_stores,viewModelFactory){
 
     private lateinit var recyclerStoresAdapter: StoresAdapter
+
+    private lateinit var  applicationInfo : ApplicationInfo
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
@@ -66,21 +77,32 @@ constructor(
         uiCommunicationListener.hideSoftKeyboard()
         uiCommunicationListener.displayBottomNavigation(false)
 
-        change_location.setOnClickListener {
-            getLocation()
-        }
-
-        if (viewModel.getCenterLatitude()==0.0 && viewModel.getCenterLongitude()==0.0){
-            getCurrentLocation()
-            getLocation()
-        }
-
-        if(viewModel.getCenterLatitude()!=0.0 && viewModel.getCenterLongitude()!=0.0){
-            getStores()
-        }
+        applicationInfo = requireActivity().packageManager.getApplicationInfo(requireActivity().packageName, PackageManager.GET_META_DATA)
 
         subscribeObservers()
         initRecyclerView()
+
+        changeRadius()
+        getDefaultCity()
+        backProceed()
+    }
+
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun changeRadius() {
+        location_container.setOnClickListener {
+            getLocation()
+        }
+    }
+
+    private fun getDefaultCity(){
+        viewModel.setStateEvent(
+            AccountStateEvent.GetUserDefaultCityEvent()
+        )
     }
 
     fun initRecyclerView(){
@@ -108,16 +130,16 @@ constructor(
 
     private fun getStores(){
         viewModel.setStateEvent(
-            AccountStateEvent.GetStoresAroundEvent()
+            AccountStateEvent.GetStoresAroundEvent(
+                viewModel.getDefaultCity()!!.lat,
+                viewModel.getDefaultCity()!!.lon,
+                viewModel.getRadius()
+            )
         )
     }
 
-    private fun getCurrentLocation(){
-       /* gpsTracker.getCurrentLocation()
-        val latitude: Double = gpsTracker.getLatitude()
-        val longitude: Double = gpsTracker.getLongitude()
-        viewModel.setCenterLatitude(latitude)
-        viewModel.setCenterLongitude(longitude)*/
+    private fun setCityName(value:String){
+        stores_city_name.text = value
     }
 
     private fun subscribeObservers() {
@@ -133,6 +155,13 @@ constructor(
                         }
                     }
                 )
+
+                if (stateMessage.response.message.equals(AccountStateEvent.GetUserDefaultCityEvent().toString())){
+                    setCityName(
+                        viewModel.getDefaultCity()!!.displayName
+                    )
+                    getStores()
+                }
             }
         })
 
@@ -165,52 +194,44 @@ constructor(
     }
 
     private fun getLocation() {
-       /* val intent = LocationPicker.IntentBuilder()
-            .setLatLong(viewModel.getCenterLatitude(), viewModel.getCenterLongitude())
-            .setDefaultMapZoom(9.0f)
+        val intent = LocationPicker.IntentBuilder()
+            .setLatLong(viewModel.getDefaultCity()!!.lat, viewModel.getDefaultCity()!!.lon)
             .setMapRawResourceStyle(R.raw.store_view_map_style)
             .setMapType(MapType.NORMAL)
             .setPlaceSearchBar(applicationInfo.metaData.getString("com.google.android.geo.API_KEY"))
             .setMarkerImageImageColor(R.color.bleu)
             .setFabColor(R.color.bleu)
-            .setPrimaryTextColor(R.color.dark)
+            .setPrimaryTextColor(R.color.black)
+            .setCircleBackgroundColorRes(R.color.blue_light2)
             .setSliderThumbTintColor(R.color.bleu)
             .setSliderTrackActiveTintColor(R.color.bleu)
-            .setSliderTrackInactiveTintColor(R.color.grey3)
+            .setSliderTrackInactiveTintColor(R.color.dark)
+            .setConfirmButtonBackgroundShape(R.drawable.radius_button_blue)
+            .setConfirmButtonTextColor(R.color.white)
+            .setBottomViewColor(R.color.white)
+            .setConfirmButtonText("Confirm")
             .setInitialCircleRadiusKilometer(viewModel.getRadius())
             .setSliderValueFrom(1.0F)
             .setSliderValueTo(200.0F)
             .hideLocationButton(false)
-            .build(activity!!)
-        startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST)*/
+            .enableMapGesturesEnabled(false)
+            .build(requireActivity())
+
+        startForResult.launch(intent)
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
-       /* if (requestCode == Constants.PLACE_PICKER_REQUEST) {
-            if (resultCode == Activity.RESULT_OK) {
-                try {
-                    val circleData = data?.getParcelableExtra<CircleData>(
-                        Constants.CIRCLE_INTENT)
-                    viewModel.apply {
-                        circleData?.let {
-                            saveLocationInformation(circleData.latitude, circleData.longitude, circleData.radius)
-                            setCenterLatitude(circleData.latitude)
-                            setCenterLongitude(circleData.longitude)
-                            setRadius(circleData.radius)
-                        }
-                    }
-                    getStores()
-                    resetUI()
-                } catch (e: Exception) {
-                    Log.e("AroundStoresFragment", e.message)
+    val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val circleData = result.data?.getParcelableExtra<CircleData>(
+                Constants.CIRCLE_INTENT)
+            viewModel.apply {
+                circleData?.let {
+                    saveLocationInformation(circleData.radius)
+                    setRadius(circleData.radius)
                 }
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data)
-        }*/
+            getStores()
+            resetUI()
+        }
     }
 }

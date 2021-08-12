@@ -78,18 +78,6 @@ fun AccountViewModel.clearOrderList(){
     setViewState(update)
 }
 
-fun AccountViewModel.setCenterLatitude(value: Double) {
-    val update = getCurrentViewStateOrNew()
-    update.aroundStoresFields.centerLatitude= value
-    setViewState(update)
-}
-
-fun AccountViewModel.setCenterLongitude(value: Double) {
-    val update = getCurrentViewStateOrNew()
-    update.aroundStoresFields.centerLongitude= value
-    setViewState(update)
-}
-
 fun AccountViewModel.setRadius(value: Double) {
     val update = getCurrentViewStateOrNew()
     update.aroundStoresFields.radius= value

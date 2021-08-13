@@ -50,36 +50,9 @@
                     android:padding="3dp"
                     android:textStyle="bold"
                     />
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/store_description"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:padding="3dp"
-                    />
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/store_address"
-                    android:textSize="16sp"
-                    android:textColor="#000"
-                    android:padding="3dp"
-                    />
-
-            <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/store_categories"
-                    android:textSize="14sp"
-                    android:padding="3dp"
-                    />
-
-
         </LinearLayout>
     </LinearLayout>
+
     <View
             android:layout_width="match_parent"
             android:layout_height="5dp"

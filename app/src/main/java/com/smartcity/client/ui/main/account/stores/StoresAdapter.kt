@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
 import com.smartcity.client.models.Store
+import com.smartcity.client.ui.main.flash_notification.flash.FlashDealsAdapter
 import kotlinx.android.synthetic.main.layout_store_list_item.view.*
 
 class StoresAdapter (
+    private val interaction: Interaction? = null,
     private val requestManager: RequestManager
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Store>() {
@@ -58,7 +60,8 @@ class StoresAdapter (
         return StoresHolder(
             LayoutInflater.from(parent.context)
                 .inflate(R.layout.layout_store_list_item, parent, false),
-            requestManager = requestManager
+            requestManager = requestManager,
+            interaction = interaction
         )
 
     }
@@ -82,26 +85,23 @@ class StoresAdapter (
 
     class StoresHolder(
         itemView: View,
+        private val interaction: Interaction?,
         val requestManager: RequestManager
     ) : RecyclerView.ViewHolder(itemView){
 
 
         @SuppressLint("SetTextI18n")
         fun bind(item: Store) = with(itemView) {
-
             itemView.store_name.text=item.name
-            itemView.store_description.text=item.description
-            itemView.store_address.text=item.storeAddress.fullAddress
 
-            if(item.defaultCategories.isNotEmpty()){
-                var categories=""
-                item.defaultCategories.map {
-                    categories=categories+" , "+it.name
-                }
-                itemView.store_categories.text=categories.drop(2)
+            itemView.setOnClickListener {
+                interaction?.onItemSelected(item)
             }
         }
 
     }
 
+    interface Interaction{
+        fun onItemSelected(item: Store)
+    }
 }

@@ -395,7 +395,10 @@ constructor(
     private fun showStoreDetailsDialog(flash: FlashDeal){
         val dialog=
             StoreBottomSheetDialog(
-                flash
+                flash.storeName!!,
+                flash.storeAddress!!,
+                flash.latitude,
+                flash.longitude
             )
         dialog.show(childFragmentManager,"dialog_store_bottom_sheet")
     }

@@ -20,11 +20,13 @@ import com.map.locationpicker.Constants
 import com.map.locationpicker.LocationPicker
 import com.map.locationpicker.MapType
 import com.smartcity.client.R
+import com.smartcity.client.models.Store
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.account.viewmodel.*
+import com.smartcity.client.ui.main.flash_notification.flash.StoreBottomSheetDialog
 import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_around_stores.*
@@ -44,7 +46,9 @@ class AroundStoresFragment
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseAccountFragment(R.layout.fragment_around_stores,viewModelFactory){
+): BaseAccountFragment(R.layout.fragment_around_stores,viewModelFactory),
+    StoresAdapter.Interaction
+{
 
     private lateinit var recyclerStoresAdapter: StoresAdapter
 
@@ -121,6 +125,7 @@ constructor(
 
             recyclerStoresAdapter =
                 StoresAdapter(
+                    this@AroundStoresFragment,
                     requestManager
                 )
             addOnScrollListener(object: RecyclerView.OnScrollListener(){
@@ -240,5 +245,16 @@ constructor(
             getStores()
             resetUI()
         }
+    }
+
+    override fun onItemSelected(item: Store) {
+        val dialog=
+            StoreBottomSheetDialog(
+                item.name,
+                item.storeAddress.fullAddress,
+                item.storeAddress.latitude,
+                item.storeAddress.longitude
+            )
+        dialog.show(childFragmentManager,"dialog_store_bottom_sheet")
     }
 }

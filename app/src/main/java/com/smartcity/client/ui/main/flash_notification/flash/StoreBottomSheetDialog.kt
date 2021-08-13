@@ -19,12 +19,15 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.smartcity.client.R
-import com.smartcity.client.models.FlashDeal
 
 
-class StoreBottomSheetDialog (val flash: FlashDeal):
-    BottomSheetDialogFragment() ,
-    OnMapReadyCallback {
+class StoreBottomSheetDialog (
+    val storeNameValue:String,
+    val storeAddressValue:String,
+    val latitude:Double?,
+    val longitude:Double?)
+    : BottomSheetDialogFragment() , OnMapReadyCallback {
+
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var mMapView: MapView
 
@@ -49,12 +52,10 @@ class StoreBottomSheetDialog (val flash: FlashDeal):
     private fun loadGoogleMap(view: View) {
         val googleMapButton=view.findViewById<Button>(R.id.store_address_open_google_map)
         googleMapButton.setOnClickListener {
-            flash.let {
-                if (it.latitude != null && it.longitude != null) {
-                    val gmmIntentUri = Uri.parse("geo:0,0?q=${it.latitude},${it.longitude}(Google)")
-                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-                    startActivity(mapIntent)
-                }
+            if (latitude != null && longitude != null) {
+                val gmmIntentUri = Uri.parse("geo:0,0?q=${latitude},${longitude}(Google)")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                startActivity(mapIntent)
             }
         }
     }
@@ -68,12 +69,12 @@ class StoreBottomSheetDialog (val flash: FlashDeal):
 
     private fun loadStoreAddress(view: View) {
         val storeAddress=view.findViewById<TextView>(R.id.store_address)
-        storeAddress.text = flash.storeAddress
+        storeAddress.text = storeAddressValue
     }
 
     private fun loadStoreName(view: View) {
         val storeName=view.findViewById<TextView>(R.id.store_name)
-        storeName.text = flash.storeName
+        storeName.text = storeNameValue
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -89,19 +90,17 @@ class StoreBottomSheetDialog (val flash: FlashDeal):
             MapStyleOptions.loadRawResourceStyle(context,R.raw.store_view_map_style)
         )
         googleMap.uiSettings.setAllGesturesEnabled(false)
-        flash.let {
-            if(it.latitude!=null && it.longitude!=null){
-                val marker=googleMap.addMarker(
-                    MarkerOptions()
-                        .draggable(false)
-                        .position(LatLng(it.latitude!!, it.longitude!!))
-                        .title(it.storeName)
-                )
-                marker.showInfoWindow()
-                val zoomLevel = 14.0f
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude!!, it.longitude!!), zoomLevel))
-                googleMap.setMinZoomPreference(16.0f)
-            }
+        if(latitude!=null && longitude!=null){
+            val marker=googleMap.addMarker(
+                MarkerOptions()
+                    .draggable(false)
+                    .position(LatLng(latitude!!,longitude!!))
+                    .title(storeNameValue)
+            )
+            marker.showInfoWindow()
+            val zoomLevel = 14.0f
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(latitude!!, longitude!!), zoomLevel))
+            googleMap.setMinZoomPreference(16.0f)
         }
     }
 }

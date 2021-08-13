@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.smartcity.client.R
+import com.smartcity.client.models.Store
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
@@ -17,6 +18,7 @@ import com.smartcity.client.ui.main.account.stores.StoresAdapter
 import com.smartcity.client.ui.main.account.viewmodel.getSearchCity
 import com.smartcity.client.ui.main.account.viewmodel.getSearchRadius
 import com.smartcity.client.ui.main.account.viewmodel.getSearchStores
+import com.smartcity.client.ui.main.flash_notification.flash.StoreBottomSheetDialog
 import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.TopSpacingItemDecoration
 import kotlinx.android.synthetic.main.fragment_view_search_stores.*
@@ -31,7 +33,9 @@ class ViewSearchStoresFragment
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseAccountFragment(R.layout.fragment_view_search_stores,viewModelFactory){
+): BaseAccountFragment(R.layout.fragment_view_search_stores,viewModelFactory),
+    StoresAdapter.Interaction
+{
 
     private lateinit var recyclerStoresAdapter: StoresAdapter
 
@@ -76,6 +80,7 @@ constructor(
 
             recyclerStoresAdapter =
                 StoresAdapter(
+                    this@ViewSearchStoresFragment,
                     requestManager
                 )
             addOnScrollListener(object: RecyclerView.OnScrollListener(){
@@ -125,5 +130,16 @@ constructor(
                 viewModel.getSearchStores()
             )
         })
+    }
+
+    override fun onItemSelected(item: Store) {
+        val dialog=
+            StoreBottomSheetDialog(
+                item.name,
+                item.storeAddress.fullAddress,
+                item.storeAddress.latitude,
+                item.storeAddress.longitude
+            )
+        dialog.show(childFragmentManager,"dialog_store_bottom_sheet")
     }
 }

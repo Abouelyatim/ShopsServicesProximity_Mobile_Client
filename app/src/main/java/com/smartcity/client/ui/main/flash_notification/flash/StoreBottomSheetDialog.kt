@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -59,7 +60,7 @@ class StoreBottomSheetDialog (val flash: FlashDeal):
     }
 
     private fun backButton(view: View) {
-        val backButton=view.findViewById<Button>(R.id.back_store)
+        val backButton=view.findViewById<ImageView>(R.id.back_store)
         backButton.setOnClickListener {
             bottomSheetDialog.dismiss()
         }
@@ -87,7 +88,7 @@ class StoreBottomSheetDialog (val flash: FlashDeal):
         googleMap!!.setMapStyle(
             MapStyleOptions.loadRawResourceStyle(context,R.raw.store_view_map_style)
         )
-
+        googleMap.uiSettings.setAllGesturesEnabled(false)
         flash.let {
             if(it.latitude!=null && it.longitude!=null){
                 val marker=googleMap.addMarker(

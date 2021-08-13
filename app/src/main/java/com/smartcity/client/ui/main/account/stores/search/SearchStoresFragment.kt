@@ -71,9 +71,24 @@ constructor(
         subscribeObservers()
         navConfigAddress()
         setSearchAddress()
+        setCategory()
         backProceed()
         setDistance()
         navViewSearch()
+        navCategory()
+    }
+
+    private fun setCategory() {
+        stores_category.text = viewModel.getSelectedCategory()
+        if(viewModel.getSelectedCategory().isEmpty()){
+            stores_category.text = "No category selected"
+        }
+    }
+
+    private fun navCategory() {
+        stores_category_container.setOnClickListener {
+            findNavController().navigate(R.id.action_searchStoresFragment_to_searchStoresSelectCategoryFragment)
+        }
     }
 
     private fun navViewSearch() {

@@ -4,7 +4,6 @@ import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.Address
 import com.smartcity.client.models.UserInformation
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.DataState
 import com.smartcity.client.util.StateEvent
 import kotlinx.coroutines.FlowPreview
@@ -73,7 +72,8 @@ interface AccountRepository {
         stateEvent: StateEvent,
         centerLatitude:Double,
         centerLongitude:Double,
-        radius:Double
+        radius:Double,
+        category: String
     ): Flow<DataState<AccountViewState>>
 
     fun attemptUserDefaultCity(
@@ -85,5 +85,9 @@ interface AccountRepository {
         stateEvent: StateEvent,
         country: String,
         city: String
+    ): Flow<DataState<AccountViewState>>
+
+    fun attemptAllCategory(
+        stateEvent: StateEvent
     ): Flow<DataState<AccountViewState>>
 }

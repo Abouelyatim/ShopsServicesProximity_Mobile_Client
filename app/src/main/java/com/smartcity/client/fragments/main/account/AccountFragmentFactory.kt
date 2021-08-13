@@ -13,6 +13,7 @@ import com.smartcity.client.ui.main.account.orders.ViewOrderFragment
 import com.smartcity.client.ui.main.account.stores.AroundStoresFragment
 import com.smartcity.client.ui.main.account.stores.search.SearchStoresConfigAddressFragment
 import com.smartcity.client.ui.main.account.stores.search.SearchStoresFragment
+import com.smartcity.client.ui.main.account.stores.search.SearchStoresSelectCategoryFragment
 import com.smartcity.client.ui.main.account.stores.search.ViewSearchStoresFragment
 
 
@@ -88,6 +89,13 @@ constructor(
 
             ViewSearchStoresFragment::class.java.name -> {
                 ViewSearchStoresFragment(
+                    viewModelFactory,
+                    requestManager
+                )
+            }
+
+            SearchStoresSelectCategoryFragment::class.java.name -> {
+                SearchStoresSelectCategoryFragment(
                     viewModelFactory,
                     requestManager
                 )

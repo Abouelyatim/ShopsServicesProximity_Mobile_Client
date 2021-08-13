@@ -73,6 +73,10 @@ constructor(
             aroundStoresFields.searchStores?.let { list ->
                 setSearchStores(list)
             }
+
+            aroundStoresFields.categoryList?.let {list ->
+                setCategoryList(list)
+            }
         }
     }
 
@@ -160,7 +164,8 @@ constructor(
                             stateEvent,
                             stateEvent.lat,
                             stateEvent.lon,
-                            stateEvent.radius
+                            stateEvent.radius,
+                            stateEvent.category
                         )
                     }
 
@@ -176,6 +181,12 @@ constructor(
                             stateEvent,
                             getDefaultCity()!!.country,
                             getCityQuery()
+                        )
+                    }
+
+                    is AllCategoryEvent ->{
+                        accountRepository.attemptAllCategory(
+                            stateEvent
                         )
                     }
 

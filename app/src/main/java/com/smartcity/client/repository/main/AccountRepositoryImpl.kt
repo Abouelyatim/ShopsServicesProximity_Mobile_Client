@@ -3,6 +3,7 @@ package com.smartcity.client.repository.main
 import android.util.Log
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.ListGenericDto
+import com.smartcity.client.api.interest.dto.CategoryDto
 import com.smartcity.client.api.interest.dto.CityDto
 import com.smartcity.client.api.main.OpenApiMainService
 import com.smartcity.client.api.main.responses.ListAddressResponse
@@ -12,12 +13,12 @@ import com.smartcity.client.models.Address
 import com.smartcity.client.models.City
 import com.smartcity.client.models.Store
 import com.smartcity.client.models.UserInformation
+import com.smartcity.client.models.product.Category
 import com.smartcity.client.persistence.AccountPropertiesDao
 import com.smartcity.client.repository.buildError
 import com.smartcity.client.repository.safeApiCall
 import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
 import com.smartcity.client.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -342,7 +343,8 @@ constructor(
             openApiMainService.getStoresAround(
                 distance = radius,
                 latitude = centerLatitude,
-                longitude = centerLongitude
+                longitude = centerLongitude,
+                category = ""
             )
         }
 
@@ -375,13 +377,15 @@ constructor(
         stateEvent: StateEvent,
         centerLatitude: Double,
         centerLongitude: Double,
-        radius: Double
+        radius: Double,
+        category: String
     ): Flow<DataState<AccountViewState>> = flow {
     val apiResult = safeApiCall(Dispatchers.IO){
         openApiMainService.getStoresAround(
             distance = radius,
             latitude = centerLatitude,
-            longitude = centerLongitude
+            longitude = centerLongitude,
+            category = category
         )
     }
 
@@ -476,6 +480,36 @@ constructor(
                             UIComponentType.None(),
                             MessageType.None()
                         )
+                    )
+                }
+
+            }.getResult()
+        )
+    }
+
+    override fun attemptAllCategory(
+        stateEvent: StateEvent
+    ): Flow<DataState<AccountViewState>> = flow {
+        val apiResult = safeApiCall(Dispatchers.IO){
+            openApiMainService.getAllCategory()
+        }
+
+        emit(
+            object: ApiResponseHandler<AccountViewState, ListGenericDto<Category, CategoryDto>>(
+                response = apiResult,
+                stateEvent = stateEvent
+            ) {
+                override suspend fun handleSuccess(resultObj: ListGenericDto<Category, CategoryDto>): DataState<AccountViewState> {
+                    Log.d(TAG,"handleSuccess ${stateEvent}")
+                    val categoryList=resultObj.toList()
+                    return DataState.data(
+                        data = AccountViewState(
+                            aroundStoresFields = AccountViewState.AroundStoresFields(
+                                categoryList = categoryList
+                            )
+                        ),
+                        stateEvent = stateEvent,
+                        response = null
                     )
                 }
 

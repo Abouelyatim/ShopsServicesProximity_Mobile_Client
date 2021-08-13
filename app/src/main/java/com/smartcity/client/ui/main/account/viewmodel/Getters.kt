@@ -1,6 +1,7 @@
 package com.smartcity.client.ui.main.account.viewmodel
 
 import com.smartcity.client.models.*
+import com.smartcity.client.models.product.Category
 import com.smartcity.client.ui.interest.viewmodel.InterestViewModel
 
 fun AccountViewModel.getSelectedOrder(): Order? {
@@ -134,5 +135,17 @@ fun AccountViewModel.checkSearchRadius(): Boolean {
 fun AccountViewModel.getSearchStores(): List<Store> {
     getCurrentViewStateOrNew().let {
         return it.aroundStoresFields.searchStores?: listOf()
+    }
+}
+
+fun AccountViewModel.getCategoryList(): List<Category> {
+    getCurrentViewStateOrNew().let {
+        return it.aroundStoresFields.categoryList?: listOf()
+    }
+}
+
+fun AccountViewModel.getSelectedCategory(): String {
+    getCurrentViewStateOrNew().let {
+        return it.aroundStoresFields.selectedCategory?:""
     }
 }

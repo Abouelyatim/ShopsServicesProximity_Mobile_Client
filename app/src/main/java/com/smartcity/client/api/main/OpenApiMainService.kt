@@ -2,6 +2,7 @@ package com.smartcity.client.api.main
 
 import com.smartcity.client.api.GenericResponse
 import com.smartcity.client.api.ListGenericDto
+import com.smartcity.client.api.interest.dto.CategoryDto
 import com.smartcity.client.api.interest.dto.CityDto
 import com.smartcity.client.api.main.responses.ListAddressResponse
 import com.smartcity.client.api.main.responses.ListOrderResponse
@@ -9,6 +10,7 @@ import com.smartcity.client.api.main.responses.ListProductResponse
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.models.*
 import com.smartcity.client.models.product.Cart
+import com.smartcity.client.models.product.Category
 import com.smartcity.client.models.product.Product
 import com.smartcity.client.util.ListGenericResponse
 import com.smartcity.provider.models.Policy
@@ -144,7 +146,8 @@ interface OpenApiMainService {
     suspend fun getStoresAround(
         @Query(value = "distance") distance: Double,
         @Query(value = "longitude") longitude: Double,
-        @Query(value = "latitude") latitude: Double
+        @Query(value = "latitude") latitude: Double,
+        @Query(value = "category") category: String
     ): ListGenericResponse<Store>
 
     @GET("product/interest")
@@ -176,6 +179,9 @@ interface OpenApiMainService {
         @Query(value = "latitude") latitude:Double,
         @Query(value = "longitude") longitude:Double
     ): ListGenericResponse<Product>
+
+    @GET("category")
+    suspend fun getAllCategory(): ListGenericDto<Category, CategoryDto>
 }
 
 

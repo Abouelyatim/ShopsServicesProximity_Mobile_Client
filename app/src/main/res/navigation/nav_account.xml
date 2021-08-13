@@ -76,6 +76,9 @@
         <action
                 android:id="@+id/action_searchStoresFragment_to_viewSearchStoresFragment"
                 app:destination="@id/viewSearchStoresFragment" />
+        <action
+                android:id="@+id/action_searchStoresFragment_to_searchStoresSelectCategoryFragment"
+                app:destination="@id/searchStoresSelectCategoryFragment" />
     </fragment>
     <fragment
             android:id="@+id/searchStoresConfigAddressFragment"
@@ -87,6 +90,11 @@
             android:name="com.smartcity.client.ui.main.account.stores.search.ViewSearchStoresFragment"
             android:label="fragment_view_search_stores"
             tools:layout="@layout/fragment_view_search_stores" />
+    <fragment
+            android:id="@+id/searchStoresSelectCategoryFragment"
+            android:name="com.smartcity.client.ui.main.account.stores.search.SearchStoresSelectCategoryFragment"
+            android:label="fragment_search_stores_select_category"
+            tools:layout="@layout/fragment_search_stores_select_category" />
 
 
 </navigation>

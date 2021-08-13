@@ -2,6 +2,7 @@ package com.smartcity.client.ui.main.account.state
 
 import android.os.Parcelable
 import com.smartcity.client.models.*
+import com.smartcity.client.models.product.Category
 import kotlinx.android.parcel.Parcelize
 
 const val ACCOUNT_VIEW_STATE_BUNDLE_KEY = "com.codingwithmitch.openapi.ui.main.account.state.AccountViewState"
@@ -34,7 +35,10 @@ class AccountViewState(
         var searchRadius:Double? =null,
         var cityList: List<City>? = null,
         var cityQuery:String ?=null,
-        var searchStores :List<Store>? = null
+        var searchStores :List<Store>? = null,
+
+        var categoryList:List<Category>? = null,
+        var selectedCategory:String? = null
     ) : Parcelable
 
     @Parcelize

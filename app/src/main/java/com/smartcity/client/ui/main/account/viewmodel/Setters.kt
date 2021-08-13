@@ -1,6 +1,7 @@
 package com.smartcity.client.ui.main.account.viewmodel
 
 import com.smartcity.client.models.*
+import com.smartcity.client.models.product.Category
 import com.smartcity.client.ui.interest.viewmodel.InterestViewModel
 
 fun AccountViewModel.setSelectedOrder(order: Order){
@@ -141,5 +142,17 @@ fun AccountViewModel.setSearchRadius(value: Double) {
 fun AccountViewModel.setSearchStores(list : List<Store>) {
     val update = getCurrentViewStateOrNew()
     update.aroundStoresFields.searchStores = list
+    setViewState(update)
+}
+
+fun AccountViewModel.setCategoryList(list: List<Category>) {
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.categoryList = list
+    setViewState(update)
+}
+
+fun AccountViewModel.setSelectedCategory(value: String?) {
+    val update = getCurrentViewStateOrNew()
+    update.aroundStoresFields.selectedCategory = value
     setViewState(update)
 }

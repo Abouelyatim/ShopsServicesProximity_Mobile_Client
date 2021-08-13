@@ -5,40 +5,41 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.smartcity.client.R
-import com.smartcity.client.models.Store
 import com.smartcity.client.ui.main.account.BaseAccountFragment
 import com.smartcity.client.ui.main.account.state.ACCOUNT_VIEW_STATE_BUNDLE_KEY
 import com.smartcity.client.ui.main.account.state.AccountStateEvent
 import com.smartcity.client.ui.main.account.state.AccountViewState
-import com.smartcity.client.ui.main.account.stores.StoresAdapter
-import com.smartcity.client.ui.main.account.viewmodel.getSearchCity
-import com.smartcity.client.ui.main.account.viewmodel.getSearchRadius
-import com.smartcity.client.ui.main.account.viewmodel.getSearchStores
-import com.smartcity.client.ui.main.account.viewmodel.getSelectedCategory
-import com.smartcity.client.ui.main.flash_notification.flash.StoreBottomSheetDialog
+import com.smartcity.client.ui.main.account.viewmodel.*
 import com.smartcity.client.util.StateMessageCallback
+import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
-import kotlinx.android.synthetic.main.fragment_view_search_stores.*
+import kotlinx.android.synthetic.main.fragment_search_stores.*
+import kotlinx.android.synthetic.main.fragment_search_stores_select_category.*
+import kotlinx.android.synthetic.main.fragment_search_stores_select_category.back_button
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class ViewSearchStoresFragment
+class SearchStoresSelectCategoryFragment
 @Inject
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseAccountFragment(R.layout.fragment_view_search_stores,viewModelFactory),
-    StoresAdapter.Interaction
+): BaseAccountFragment(R.layout.fragment_search_stores_select_category,viewModelFactory),
+    CategoriesAdapter.Interaction
 {
 
-    private lateinit var recyclerStoresAdapter: StoresAdapter
+    private var categoriesRecyclerAdapter: CategoriesAdapter? = null
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(
@@ -67,50 +68,22 @@ constructor(
         uiCommunicationListener.hideSoftKeyboard()
         uiCommunicationListener.displayBottomNavigation(false)
 
-        getStores()
-        subscribeObservers()
+        getCategories()
         initRecyclerView()
+        subscribeObservers()
+        backProceed()
     }
 
-    private fun initRecyclerView() {
-        search_stores_recyclerview.apply {
-            layoutManager = LinearLayoutManager(this@ViewSearchStoresFragment.context)
-            val topSpacingDecorator = TopSpacingItemDecoration(0)
-            removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
-            addItemDecoration(topSpacingDecorator)
-
-            recyclerStoresAdapter =
-                StoresAdapter(
-                    this@ViewSearchStoresFragment,
-                    requestManager
-                )
-            addOnScrollListener(object: RecyclerView.OnScrollListener(){
-
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
-                }
-            })
-            adapter = recyclerStoresAdapter
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
         }
-    }
-
-    private fun getStores(){
-        viewModel.setStateEvent(
-            AccountStateEvent.SearchStoresAroundEvent(
-                viewModel.getSearchCity()!!.lat,
-                viewModel.getSearchCity()!!.lon,
-                viewModel.getSearchRadius(),
-                viewModel.getSelectedCategory()
-            )
-        )
     }
 
     private fun subscribeObservers() {
         viewModel.stateMessage.observe(viewLifecycleOwner, Observer { stateMessage ->//must
 
             stateMessage?.let {
-
 
                 uiCommunicationListener.onResponseReceived(
                     response = it.response,
@@ -127,21 +100,60 @@ constructor(
             uiCommunicationListener.displayProgressBar(viewModel.areAnyJobsActive())
         })
 
-        viewModel.viewState.observe(viewLifecycleOwner, Observer{ viewState ->
-            recyclerStoresAdapter.submitList(
-                viewModel.getSearchStores()
-            )
+        //submit list to recycler view
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
+            categoriesRecyclerAdapter?.let {
+                val list = mutableListOf<String>()
+                viewModel.getCategoryList().map {
+                    list.addAll(it.subCategorys)
+                }
+
+                it.submitList(
+                    list,
+                    viewModel.getSelectedCategory()
+                )
+            }
         })
     }
 
-    override fun onItemSelected(item: Store) {
-        val dialog=
-            StoreBottomSheetDialog(
-                item.name,
-                item.storeAddress.fullAddress,
-                item.storeAddress.latitude,
-                item.storeAddress.longitude
-            )
-        dialog.show(childFragmentManager,"dialog_store_bottom_sheet")
+    fun initRecyclerView(){
+        categories_recycler_view.apply {
+            layoutManager = FlexboxLayoutManager(context)
+            (layoutManager as FlexboxLayoutManager).justifyContent = JustifyContent.FLEX_START
+            (layoutManager as FlexboxLayoutManager).flexWrap= FlexWrap.WRAP
+
+            val topSpacingDecorator = TopSpacingItemDecoration(30)
+            removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
+            addItemDecoration(topSpacingDecorator)
+
+            categoriesRecyclerAdapter =
+                CategoriesAdapter(
+                    this@SearchStoresSelectCategoryFragment
+                )
+            addOnScrollListener(object: RecyclerView.OnScrollListener(){
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                }
+            })
+            adapter = categoriesRecyclerAdapter
+        }
+    }
+
+    private fun getCategories() {
+        viewModel.setStateEvent(
+            AccountStateEvent.AllCategoryEvent()
+        )
+    }
+
+    override fun onItemSelected(item: String) {
+        viewModel.setSelectedCategory(item)
+        categoriesRecyclerAdapter!!.notifyDataSetChanged()
+        findNavController().popBackStack()
+    }
+
+    override fun onItemDeSelected(item: String) {
+        viewModel.setSelectedCategory(null)
+        categoriesRecyclerAdapter!!.notifyDataSetChanged()
     }
 }

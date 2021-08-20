@@ -6,18 +6,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.github.sumimakito.awesomeqr.AwesomeQrRenderer
-import com.github.sumimakito.awesomeqr.RenderResult
-import com.github.sumimakito.awesomeqr.option.RenderOption
-import com.github.sumimakito.awesomeqr.option.color.Color
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.smartcity.client.R
 import com.smartcity.client.models.Order
@@ -29,10 +22,7 @@ import com.smartcity.client.ui.main.account.viewmodel.getSelectedOrder
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.DateUtils.Companion.convertStringToStringDate
 import com.smartcity.client.util.TopSpacingItemDecoration
-import kotlinx.android.synthetic.main.fragment_orders.*
 import kotlinx.android.synthetic.main.fragment_view_order.*
-import kotlinx.android.synthetic.main.fragment_view_order.back_button
-import kotlinx.android.synthetic.main.layout_product_order_item.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -121,30 +111,7 @@ constructor(
     }
 
     private fun generateQrCode():Bitmap?{
-        val renderOption = RenderOption()
-        renderOption.content = viewModel.getSelectedOrder()!!.id.toString() // content to encode
-        renderOption.size = 800 // size of the final QR code image
-        renderOption.borderWidth = 0 // width of the empty space around the QR code
-        renderOption.patternScale = 0.35f // (optional) specify a scale for patterns
-        renderOption.roundedPatterns = true // (optional) if true, blocks will be drawn as dots instead
-        renderOption.clearBorder = true // if set to true, the background will NOT be drawn on the border area
-        val color = Color()
-        color.light = 0xFFFFFFFF.toInt() // for blank spaces
-        color.dark = ResourcesCompat.getColor(resources, R.color.bleu,null) // for non-blank spaces
-        color.background = ResourcesCompat.getColor(resources, R.color.bleu_light,null)
-        color.auto = false
-        renderOption.color = color
-        
-        try {
-            val result = AwesomeQrRenderer.render(renderOption)
-            if (result.bitmap != null) {
-                return result.bitmap
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-            // Oops, something gone wrong.
-        }
-        return null
+        return net.glxn.qrgen.android.QRCode.from(viewModel.getSelectedOrder()!!.id.toString()).bitmap()
     }
 
     private fun setOrderType(order:Order) {

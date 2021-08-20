@@ -70,7 +70,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
 
-    implementation 'com.github.SumiMakito:AwesomeQRCode:1.2.0'
+    implementation 'com.github.kenglxn.qrgen:android:2.6.0'
 
     implementation 'com.hbb20:ccp:2.5.3'
 

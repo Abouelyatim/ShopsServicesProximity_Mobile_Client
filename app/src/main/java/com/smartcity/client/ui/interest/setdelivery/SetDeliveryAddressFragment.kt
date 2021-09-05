@@ -259,20 +259,18 @@ constructor(
     override fun onResume() {
         super.onResume()
         setGoogleMapMarker()
-        if(viewModel.getHomeLat()==0.0 || viewModel.getHomeLong()==0.0){
-            viewModel.setHomeLat(
-                viewModel.getSelectedCity()!!.lat
-            )
-            viewModel.setHomeLong(
-                viewModel.getSelectedCity()!!.lon
-            )
-        }
+        viewModel.setHomeLat(
+            viewModel.getSelectedCity()!!.lat
+        )
 
-        if (viewModel.getHomeAddress().isEmpty()){
-            viewModel.setHomeAddress(
-                viewModel.getSelectedCity()!!.name
-            )
-        }
+        viewModel.setHomeLong(
+            viewModel.getSelectedCity()!!.lon
+        )
+
+        viewModel.setHomeAddress(
+            viewModel.getSelectedCity()!!.name
+        )
+
         setAddress()
     }
 }

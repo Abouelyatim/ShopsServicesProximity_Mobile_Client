@@ -15,6 +15,7 @@ import com.smartcity.client.ui.interest.state.ConfigurationFields
 import com.smartcity.client.ui.interest.state.InterestViewState
 import com.smartcity.client.ui.main.account.state.AccountViewState
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
+import com.smartcity.client.ui.main.product.state.ProductViewState
 import com.smartcity.client.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -284,6 +285,39 @@ constructor(
                     )
                 }
 
+            }.getResult()
+        )
+    }
+
+    override fun attemptSaveClickedProduct(
+        stateEvent: StateEvent,
+        userId: Long,
+        productId: Long
+    ): Flow<DataState<FlashViewState>> = flow {
+        val apiResult = safeApiCall(Dispatchers.IO){
+            openApiMainService.saveClickedProduct(
+                userId = userId,
+                productId = productId
+            )
+        }
+
+        emit(
+            object: ApiResponseHandler<FlashViewState, GenericResponse>(
+                response = apiResult,
+                stateEvent = stateEvent
+            ) {
+                override suspend fun handleSuccess(resultObj: GenericResponse): DataState<FlashViewState> {
+                    Log.d(TAG,"handleSuccess ${stateEvent}")
+                    return DataState.data(
+                        data =  null,
+                        stateEvent = stateEvent,
+                        response = Response(
+                            SuccessHandling.CREATED_DONE,
+                            UIComponentType.None(),
+                            MessageType.None()
+                        )
+                    )
+                }
             }.getResult()
         )
     }

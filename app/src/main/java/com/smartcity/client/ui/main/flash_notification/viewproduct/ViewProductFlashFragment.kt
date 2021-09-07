@@ -2,25 +2,37 @@ package com.smartcity.client.ui.main.flash_notification.viewproduct
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.smartcity.client.R
 import com.smartcity.client.models.product.AttributeValue
 import com.smartcity.client.models.product.OfferType
@@ -34,14 +46,16 @@ import com.smartcity.client.ui.main.flash_notification.viewmodel.clearChoicesMap
 import com.smartcity.client.ui.main.flash_notification.viewmodel.getChoicesMap
 import com.smartcity.client.ui.main.flash_notification.viewmodel.getSelectedProduct
 import com.smartcity.client.ui.main.flash_notification.viewmodel.setChoicesMap
+import com.smartcity.client.ui.main.product.state.ProductStateEvent
 import com.smartcity.client.ui.main.product.viewProduct.adapters.OptionsAdapter
 import com.smartcity.client.ui.main.product.viewProduct.adapters.ValuesAdapter
 import com.smartcity.client.ui.main.product.viewProduct.adapters.VariantImageAdapter
 import com.smartcity.client.ui.main.product.viewProduct.adapters.ViewPagerAdapter
 import com.smartcity.client.util.Constants
 import com.smartcity.client.util.StateMessageCallback
+import com.smartcity.client.util.SuccessHandling
 import com.smartcity.client.util.TopSpacingItemDecoration
-import kotlinx.android.synthetic.main.fragment_view_product.*
+import kotlinx.android.synthetic.main.fragment_view_product_flash.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import java.math.BigDecimal
@@ -55,11 +69,13 @@ class ViewProductFlashFragment
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseFlashNotificationFragment(R.layout.fragment_view_product,viewModelFactory),
+): BaseFlashNotificationFragment(R.layout.fragment_view_product_flash,viewModelFactory),
     OptionsAdapter.Interaction,
-    VariantImageAdapter.Interaction
+    VariantImageAdapter.Interaction,
+    OnMapReadyCallback
 {
 
+    private lateinit var mMapView:MapView
     private lateinit var dialogView: View
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var viewPager: ViewPager
@@ -71,6 +87,7 @@ constructor(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Restore state after process death
+        viewModel.cancelActiveJobs()
         savedInstanceState?.let { inState ->
             (inState[CUSTOM_FLASH_VIEW_STATE_BUNDLE_KEY] as FlashViewState?)?.let { viewState ->
                 viewModel.setViewState(viewState)
@@ -101,6 +118,7 @@ constructor(
         }
 
 
+        setStoreAddressMap(savedInstanceState)
         initViewPager()
         setNewPrice(product_new_price)
         setDiscountValue()
@@ -108,10 +126,115 @@ constructor(
         setOptions()
         setDescription()
         variantsDialog()
+        setStoreAddress()
+        SetOpenGoogleMap()
+        SetStoreName()
+        setNavViewStore()
         subscribeObservers()
+        onBackClicked()
+        saveProductClicked()
     }
+
+    private fun saveProductClicked(){
+        viewModel.setStateEvent(
+            FlashStateEvent.SaveClickedProductEvent(
+                product.id
+            )
+        )
+    }
+
+    private fun onBackClicked() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    private fun setNavViewStore() {
+        product_view_store_button.setOnClickListener { navStore() }
+        product_store_container.setOnClickListener { navStore() }
+    }
+
+    private fun navStore(){
+        //todo
+       // findNavController().navigate(R.id.)
+    }
+
+    private fun SetStoreName() {
+        product_store_name.text=product.storeName
+    }
+
+    private fun SetOpenGoogleMap() {
+        product_store_address_open_google_map.setOnClickListener {
+            product.storeAddress?.let {
+                if (it.latitude != 0.0 && it.longitude != 0.0) {
+                    val gmmIntentUri = Uri.parse("geo:0,0?q=${it.latitude},${it.longitude}(Google)")
+                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                    startActivity(mapIntent)
+                }
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setStoreAddressMap(savedInstanceState: Bundle?) {
+        val mainScrollView: NestedScrollView = requireActivity().findViewById(R.id.scrollView) as NestedScrollView
+        val transparentImageView = requireActivity().findViewById(R.id.transparent_image) as ImageView
+        transparentImageView.setOnTouchListener { v, event ->
+            val action = event.action
+            when (action) {
+                MotionEvent.ACTION_DOWN -> {
+                    // Disallow ScrollView to intercept touch events.
+                    mainScrollView.requestDisallowInterceptTouchEvent(true)
+                    // Disable touch on transparent view
+                    false
+                }
+                MotionEvent.ACTION_UP -> {
+                    // Allow ScrollView to intercept touch events.
+                    mainScrollView.requestDisallowInterceptTouchEvent(false)
+                    true
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    mainScrollView.requestDisallowInterceptTouchEvent(true)
+                    false
+                }
+                else -> true
+            }
+        }
+        mMapView = requireActivity().findViewById(R.id.product_store_address_map) as MapView
+        mMapView.onCreate(savedInstanceState)
+        mMapView.onResume() // needed to get the map to display immediately
+        mMapView.getMapAsync(this)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap?) {
+        googleMap!!.setMapStyle(
+            MapStyleOptions.loadRawResourceStyle(context,R.raw.store_view_map_style)
+        )
+
+        product.storeAddress?.let {
+            if(it.latitude!=0.0 && it.longitude!=0.0){
+                val marker=googleMap!!.addMarker(
+                    MarkerOptions()
+                        .draggable(false)
+                        .position(LatLng(it.latitude, it.longitude))
+                        .title(product.storeName)
+                )
+                marker.showInfoWindow()
+                val zoomLevel = 14.0f
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(it.latitude, it.longitude), zoomLevel))
+                googleMap.setMinZoomPreference(16.0f)
+            }
+        }
+    }
+
+    private fun setStoreAddress() {
+        product.storeAddress?.let {
+            product_store_address.text= it.fullAddress
+        }
+    }
+
     private fun initViewPager() {
-        viewPager = requireActivity().findViewById(R.id.view_pager)
+        viewPager = requireActivity().findViewById(R.id.view_pager_images)
         viewPagerAdapter =
             ViewPagerAdapter(
                 requestManager
@@ -122,8 +245,8 @@ constructor(
         if (images.size<2){
             dotsIndicator.visibility=View.GONE
         }
-        dotsIndicator.setViewPager(view_pager)
-        view_pager.adapter?.registerDataSetObserver(dotsIndicator.dataSetObserver)
+        dotsIndicator.setViewPager(view_pager_images)
+        view_pager_images.adapter?.registerDataSetObserver(dotsIndicator.dataSetObserver)
     }
 
     @SuppressLint("SetTextI18n")
@@ -292,6 +415,9 @@ constructor(
 
             stateMessage?.let {
 
+                if(stateMessage.response.message.equals(SuccessHandling.DONE_Back_Clicked_View_product_Event)){
+                    findNavController().popBackStack()
+                }
 
                 uiCommunicationListener.onResponseReceived(
                     response = it.response,
@@ -383,12 +509,11 @@ constructor(
                 val variantId=getVariantId(map)
                 if(variantId!=-1L){
                     viewModel.setStateEvent(
-                        FlashStateEvent.AddProductCartEvent(
+                        ProductStateEvent.AddProductCartEvent(
                             variantId,
                             btn1.number.toInt()
                         )
                     )
-
                 }
             }
         }
@@ -493,8 +618,7 @@ constructor(
                                     }
 
                                     OfferType.PERCENTAGE ->{
-                                        price=
-                                            BigDecimal(variant.price-(variant.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                                        price=BigDecimal(variant.price-(variant.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
                                     }
                                 }
 
@@ -523,8 +647,7 @@ constructor(
                                 }
 
                                 OfferType.PERCENTAGE ->{
-                                    price=
-                                        BigDecimal(variant.price-(variant.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
+                                    price=BigDecimal(variant.price-(variant.price*offer.percentage!!/100)).setScale(2, RoundingMode.HALF_EVEN).toDouble()
                                 }
                             }
 
@@ -602,8 +725,7 @@ constructor(
 
     fun initVariantImageRecyclerView(){
         product_recyclerview_variant_image.apply {
-            layoutManager = LinearLayoutManager(this@ViewProductFlashFragment.context,
-                LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(this@ViewProductFlashFragment.context,LinearLayoutManager.HORIZONTAL, false)
             val topSpacingDecorator = TopSpacingItemDecoration(0)
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
@@ -627,11 +749,12 @@ constructor(
 
     override fun onDestroy() {
         super.onDestroy()
-        viewPager.adapter=null
+        viewPager?.adapter=null
+        mMapView.onDestroy()
     }
 
     override fun onItemSelected(option: String, value: String) {
-        optionsRecyclerview.adapter!!.notifyDataSetChanged()
+        optionsRecyclerview.adapter?.notifyDataSetChanged()
         val map=viewModel.getChoicesMap()
         if(map[option]==value){
             map.remove(option)
@@ -639,5 +762,19 @@ constructor(
             map.put(option,value)
         }
         viewModel.setChoicesMap(map)
+    }
+    override fun onResume() {
+        super.onResume()
+        mMapView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mMapView.onPause()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        mMapView.onLowMemory()
     }
 }

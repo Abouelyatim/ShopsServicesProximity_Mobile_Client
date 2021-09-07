@@ -1,5 +1,6 @@
 package com.smartcity.client.ui.main.flash_notification.state
 
+import com.smartcity.client.ui.main.product.state.ProductStateEvent
 import com.smartcity.client.util.StateEvent
 
 sealed class FlashStateEvent: StateEvent {
@@ -81,6 +82,17 @@ sealed class FlashStateEvent: StateEvent {
         }
     }
 
+    class SaveClickedProductEvent(
+        val productId: Long
+    ): FlashStateEvent(){
+        override fun errorInfo(): String {
+            return "Charge product attempt failed."
+        }
+
+        override fun toString(): String {
+            return "SaveClickedProductStateEvent"
+        }
+    }
 
     class None: FlashStateEvent(){
         override fun errorInfo(): String {

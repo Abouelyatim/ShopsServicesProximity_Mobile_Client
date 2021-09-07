@@ -3,6 +3,7 @@ package com.smartcity.client.repository.main
 import com.smartcity.client.di.main.MainScope
 import com.smartcity.client.ui.interest.state.InterestViewState
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
+import com.smartcity.client.ui.main.product.state.ProductViewState
 import com.smartcity.client.util.DataState
 import com.smartcity.client.util.StateEvent
 import kotlinx.coroutines.FlowPreview
@@ -52,5 +53,11 @@ interface FlashRepository {
         stateEvent: StateEvent,
         country: String,
         city: String
+    ): Flow<DataState<FlashViewState>>
+
+    fun attemptSaveClickedProduct(
+        stateEvent: StateEvent,
+        userId: Long,
+        productId: Long
     ): Flow<DataState<FlashViewState>>
 }

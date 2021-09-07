@@ -7,6 +7,7 @@ import com.smartcity.client.session.SessionManager
 import com.smartcity.client.ui.BaseViewModel
 import com.smartcity.client.ui.main.flash_notification.state.FlashStateEvent
 import com.smartcity.client.ui.main.flash_notification.state.FlashViewState
+import com.smartcity.client.ui.main.product.state.ProductStateEvent
 import com.smartcity.client.util.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -122,6 +123,14 @@ constructor(
                             stateEvent,
                             getSearchCity()!!.lat,
                             getSearchCity()!!.lon
+                        )
+                    }
+
+                    is FlashStateEvent.SaveClickedProductEvent ->{
+                        flashRepository.attemptSaveClickedProduct(
+                            stateEvent,
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.productId
                         )
                     }
 

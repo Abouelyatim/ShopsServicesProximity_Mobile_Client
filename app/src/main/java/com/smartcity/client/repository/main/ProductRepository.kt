@@ -69,4 +69,10 @@ interface ProductRepository {
         page: Int,
         userId: Long
     ): Flow<DataState<ProductViewState>>
+
+    fun attemptSaveClickedProduct(
+        stateEvent: StateEvent,
+        userId: Long,
+        productId: Long
+    ): Flow<DataState<ProductViewState>>
 }

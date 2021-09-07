@@ -389,6 +389,39 @@ constructor(
             }.getResult()
         )
     }
+
+    override fun attemptSaveClickedProduct(
+        stateEvent: StateEvent,
+        userId: Long,
+        productId: Long
+    ): Flow<DataState<ProductViewState>> = flow {
+        val apiResult = safeApiCall(Dispatchers.IO){
+            openApiMainService.saveClickedProduct(
+                userId = userId,
+                productId = productId
+            )
+        }
+
+        emit(
+            object: ApiResponseHandler<ProductViewState, GenericResponse>(
+                response = apiResult,
+                stateEvent = stateEvent
+            ) {
+                override suspend fun handleSuccess(resultObj: GenericResponse): DataState<ProductViewState> {
+                    Log.d(TAG,"handleSuccess ${stateEvent}")
+                    return DataState.data(
+                        data =  null,
+                        stateEvent = stateEvent,
+                        response = Response(
+                            SuccessHandling.CREATED_DONE,
+                            UIComponentType.None(),
+                            MessageType.None()
+                        )
+                    )
+                }
+            }.getResult()
+        )
+    }
 }
 
 

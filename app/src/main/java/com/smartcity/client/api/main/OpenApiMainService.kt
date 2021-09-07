@@ -182,6 +182,12 @@ interface OpenApiMainService {
 
     @GET("category")
     suspend fun getAllCategory(): ListGenericDto<Category, CategoryDto>
+
+    @PUT("product/clicked")
+    suspend fun saveClickedProduct(
+        @Query(value = "userId") userId:Long,
+        @Query(value = "productId") productId:Long
+    ): GenericResponse
 }
 
 

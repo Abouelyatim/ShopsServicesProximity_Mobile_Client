@@ -119,6 +119,18 @@ sealed class ProductStateEvent: StateEvent {
         }
     }
 
+    class SaveClickedProductEvent(
+        val productId: Long
+    ): ProductStateEvent(){
+        override fun errorInfo(): String {
+            return "Charge product attempt failed."
+        }
+
+        override fun toString(): String {
+            return "SaveClickedProductStateEvent"
+        }
+    }
+
     class None: ProductStateEvent(){
         override fun errorInfo(): String {
             return "None"

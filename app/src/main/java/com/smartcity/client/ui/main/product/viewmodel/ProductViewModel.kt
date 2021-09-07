@@ -164,6 +164,14 @@ constructor(
                         )
                     }
 
+                    is SaveClickedProductEvent ->{
+                        productRepository.attemptSaveClickedProduct(
+                            stateEvent,
+                            authToken.account_pk!!.toLong(),
+                            stateEvent.productId
+                        )
+                    }
+
                     else -> {
                         flow{
                             emit(

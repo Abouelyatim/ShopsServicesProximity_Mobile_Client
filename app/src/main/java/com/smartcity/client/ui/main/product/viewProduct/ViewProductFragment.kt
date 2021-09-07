@@ -125,6 +125,15 @@ constructor(
         setNavViewStore()
         subscribeObservers()
         onBackClicked()
+        saveProductClicked()
+    }
+
+    private fun saveProductClicked(){
+        viewModel.setStateEvent(
+            ProductStateEvent.SaveClickedProductEvent(
+                product.id
+            )
+        )
     }
 
     private fun onBackClicked() {

@@ -26,7 +26,7 @@
     <string name="logout">Logout</string>
     <string name="my_blogs">My Blogs</string>
     <string name="home">Home</string>
-    <string name="create">Create</string>
+    <string name="cart">Cart</string>
     <string name="flash">Flash</string>
 
     <string name="fragment_create_blog">Create</string>

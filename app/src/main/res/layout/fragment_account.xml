@@ -6,13 +6,35 @@
         android:layout_height="match_parent"
         tools:context=".ui.main.account.AccountFragment"
         android:orientation="vertical"
-        android:layout_margin="16dp"
         >
-
-    <View
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/default_background_color"/>
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+        <TextView
+                android:layout_marginStart="10dp"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:text="My account"
+                android:textColor="@color/dark"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
     <LinearLayout
             android:id="@+id/information_settings"
@@ -35,6 +57,7 @@
                 android:textSize="16sp"
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
+                android:textColor="@color/dark"
                 android:textStyle="bold"/>
 
         <ImageView
@@ -67,6 +90,7 @@
                 android:textSize="16sp"
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
+                android:textColor="@color/dark"
                 android:textStyle="bold"/>
 
         <ImageView
@@ -100,6 +124,7 @@
                 android:textSize="16sp"
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
+                android:textColor="@color/dark"
                 android:textStyle="bold"/>
 
         <ImageView
@@ -134,6 +159,7 @@
                 android:textSize="16sp"
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
+                android:textColor="@color/dark"
                 android:textStyle="bold"/>
 
         <ImageView
@@ -146,5 +172,5 @@
             android:layout_height="1dp"
             android:background="@color/default_background_color"/>
 
-
+    </LinearLayout>
 </LinearLayout>

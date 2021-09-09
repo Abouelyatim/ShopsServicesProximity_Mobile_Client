@@ -8,9 +8,6 @@ enum class SelfPickUpOptions {
     SELF_PICK_UP_PART_PERCENTAGE,
     SELF_PICK_UP_PART_RANGE,
 
-    //
-    SELF_PICK_UP_EXTEND_PERCENTAGE,
-
     //This part of the order does not require any payment before getting it from the store
     SELF_PICK_UP
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Observer
@@ -199,10 +198,6 @@ constructor(
 
             SelfPickUpOptions.SELF_PICK_UP ->{
                 text="This part of the order does not require any payment before getting it from the store"
-            }
-
-            SelfPickUpOptions.SELF_PICK_UP_EXTEND_PERCENTAGE -> {
-
             }
         }
         pickup_description_text.text=text

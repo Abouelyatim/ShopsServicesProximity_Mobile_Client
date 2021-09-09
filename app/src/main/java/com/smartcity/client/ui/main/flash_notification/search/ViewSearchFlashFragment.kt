@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,6 +89,13 @@ constructor(
         initOfferActionRecyclerView()
         subscribeObservers()
         initData(viewModel.getSearchOfferActionRecyclerPosition())
+        backProceed()
+    }
+
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun initData(actionPosition: Int) {

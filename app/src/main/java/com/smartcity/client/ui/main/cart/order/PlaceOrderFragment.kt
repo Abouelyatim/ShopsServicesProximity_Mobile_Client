@@ -102,7 +102,7 @@ constructor(
             findNavController().popBackStack()
         }
     }
-    
+
     private fun placeOrder(){
         viewModel.setStateEvent(
             CartStateEvent.PlaceOrderEvent(

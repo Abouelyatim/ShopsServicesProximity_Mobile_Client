@@ -105,7 +105,7 @@ constructor(
 
         uiCommunicationListener.expandAppBar()
         uiCommunicationListener.displayBottomNavigation(false)
-        uiCommunicationListener.updateStatusBarColor(R.color.dark,true)
+        uiCommunicationListener.updateStatusBarColor(R.color.white,false)
 
         viewModel.getViewProductFields()?.let {
             product=it

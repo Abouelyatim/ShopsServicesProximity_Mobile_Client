@@ -10,7 +10,7 @@
 
     <LinearLayout
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/dark"
+            android:background="@color/white"
             android:layout_width="match_parent"
             android:orientation="horizontal"
             android:gravity="right">
@@ -27,7 +27,7 @@
             <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/ic_baseline_arrow_back_white"
+                    android:background="@drawable/ic_baseline_arrow_back_ios_dark"
                     />
 
         </LinearLayout>
@@ -37,11 +37,11 @@
                 android:id="@+id/search_button"
                 android:layout_width="0dp"
                 android:layout_height="35dp"
-                android:background="@drawable/round_corner_white"
+                android:background="@drawable/round_corner_grey"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 />
 
         <LinearLayout
@@ -57,7 +57,7 @@
             <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/ic_outline_shopping_cart_white"
+                    android:background="@drawable/ic_outline_shopping_cart_dark"
                     />
         </LinearLayout>
 
@@ -75,7 +75,7 @@
             <ImageView
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/ic_baseline_share_white"
+                    android:background="@drawable/ic_baseline_share_dark"
                     />
 
         </LinearLayout>

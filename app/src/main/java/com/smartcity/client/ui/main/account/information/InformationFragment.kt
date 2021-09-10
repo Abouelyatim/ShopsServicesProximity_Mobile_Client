@@ -70,6 +70,13 @@ constructor(
         save_information_button.setOnClickListener {
             saveUserInformation()
         }
+        backProceed()
+    }
+
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun getUserInformation(){

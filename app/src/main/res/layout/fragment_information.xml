@@ -7,6 +7,47 @@
         android:background="@color/new_default_background_color"
         android:orientation="vertical"
         tools:context=".ui.main.account.information.InformationFragment">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:gravity="start">
+
+        <LinearLayout
+                android:id="@+id/back_button"
+                android:paddingStart="20dp"
+                android:paddingEnd="10dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/ic_baseline_arrow_back_ios_dark"
+                    />
+
+        </LinearLayout>
+
+        <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Information"
+                android:textColor="@color/dark"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                />
+
+
+    </LinearLayout>
+
     <LinearLayout
             android:background="@color/white"
             android:layout_width="match_parent"

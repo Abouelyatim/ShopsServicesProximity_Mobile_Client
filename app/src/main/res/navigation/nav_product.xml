@@ -10,7 +10,7 @@
     <fragment android:id="@+id/blogFragment"
             android:name="com.smartcity.client.ui.main.product.products.ProductFragment"
             android:label="@string/fragment_blog"
-            tools:layout="@layout/fragment_blog">
+            tools:layout="@layout/fragment_product">
         <action
                 android:id="@+id/action_blogFragment_to_viewProductFragment"
                 app:destination="@id/viewProductFragment" />

@@ -7,11 +7,23 @@
         android:orientation="vertical"
         android:clickable="true"
         android:focusable="true"
-        android:background="@drawable/radius_shape_white"
         android:id="@+id/address_container"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
+        android:background="@color/white"
         >
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/default_background_color"/>
+
+    <LinearLayout
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -63,7 +75,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             >
     <LinearLayout
             android:layout_width="match_parent"
@@ -347,6 +360,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    </LinearLayout>
 </LinearLayout>
 

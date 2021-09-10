@@ -20,7 +20,7 @@ import com.smartcity.client.ui.main.product.state.ProductViewState
 import com.smartcity.client.ui.main.product.viewmodel.*
 import com.smartcity.client.util.StateMessageCallback
 import com.smartcity.client.util.TopSpacingItemDecoration
-import kotlinx.android.synthetic.main.fragment_blog.*
+import kotlinx.android.synthetic.main.fragment_product.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import javax.inject.Inject
@@ -32,7 +32,7 @@ class ProductFragment
 constructor(
     private val viewModelFactory: ViewModelProvider.Factory,
     private val requestManager: RequestManager
-): BaseProductFragment(R.layout.fragment_blog,viewModelFactory),
+): BaseProductFragment(R.layout.fragment_product,viewModelFactory),
     ProductListAdapter.Interaction,
     ProductGridAdapter.Interaction,
     SwipeRefreshLayout.OnRefreshListener

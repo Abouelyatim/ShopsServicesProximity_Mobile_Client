@@ -71,6 +71,14 @@ constructor(
 
         getAddresses()
         subscribeObservers()
+        backProceed()
+
+    }
+
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun subscribeObservers() {
@@ -126,7 +134,7 @@ constructor(
     fun initRecyclerView(){
         address_recyclerview.apply {
             layoutManager = LinearLayoutManager(this@AddressFragment.context)
-            val topSpacingDecorator = TopSpacingItemDecoration(30)
+            val topSpacingDecorator = TopSpacingItemDecoration(0)
             removeItemDecoration(topSpacingDecorator) // does nothing if not applied already
             addItemDecoration(topSpacingDecorator)
 

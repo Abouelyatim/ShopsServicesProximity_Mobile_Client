@@ -5,18 +5,19 @@
         android:layout_height="wrap_content"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:orientation="vertical"
-        android:background="@drawable/radius_shape_white"
         android:clickable="true"
         android:focusable="true"
         android:id="@+id/address_container"
+        android:background="@color/white"
         >
 
 
     <LinearLayout
+            android:layout_margin="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_margin="16dp"
+
             >
 
         <ImageView
@@ -30,9 +31,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/address_"
                 android:text="city"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
+                android:textColor="@color/dark"
+                android:textStyle="bold"
                 />
 
 
@@ -45,6 +48,9 @@
                 />
 
     </LinearLayout>
-
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/new_default_background_color"/>
 
 </LinearLayout>

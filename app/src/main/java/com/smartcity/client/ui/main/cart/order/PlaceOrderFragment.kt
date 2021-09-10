@@ -94,8 +94,15 @@ constructor(
         place_order_button.setOnClickListener {
             showOrderConfirmationDialog()
         }
+        backProceed()
     }
 
+    private fun backProceed() {
+        back_button.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+    
     private fun placeOrder(){
         viewModel.setStateEvent(
             CartStateEvent.PlaceOrderEvent(

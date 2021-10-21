@@ -8,6 +8,13 @@ The arrival of the COVID-19 pandemic has completely transformed the way the mark
 This app is for local trader.
 </br> this repository is part of two other repositories [trader app](https://github.com/Abouelyatim/ShopsServicesProximity_Mobile_Provider) and [backend](https://github.com/Abouelyatim/ShopsServicesProximity_Backend).
 
+## Main features
+* Product recomendation.
+* User cart management.
+* Offers management.
+* Account management.
+* Orders management.
+* Stores arround user management.
 
 ## Architecture
 <img src=images/architecture_mvi.png width="800">

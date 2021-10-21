@@ -6,9 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.smartcity.client.R
 import com.smartcity.client.models.Store
 import com.smartcity.client.ui.main.flash_notification.flash.FlashDealsAdapter
+import com.smartcity.client.util.Constants
+import kotlinx.android.synthetic.main.layout_product_cart_list_item.view.*
 import kotlinx.android.synthetic.main.layout_store_list_item.view.*
 
 class StoresAdapter (
@@ -93,6 +96,11 @@ class StoresAdapter (
         @SuppressLint("SetTextI18n")
         fun bind(item: Store) = with(itemView) {
             itemView.store_name.text=item.name
+
+            requestManager
+                .load(Constants.PRODUCT_IMAGE_URL+item.imageStore)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(itemView.store_image)
 
             itemView.setOnClickListener {
                 interaction?.onItemSelected(item)

@@ -70,9 +70,7 @@ constructor(
         }
 
         around_stores_settings.setOnClickListener{
-            if(uiCommunicationListener.isFineLocationPermissionGranted()){
-                navAroundStore()
-            }
+            navAroundStore()
         }
     }
 
